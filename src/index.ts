@@ -1,0 +1,1 @@
+export { openAPISchemaFor } from './compiler';
