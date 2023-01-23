@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest test",
     "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit",
     "format": "prettier -w src test"
   },
   "keywords": [],
