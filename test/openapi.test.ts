@@ -1,4 +1,4 @@
-import { flow, pipe } from '@fp-ts/data/Function';
+import { pipe } from '@fp-ts/data/Function';
 import * as S from '@fp-ts/schema/Schema';
 import { createOpenAPI } from '../src/openapi';
 import * as OA from '../src/openapi';
@@ -107,7 +107,8 @@ describe('simple', () => {
         '/pet',
         OA.addOperation(
           'post',
-          flow(OA.setJsonRequestBody(schema), OA.setJsonResponse('200', schema))
+          OA.setJsonRequestBody(schema),
+          OA.setJsonResponse('200', schema)
         )
       )
     );
@@ -144,17 +145,13 @@ describe('simple', () => {
       OA.info(OA.setDescription('My API')),
       OA.addPath(
         '/pet',
-        flow(
-          OA.addOperation(
-            'post',
-            flow(
-              OA.setJsonRequestBody(schema),
-              OA.setJsonResponse('200', schema),
-              OA.setDescription('Store a pet')
-            )
-          ),
-          OA.setDescription('Pet endpoint')
-        )
+        OA.addOperation(
+          'post',
+          OA.setJsonRequestBody(schema),
+          OA.setJsonResponse('200', schema),
+          OA.setDescription('Store a pet')
+        ),
+        OA.setDescription('Pet endpoint')
       )
     );
 
@@ -184,17 +181,13 @@ describe('simple', () => {
       OA.openAPI('test', '0.1'),
       OA.addPath(
         '/pet',
-        flow(
-          OA.addOperation(
-            'post',
-            flow(
-              OA.setJsonRequestBody(schema),
-              OA.setJsonResponse('200', schema),
-              OA.setSummary('My summary')
-            )
-          ),
-          OA.setSummary('Pet stuff')
-        )
+        OA.addOperation(
+          'post',
+          OA.setJsonRequestBody(schema),
+          OA.setJsonResponse('200', schema),
+          OA.setSummary('My summary')
+        ),
+        OA.setSummary('Pet stuff')
       )
     );
 
@@ -209,14 +202,10 @@ describe('simple', () => {
       OA.openAPI('test', '0.1'),
       OA.addPath(
         '/pet',
-        flow(
-          OA.addOperation(
-            'post',
-            flow(
-              OA.setJsonRequestBody(schema, 'request description'),
-              OA.setJsonResponse('200', schema, 'response description')
-            )
-          )
+        OA.addOperation(
+          'post',
+          OA.setJsonRequestBody(schema, 'request description'),
+          OA.setJsonResponse('200', schema, 'response description')
         )
       )
     );
@@ -263,11 +252,9 @@ describe('simple', () => {
       OA.openAPI('test', '0.1'),
       OA.addServer(
         'http://server.com',
-        flow(
-          OA.setDescription('production'),
-          OA.addVariable('username', 'demo', OA.setDescription('username')),
-          OA.addVariable('port', '8443', OA.setEnum('8443', '443'))
-        )
+        OA.setDescription('production'),
+        OA.addVariable('username', 'demo', OA.setDescription('username')),
+        OA.addVariable('port', '8443', OA.setEnum('8443', '443'))
       )
     );
 
@@ -290,25 +277,19 @@ describe('simple', () => {
       OA.openAPI('test', '0.1'),
       OA.addPath(
         '/pet',
-        flow(
-          OA.addOperation(
-            'post',
-            flow(
-              OA.setJsonRequestBody(schema),
-              OA.setJsonResponse('200', schema)
-            )
-          ),
-          OA.setSummary('Pet stuff'),
-          OA.addParameter(
-            'id',
-            'query',
-            flow(
-              OA.setRequired(),
-              OA.setDeprecated(),
-              OA.setAllowEmptyValue(),
-              OA.setDescription('id')
-            )
-          )
+        OA.addOperation(
+          'post',
+          OA.setJsonRequestBody(schema),
+          OA.setJsonResponse('200', schema)
+        ),
+        OA.setSummary('Pet stuff'),
+        OA.addParameter(
+          'id',
+          'query',
+          OA.setRequired(),
+          OA.setDeprecated(),
+          OA.setAllowEmptyValue(),
+          OA.setDescription('id')
         )
       )
     );

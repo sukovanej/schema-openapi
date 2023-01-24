@@ -115,11 +115,11 @@ export const openAPI = (
 
 export const info =
   (
-    setInfo: I.Setter<OpenAPISpecInfo>
+    ...setters: I.Setter<OpenAPISpecInfo>[]
   ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
   (spec) => ({
     ...spec,
-    info: setInfo(spec.info),
+    info: I.runSetters(spec.info, setters),
   });
 
 export const license =
@@ -138,24 +138,24 @@ export const license =
 export const addServer =
   (
     url: string,
-    setServer: I.Setter<OpenAPISpecServer> = identity
+    ...setters: I.Setter<OpenAPISpecServer>[]
   ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
   (spec) => ({
     ...spec,
-    servers: [...(spec.servers ?? []), setServer({ url })],
+    servers: [...(spec.servers ?? []), I.runSetters({ url }, setters)],
   });
 
 export const addVariable =
   (
     name: string,
     defaultValue: string,
-    setVariable: I.Setter<OpenAPISpecServerVariable> = identity
+    ...setters: I.Setter<OpenAPISpecServerVariable>[]
   ): I.Setter<OpenAPISpecServer> =>
   (server) => ({
     ...server,
     variables: {
       ...server.variables,
-      [name]: setVariable({ default: defaultValue }),
+      [name]: I.runSetters({ default: defaultValue }, setters),
     },
   });
 
@@ -169,23 +169,23 @@ export const setEnum =
 export const addPath =
   (
     path: string,
-    setPathItem: I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>>
+    ...setters: I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
   (spec) => ({
     ...spec,
-    paths: { ...spec.paths, [path]: setPathItem({}) },
+    paths: { ...spec.paths, [path]: I.runSetters({}, setters) },
   });
 
 export const addOperation =
   (
     methodName: OpenAPISpecMethodName,
-    setOperation: I.Setter<OpenAPISpecOperation<OpenAPISchemaType>>
+    ...setters: I.Setter<OpenAPISpecOperation<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>> =>
   (pathItem) => ({
     ...pathItem,
     [methodName]: {
       ...pathItem[methodName],
-      ...setOperation({}),
+      ...I.runSetters({}, setters),
     },
   });
 
@@ -193,13 +193,13 @@ export const addParameter =
   (
     name: string,
     inValue: OpenAPISpecParameter['in'],
-    setParameter: I.Setter<OpenAPISpecParameter> = identity
+    ...setters: I.Setter<OpenAPISpecParameter>[]
   ) =>
   <A extends { parameters?: OpenAPISpecParameter[] }>(spec: A): A => ({
     ...spec,
     parameters: [
       ...(spec.parameters ?? []),
-      setParameter({ name, in: inValue }),
+      I.runSetters({ name, in: inValue }, setters),
     ],
   });
 
