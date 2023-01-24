@@ -20,6 +20,7 @@ import {
   OpenAPISpecServerVariable,
   OpenAPISpecStatusCode,
 } from './types';
+import * as I from './internal';
 
 export const createOpenAPI = (spec: OpenAPISpec) => {
   const paths = createPaths(spec.paths);
@@ -113,15 +114,17 @@ export const openAPI = (
 });
 
 export const info =
-  (setInfo: (info: OpenAPISpecInfo) => OpenAPISpecInfo) =>
-  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+  (
+    setInfo: I.Setter<OpenAPISpecInfo>
+  ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
+  (spec) => ({
     ...spec,
     info: setInfo(spec.info),
   });
 
 export const license =
-  (name: string, url: string | undefined = undefined) =>
-  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+  (name: string, url?: string): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
+  (spec) => ({
     ...spec,
     info: {
       ...spec.info,
@@ -135,9 +138,9 @@ export const license =
 export const addServer =
   (
     url: string,
-    setServer: (server: OpenAPISpecServer) => OpenAPISpecServer = identity
-  ) =>
-  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+    setServer: I.Setter<OpenAPISpecServer> = identity
+  ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
+  (spec) => ({
     ...spec,
     servers: [...(spec.servers ?? []), setServer({ url })],
   });
@@ -146,11 +149,9 @@ export const addVariable =
   (
     name: string,
     defaultValue: string,
-    setVariable: (
-      server: OpenAPISpecServerVariable
-    ) => OpenAPISpecServerVariable = identity
-  ) =>
-  (server: OpenAPISpecServer): OpenAPISpecServer => ({
+    setVariable: I.Setter<OpenAPISpecServerVariable> = identity
+  ): I.Setter<OpenAPISpecServer> =>
+  (server) => ({
     ...server,
     variables: {
       ...server.variables,
@@ -159,8 +160,8 @@ export const addVariable =
   });
 
 export const setEnum =
-  (...values: string[]) =>
-  (variable: OpenAPISpecServerVariable): OpenAPISpecServerVariable => ({
+  (...values: string[]): I.Setter<OpenAPISpecServerVariable> =>
+  (variable) => ({
     ...variable,
     enum: [...(variable.enum ?? []), ...values],
   });
@@ -168,11 +169,9 @@ export const setEnum =
 export const addPath =
   (
     path: string,
-    setPathItem: (
-      spec: OpenAPISpecPathItem<OpenAPISchemaType>
-    ) => OpenAPISpecPathItem<OpenAPISchemaType>
-  ) =>
-  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+    setPathItem: I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>>
+  ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
+  (spec) => ({
     ...spec,
     paths: { ...spec.paths, [path]: setPathItem({}) },
   });
@@ -180,13 +179,9 @@ export const addPath =
 export const addOperation =
   (
     methodName: OpenAPISpecMethodName,
-    setOperation: (
-      spec: OpenAPISpecOperation<OpenAPISchemaType>
-    ) => OpenAPISpecOperation<OpenAPISchemaType>
-  ) =>
-  (
-    pathItem: OpenAPISpecPathItem<OpenAPISchemaType>
-  ): OpenAPISpecPathItem<OpenAPISchemaType> => ({
+    setOperation: I.Setter<OpenAPISpecOperation<OpenAPISchemaType>>
+  ): I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>> =>
+  (pathItem) => ({
     ...pathItem,
     [methodName]: {
       ...pathItem[methodName],
@@ -198,9 +193,7 @@ export const addParameter =
   (
     name: string,
     inValue: OpenAPISpecParameter['in'],
-    setParameter: (
-      spec: OpenAPISpecParameter
-    ) => OpenAPISpecParameter = identity
+    setParameter: I.Setter<OpenAPISpecParameter> = identity
   ) =>
   <A extends { parameters?: OpenAPISpecParameter[] }>(spec: A): A => ({
     ...spec,
@@ -211,8 +204,8 @@ export const addParameter =
   });
 
 export const setAllowEmptyValue =
-  (allowEmptyValue: boolean = true) =>
-  (parameter: OpenAPISpecParameter): OpenAPISpecParameter => ({
+  (allowEmptyValue: boolean = true): I.Setter<OpenAPISpecParameter> =>
+  (parameter) => ({
     ...parameter,
     allowEmptyValue,
   });
@@ -225,17 +218,18 @@ export const setDeprecated =
   });
 
 export const setRequired =
-  (required: boolean = true) =>
-  (parameter: OpenAPISpecParameter): OpenAPISpecParameter => ({
+  (required: boolean = true): I.Setter<OpenAPISpecParameter> =>
+  (parameter) => ({
     ...parameter,
     required,
   });
 
 export const setJsonRequestBody =
-  (schema: AnySchema, description?: string) =>
   (
-    spec: OpenAPISpecOperation<OpenAPISchemaType>
-  ): OpenAPISpecOperation<OpenAPISchemaType> => ({
+    schema: AnySchema,
+    description?: string
+  ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
+  (spec) => ({
     ...spec,
     requestBody: {
       ...spec.requestBody,
@@ -252,10 +246,8 @@ export const setJsonResponse =
     statusCode: OpenAPISpecStatusCode,
     schema: AnySchema,
     description?: string
-  ) =>
-  (
-    spec: OpenAPISpecOperation<OpenAPISchemaType>
-  ): OpenAPISpecOperation<OpenAPISchemaType> => ({
+  ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
+  (spec) => ({
     ...spec,
     responses: {
       ...spec.responses,
