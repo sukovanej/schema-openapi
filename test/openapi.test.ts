@@ -103,12 +103,12 @@ describe('simple', () => {
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addPath(
+      OA.path(
         '/pet',
-        OA.addOperation(
+        OA.operation(
           'post',
-          OA.setJsonRequestBody(schema),
-          OA.setJsonResponse('200', schema)
+          OA.jsonRequest(schema),
+          OA.jsonResponse('200', schema)
         )
       )
     );
@@ -142,16 +142,16 @@ describe('simple', () => {
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
-      OA.info(OA.setDescription('My API')),
-      OA.addPath(
+      OA.info(OA.description('My API')),
+      OA.path(
         '/pet',
-        OA.addOperation(
+        OA.operation(
           'post',
-          OA.setJsonRequestBody(schema),
-          OA.setJsonResponse('200', schema),
-          OA.setDescription('Store a pet')
+          OA.jsonRequest(schema),
+          OA.jsonResponse('200', schema),
+          OA.description('Store a pet')
         ),
-        OA.setDescription('Pet endpoint')
+        OA.description('Pet endpoint')
       )
     );
 
@@ -179,15 +179,15 @@ describe('simple', () => {
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addPath(
+      OA.path(
         '/pet',
-        OA.addOperation(
+        OA.operation(
           'post',
-          OA.setJsonRequestBody(schema),
-          OA.setJsonResponse('200', schema),
-          OA.setSummary('My summary')
+          OA.jsonRequest(schema),
+          OA.jsonResponse('200', schema),
+          OA.summary('My summary')
         ),
-        OA.setSummary('Pet stuff')
+        OA.summary('Pet stuff')
       )
     );
 
@@ -200,12 +200,12 @@ describe('simple', () => {
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addPath(
+      OA.path(
         '/pet',
-        OA.addOperation(
+        OA.operation(
           'post',
-          OA.setJsonRequestBody(schema, 'request description'),
-          OA.setJsonResponse('200', schema, 'response description')
+          OA.jsonRequest(schema, 'request description'),
+          OA.jsonResponse('200', schema, 'response description')
         )
       )
     );
@@ -223,15 +223,15 @@ describe('simple', () => {
   it('servers', () => {
     const spec1 = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addServer('http://server.com')
+      OA.server('http://server.com')
     );
 
     expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
 
     const spec2 = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addServer('http://server-prod.com'),
-      OA.addServer('http://server-sandbox.com')
+      OA.server('http://server-prod.com'),
+      OA.server('http://server-sandbox.com')
     );
 
     expect(spec2.servers).toStrictEqual([
@@ -241,7 +241,7 @@ describe('simple', () => {
 
     const spec3 = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addServer('http://server.com', OA.setDescription('production'))
+      OA.server('http://server.com', OA.description('production'))
     );
 
     expect(spec3.servers).toStrictEqual([
@@ -250,11 +250,11 @@ describe('simple', () => {
 
     const spec4 = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addServer(
+      OA.server(
         'http://server.com',
-        OA.setDescription('production'),
-        OA.addVariable('username', 'demo', OA.setDescription('username')),
-        OA.addVariable('port', '8443', OA.setEnum('8443', '443'))
+        OA.description('production'),
+        OA.variable('username', 'demo', OA.description('username')),
+        OA.variable('port', '8443', OA.enum('8443', '443'))
       )
     );
 
@@ -275,21 +275,21 @@ describe('simple', () => {
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
-      OA.addPath(
+      OA.path(
         '/pet',
-        OA.addOperation(
+        OA.operation(
           'post',
-          OA.setJsonRequestBody(schema),
-          OA.setJsonResponse('200', schema)
+          OA.jsonRequest(schema),
+          OA.jsonResponse('200', schema)
         ),
-        OA.setSummary('Pet stuff'),
-        OA.addParameter(
+        OA.summary('Pet stuff'),
+        OA.parameter(
           'id',
           'query',
-          OA.setRequired(),
-          OA.setDeprecated(),
-          OA.setAllowEmptyValue(),
-          OA.setDescription('id')
+          OA.required,
+          OA.deprecated,
+          OA.allowEmptyValue,
+          OA.description('id')
         )
       )
     );

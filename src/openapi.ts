@@ -1,4 +1,3 @@
-import { identity } from '@fp-ts/data/Function';
 import { openAPISchemaFor } from './compiler';
 import {
   AnySchema,
@@ -135,7 +134,7 @@ export const license =
     },
   });
 
-export const addServer =
+export const server =
   (
     url: string,
     ...setters: I.Setter<OpenAPISpecServer>[]
@@ -145,7 +144,7 @@ export const addServer =
     servers: [...(spec.servers ?? []), I.runSetters({ url }, setters)],
   });
 
-export const addVariable =
+export const variable =
   (
     name: string,
     defaultValue: string,
@@ -159,14 +158,16 @@ export const addVariable =
     },
   });
 
-export const setEnum =
+const _enum =
   (...values: string[]): I.Setter<OpenAPISpecServerVariable> =>
   (variable) => ({
     ...variable,
     enum: [...(variable.enum ?? []), ...values],
   });
 
-export const addPath =
+export { _enum as enum };
+
+export const path =
   (
     path: string,
     ...setters: I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>>[]
@@ -176,7 +177,7 @@ export const addPath =
     paths: { ...spec.paths, [path]: I.runSetters({}, setters) },
   });
 
-export const addOperation =
+export const operation =
   (
     methodName: OpenAPISpecMethodName,
     ...setters: I.Setter<OpenAPISpecOperation<OpenAPISchemaType>>[]
@@ -189,7 +190,7 @@ export const addOperation =
     },
   });
 
-export const addParameter =
+export const parameter =
   (
     name: string,
     inValue: OpenAPISpecParameter['in'],
@@ -203,28 +204,24 @@ export const addParameter =
     ],
   });
 
-export const setAllowEmptyValue =
-  (allowEmptyValue: boolean = true): I.Setter<OpenAPISpecParameter> =>
-  (parameter) => ({
-    ...parameter,
-    allowEmptyValue,
-  });
+export const allowEmptyValue: I.Setter<OpenAPISpecParameter> = (parameter) => ({
+  ...parameter,
+  allowEmptyValue: true,
+});
 
-export const setDeprecated =
-  (deprecated: boolean = true) =>
-  <A extends { deprecated?: boolean }>(parameter: A): A => ({
-    ...parameter,
-    deprecated,
-  });
+export const deprecated = <A extends { deprecated?: boolean }>(
+  parameter: A
+): A => ({
+  ...parameter,
+  deprecated,
+});
 
-export const setRequired =
-  (required: boolean = true): I.Setter<OpenAPISpecParameter> =>
-  (parameter) => ({
-    ...parameter,
-    required,
-  });
+export const required: I.Setter<OpenAPISpecParameter> = (parameter) => ({
+  ...parameter,
+  required: true,
+});
 
-export const setJsonRequestBody =
+export const jsonRequest =
   (
     schema: AnySchema,
     description?: string
@@ -241,7 +238,7 @@ export const setJsonRequestBody =
     },
   });
 
-export const setJsonResponse =
+export const jsonResponse =
   (
     statusCode: OpenAPISpecStatusCode,
     schema: AnySchema,
@@ -262,14 +259,14 @@ export const setJsonResponse =
     },
   });
 
-export const setDescription =
+export const description =
   (description: string) =>
   <A extends { description?: string }>(spec: A): A => ({
     ...spec,
     description,
   });
 
-export const setSummary =
+export const summary =
   (summary: string) =>
   <A extends { summary?: string }>(spec: A): A => ({ ...spec, summary });
 
