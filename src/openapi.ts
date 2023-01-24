@@ -7,7 +7,6 @@ import {
   OpenApiSpecContent,
   OpenApiSpecContentType,
   OpenAPISpecInfo,
-  OpenAPISpecLicense,
   OpenAPISpecMethodName,
   OpenAPISpecOperation,
   OpenAPISpecPathItem,
