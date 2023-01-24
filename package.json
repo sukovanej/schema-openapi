@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest test",
     "build": "tsc -p tsconfig.build.json",
-    "format": "prettier -w src test"
+    "format": "prettier -w src test",
+    "check-format": "prettier --check src test"
   },
   "keywords": [],
   "author": "",

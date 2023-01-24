@@ -6,7 +6,11 @@ import type { JSONSchema } from '@fp-ts/schema/annotation/AST';
 import { JSONSchemaId } from '@fp-ts/schema/annotation/AST';
 import * as AST from '@fp-ts/schema/AST';
 import type { Schema } from '@fp-ts/schema/Schema';
-import { OpenAPISchemaArrayType, OpenAPISchemaObjectType, OpenAPISchemaType } from './types';
+import {
+  OpenAPISchemaArrayType,
+  OpenAPISchemaObjectType,
+  OpenAPISchemaType,
+} from './types';
 
 const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
