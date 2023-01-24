@@ -77,6 +77,7 @@ export type OpenAPISpecOperation<S = AnySchema> = {
   requestBody?: OpenAPISpecRequestBody<S>;
   responses?: OpenAPISpecResponses<S>;
   description?: string;
+  summary?: string;
 };
 
 // Open API schema

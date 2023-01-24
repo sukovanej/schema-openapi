@@ -192,6 +192,10 @@ export const setDescription =
     description,
   });
 
+export const setSummary =
+  (summary: string) =>
+  <A extends { summary?: string }>(spec: A): A => ({ ...spec, summary });
+
 // internals
 
 const modifyContentJsonSchema = (

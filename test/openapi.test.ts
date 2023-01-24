@@ -176,4 +176,29 @@ describe('simple', () => {
     expect(spec2.info.license?.name).toEqual('MIT');
     expect(spec2.info.license?.url).toEqual('http://patrik.com');
   });
+
+  it('set description', () => {
+    const schema = S.string;
+
+    const spec = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addPath(
+        '/pet',
+        flow(
+          OA.addOperation(
+            'post',
+            flow(
+              OA.setJsonRequestBody(schema),
+              OA.setJsonResponse('200', schema),
+              OA.setSummary('My summary')
+            )
+          ),
+          OA.setSummary('Pet stuff')
+        )
+      )
+    );
+
+    expect(spec.paths['/pet'].post?.summary).toEqual('My summary');
+    expect(spec.paths['/pet'].summary).toEqual('Pet stuff');
+  });
 });
