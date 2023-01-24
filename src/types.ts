@@ -85,6 +85,7 @@ export type OpenApiSpecContent<S = AnySchema> = {
 
 export type OpenApiSpecResponse<S = AnySchema> = {
   content: OpenApiSpecContent<S>;
+  description?: string;
 };
 
 export type OpenApiSpecMediaType<S = AnySchema> = {
@@ -95,6 +96,8 @@ export type OpenApiSpecMediaType<S = AnySchema> = {
 
 export type OpenAPISpecRequestBody<S = AnySchema> = {
   content: OpenApiSpecContent<S>;
+  description?: string;
+  required?: boolean;
 };
 
 export type OpenAPISpecOperation<S = AnySchema> = {

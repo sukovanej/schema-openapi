@@ -214,7 +214,7 @@ export const deprecated: I.Setter<{ deprecated?: boolean }> = (parameter) => ({
   deprecated: true,
 });
 
-export const required: I.Setter<OpenAPISpecParameter> = (parameter) => ({
+export const required: I.Setter<{ required?: boolean }> = (parameter) => ({
   ...parameter,
   required: true,
 });
@@ -222,38 +222,36 @@ export const required: I.Setter<OpenAPISpecParameter> = (parameter) => ({
 export const jsonRequest =
   (
     schema: AnySchema,
-    description?: string
+    ...setters: I.Setter<OpenAPISpecRequestBody<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
   (spec) => ({
     ...spec,
-    requestBody: {
-      ...spec.requestBody,
-      content: modifyContentJsonSchema(
-        spec.requestBody?.content,
-        schema,
-        description
-      ),
-    },
+    requestBody: I.runSetters(
+      {
+        ...spec.requestBody,
+        content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+      },
+      setters
+    ),
   });
 
 export const jsonResponse =
   (
     statusCode: OpenAPISpecStatusCode,
     schema: AnySchema,
-    description?: string
+    ...setters: I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
   (spec) => ({
     ...spec,
     responses: {
       ...spec.responses,
-      [statusCode]: {
-        ...(spec.responses && spec.responses[statusCode]),
-        content: modifyContentJsonSchema(
-          spec.requestBody?.content,
-          schema,
-          description
-        ),
-      },
+      [statusCode]: I.runSetters(
+        {
+          ...spec.responses?.[statusCode],
+          content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+        },
+        setters
+      ),
     },
   });
 
@@ -269,14 +267,12 @@ export const summary =
 
 const modifyContentJsonSchema = (
   content: OpenApiSpecContent<OpenAPISchemaType> | undefined,
-  schema: AnySchema,
-  description: string | undefined
+  schema: AnySchema
 ): OpenApiSpecContent<OpenAPISchemaType> => ({
   'application/json': {
     ...(content && content['application/json']),
     schema: {
       ...openAPISchemaFor(schema),
-      ...(description && { description }),
     },
   },
 });

@@ -204,20 +204,19 @@ describe('simple', () => {
         '/pet',
         OA.operation(
           'post',
-          OA.jsonRequest(schema, 'request description'),
-          OA.jsonResponse('200', schema, 'response description')
+          OA.jsonRequest(schema, OA.description('request description')),
+          OA.jsonResponse('200', schema, OA.description('response description'))
         )
       )
     );
 
-    expect(
-      spec.paths['/pet'].post?.responses?.['200']?.content['application/json']
-        ?.schema.description
-    ).toEqual('response description');
-    expect(
-      spec.paths['/pet'].post?.requestBody?.content['application/json']?.schema
-        ?.description
-    ).toEqual('request description');
+    expect(spec.paths['/pet'].post?.responses?.['200']?.description).toEqual(
+      'response description'
+    );
+
+    expect(spec.paths['/pet'].post?.requestBody?.description).toEqual(
+      'request description'
+    );
   });
 
   it('servers', () => {
@@ -331,5 +330,33 @@ describe('simple', () => {
         required: true,
       },
     ]);
+  });
+
+  it('request body', () => {
+    const schema = S.string;
+
+    const spec = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.path(
+        '/pet/{id}',
+        OA.operation(
+          'post',
+          OA.jsonRequest(schema, OA.description('schema'), OA.required),
+          OA.jsonResponse('200', schema),
+          OA.parameter('id', 'query', OA.required, OA.description('id'))
+        ),
+        OA.summary('Pet stuff')
+      )
+    );
+
+    expect(spec.paths['/pet/{id}'].post?.requestBody).toEqual({
+      content: {
+        'application/json': {
+          schema: { type: 'string' },
+        },
+      },
+      required: true,
+      description: 'schema',
+    });
   });
 });
