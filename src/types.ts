@@ -62,9 +62,10 @@ export type OpenAPISpecPathItem<S = AnySchema> = {
   parameters?: OpenAPISpecParameter[];
 };
 
-export type OpenAPISpecParameter = {
+export type OpenAPISpecParameter<S = AnySchema> = {
   name: string;
   in: 'query' | 'header' | 'path' | 'cookie';
+  schema: S;
   description?: string;
   required?: boolean;
   deprecated?: boolean;
@@ -85,7 +86,7 @@ export type OpenApiSpecContent<S = AnySchema> = {
 
 export type OpenApiSpecResponse<S = AnySchema> = {
   content: OpenApiSpecContent<S>;
-  description?: string;
+  description: string;
 };
 
 export type OpenApiSpecMediaType<S = AnySchema> = {
@@ -104,7 +105,7 @@ export type OpenAPISpecOperation<S = AnySchema> = {
   requestBody?: OpenAPISpecRequestBody<S>;
   responses?: OpenAPISpecResponses<S>;
   description?: string;
-  parameters?: OpenAPISpecParameter[];
+  parameters?: OpenAPISpecParameter<S>[];
   summary?: string;
 };
 

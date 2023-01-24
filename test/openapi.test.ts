@@ -1,14 +1,22 @@
 import { pipe } from '@fp-ts/data/Function';
 import * as S from '@fp-ts/schema/Schema';
 import * as OA from '../src/openapi';
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 describe('simple', () => {
-  it('simple post', () => {
+  it('simple post', async () => {
     const schema = S.string;
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
-      OA.path('/pet', OA.operation('post', OA.jsonRequest(schema)))
+      OA.path(
+        '/pet',
+        OA.operation(
+          'post',
+          OA.jsonRequest(schema),
+          OA.jsonResponse('200', schema, 'test')
+        )
+      )
     );
 
     expect(spec).toStrictEqual({
@@ -29,52 +37,27 @@ describe('simple', () => {
                 },
               },
             },
-          },
-        },
-      },
-    });
-  });
-
-  it('simple post with response using pipeable API', () => {
-    const schema = S.string;
-
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
-      OA.path(
-        '/pet',
-        OA.operation(
-          'post',
-          OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema)
-        )
-      )
-    );
-
-    expect(spec.paths['/pet'].post).toStrictEqual({
-      requestBody: {
-        content: {
-          'application/json': {
-            schema: {
-              type: 'string',
-            },
-          },
-        },
-      },
-      responses: {
-        '200': {
-          content: {
-            'application/json': {
-              schema: {
-                type: 'string',
+            responses: {
+              '200': {
+                description: 'test',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'string',
+                    },
+                  },
+                },
               },
             },
           },
         },
       },
     });
+
+    await SwaggerParser.validate(spec);
   });
 
-  it('set description', () => {
+  it('set description', async () => {
     const schema = S.string;
 
     const spec = pipe(
@@ -85,7 +68,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema),
+          OA.jsonResponse('200', schema, 'description'),
           OA.description('Store a pet')
         ),
         OA.description('Pet endpoint')
@@ -95,12 +78,15 @@ describe('simple', () => {
     expect(spec.info.description).toEqual('My API');
     expect(spec.paths['/pet'].post?.description).toEqual('Store a pet');
     expect(spec.paths['/pet'].description).toEqual('Pet endpoint');
+
+    await SwaggerParser.validate(spec);
   });
 
-  it('set license', () => {
+  it('set license', async () => {
     const spec1 = pipe(OA.openAPI('test', '0.1'), OA.license('MIT'));
 
     expect(spec1.info.license?.name).toEqual('MIT');
+    await SwaggerParser.validate(spec1);
 
     const spec2 = pipe(
       OA.openAPI('test', '0.1'),
@@ -109,9 +95,11 @@ describe('simple', () => {
 
     expect(spec2.info.license?.name).toEqual('MIT');
     expect(spec2.info.license?.url).toEqual('http://patrik.com');
+
+    await SwaggerParser.validate(spec2);
   });
 
-  it('set description', () => {
+  it('set description', async () => {
     const schema = S.string;
 
     const spec = pipe(
@@ -121,7 +109,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema),
+          OA.jsonResponse('200', schema, 'description'),
           OA.summary('My summary')
         ),
         OA.summary('Pet stuff')
@@ -130,9 +118,11 @@ describe('simple', () => {
 
     expect(spec.paths['/pet'].post?.summary).toEqual('My summary');
     expect(spec.paths['/pet'].summary).toEqual('Pet stuff');
+
+    await SwaggerParser.validate(spec);
   });
 
-  it('schema description', () => {
+  it('schema description', async () => {
     const schema = S.string;
 
     const spec = pipe(
@@ -142,7 +132,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema, OA.description('request description')),
-          OA.jsonResponse('200', schema, OA.description('response description'))
+          OA.jsonResponse('200', schema, 'response description')
         )
       )
     );
@@ -154,15 +144,18 @@ describe('simple', () => {
     expect(spec.paths['/pet'].post?.requestBody?.description).toEqual(
       'request description'
     );
+
+    await SwaggerParser.validate(spec);
   });
 
-  it('servers', () => {
+  it('servers', async () => {
     const spec1 = pipe(
       OA.openAPI('test', '0.1'),
       OA.server('http://server.com')
     );
 
     expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
+    await SwaggerParser.validate(spec1);
 
     const spec2 = pipe(
       OA.openAPI('test', '0.1'),
@@ -174,6 +167,7 @@ describe('simple', () => {
       { url: 'http://server-prod.com' },
       { url: 'http://server-sandbox.com' },
     ]);
+    await SwaggerParser.validate(spec2);
 
     const spec3 = pipe(
       OA.openAPI('test', '0.1'),
@@ -183,6 +177,7 @@ describe('simple', () => {
     expect(spec3.servers).toStrictEqual([
       { url: 'http://server.com', description: 'production' },
     ]);
+    await SwaggerParser.validate(spec3);
 
     const spec4 = pipe(
       OA.openAPI('test', '0.1'),
@@ -204,9 +199,10 @@ describe('simple', () => {
         },
       },
     ]);
+    await SwaggerParser.validate(spec4);
   });
 
-  it('path parameters', () => {
+  it('path parameters', async () => {
     const schema = S.string;
 
     const spec = pipe(
@@ -216,12 +212,13 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema)
+          OA.jsonResponse('200', schema, 'description')
         ),
         OA.summary('Pet stuff'),
         OA.parameter(
           'id',
           'query',
+          S.string,
           OA.required,
           OA.deprecated,
           OA.allowEmptyValue,
@@ -234,15 +231,19 @@ describe('simple', () => {
       {
         name: 'id',
         in: 'query',
+        schema: {
+          type: 'string',
+        },
         description: 'id',
         required: true,
         deprecated: true,
         allowEmptyValue: true,
       },
     ]);
+    await SwaggerParser.validate(spec);
   });
 
-  it('operation parameters', () => {
+  it('operation parameters', async () => {
     const schema = S.string;
 
     const spec = pipe(
@@ -252,8 +253,14 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema),
-          OA.parameter('id', 'query', OA.required, OA.description('id'))
+          OA.jsonResponse('200', schema, 'description'),
+          OA.parameter(
+            'id',
+            'query',
+            S.string,
+            OA.required,
+            OA.description('id')
+          )
         ),
         OA.summary('Pet stuff')
       )
@@ -263,13 +270,17 @@ describe('simple', () => {
       {
         name: 'id',
         in: 'query',
+        schema: {
+          type: 'string',
+        },
         description: 'id',
         required: true,
       },
     ]);
+    await SwaggerParser.validate(spec);
   });
 
-  it('request body', () => {
+  it('request body', async () => {
     const schema = S.string;
 
     const spec = pipe(
@@ -279,10 +290,8 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse('200', schema),
-          OA.parameter('id', 'query', OA.required, OA.description('id'))
-        ),
-        OA.summary('Pet stuff')
+          OA.jsonResponse('200', schema, 'description')
+        )
       )
     );
 
@@ -295,5 +304,6 @@ describe('simple', () => {
       required: true,
       description: 'schema',
     });
+    await SwaggerParser.validate(spec);
   });
 });

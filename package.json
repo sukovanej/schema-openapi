@@ -17,6 +17,7 @@
     "@fp-ts/schema": "^0.0.8"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "@jest/globals": "^29.3.1",
     "@types/jest": "^29.2.6",
     "@types/node": "^18.11.18",

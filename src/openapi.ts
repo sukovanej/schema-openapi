@@ -108,13 +108,17 @@ export const parameter =
   (
     name: string,
     inValue: OpenAPISpecParameter['in'],
-    ...setters: I.Setter<OpenAPISpecParameter>[]
-  ) =>
-  <A extends { parameters?: OpenAPISpecParameter[] }>(spec: A): A => ({
+    schema: AnySchema,
+    ...setters: I.Setter<OpenAPISpecParameter<OpenAPISchemaType>>[]
+  ): I.Setter<{ parameters?: OpenAPISpecParameter<OpenAPISchemaType>[] }> =>
+  (spec) => ({
     ...spec,
     parameters: [
       ...(spec.parameters ?? []),
-      I.runSetters({ name, in: inValue }, setters),
+      I.runSetters(
+        { name, in: inValue, schema: openAPISchemaFor(schema) },
+        setters
+      ),
     ],
   });
 
@@ -153,6 +157,7 @@ export const jsonResponse =
   (
     statusCode: OpenAPISpecStatusCode,
     schema: AnySchema,
+    description: string,
     ...setters: I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
   (spec) => ({
@@ -163,6 +168,7 @@ export const jsonResponse =
         {
           ...spec.responses?.[statusCode],
           content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+          description,
         },
         setters
       ),
