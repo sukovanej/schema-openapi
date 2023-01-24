@@ -5,6 +5,7 @@ export type AnySchema = S.Schema<any>;
 export type OpenAPISpec<S = AnySchema> = {
   openapi: '3.0.3';
   info: OpenAPISpecInfo;
+  servers?: OpenAPISpecServer[];
   paths: OpenAPISpecPaths<S>;
 };
 
@@ -18,6 +19,18 @@ export type OpenAPISpecInfo = {
 export type OpenAPISpecLicense = {
   name: string;
   url?: string;
+};
+
+export type OpenAPISpecServer = {
+  url: string;
+  description?: string;
+  variables?: Record<string, OpenAPISpecServerVariable>;
+};
+
+export type OpenAPISpecServerVariable = {
+  default: string;
+  enum?: string[];
+  description?: string;
 };
 
 export type OpenAPISpecPaths<S = AnySchema> = Record<

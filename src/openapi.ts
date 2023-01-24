@@ -1,3 +1,4 @@
+import { identity } from '@fp-ts/data/Function';
 import { openAPISchemaFor } from './compiler';
 import {
   AnySchema,
@@ -14,6 +15,8 @@ import {
   OpenAPISpecRequestBody,
   OpenApiSpecResponse,
   OpenAPISpecResponses,
+  OpenAPISpecServer,
+  OpenAPISpecServerVariable,
   OpenAPISpecStatusCode,
 } from './types';
 
@@ -126,6 +129,39 @@ export const license =
         name,
       },
     },
+  });
+
+export const addServer =
+  (
+    url: string,
+    setServer: (server: OpenAPISpecServer) => OpenAPISpecServer = identity
+  ) =>
+  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+    ...spec,
+    servers: [...(spec.servers ?? []), setServer({ url })],
+  });
+
+export const addVariable =
+  (
+    name: string,
+    defaultValue: string,
+    setVariable: (
+      server: OpenAPISpecServerVariable
+    ) => OpenAPISpecServerVariable = identity
+  ) =>
+  (server: OpenAPISpecServer): OpenAPISpecServer => ({
+    ...server,
+    variables: {
+      ...server.variables,
+      [name]: setVariable({ default: defaultValue }),
+    },
+  });
+
+export const setEnum =
+  (...values: string[]) =>
+  (variable: OpenAPISpecServerVariable): OpenAPISpecServerVariable => ({
+    ...variable,
+    enum: [...(variable.enum ?? []), ...values],
   });
 
 export const addPath =

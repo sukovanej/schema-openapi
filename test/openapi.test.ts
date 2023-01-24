@@ -230,4 +230,56 @@ describe('simple', () => {
         ?.description
     ).toEqual('request description');
   });
+
+  it('servers', () => {
+    const spec1 = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addServer('http://server.com')
+    );
+
+    expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
+
+    const spec2 = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addServer('http://server-prod.com'),
+      OA.addServer('http://server-sandbox.com')
+    );
+
+    expect(spec2.servers).toStrictEqual([
+      { url: 'http://server-prod.com' },
+      { url: 'http://server-sandbox.com' },
+    ]);
+
+    const spec3 = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addServer('http://server.com', OA.setDescription('production'))
+    );
+
+    expect(spec3.servers).toStrictEqual([
+      { url: 'http://server.com', description: 'production' },
+    ]);
+
+    const spec4 = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addServer(
+        'http://server.com',
+        flow(
+          OA.setDescription('production'),
+          OA.addVariable('username', 'demo', OA.setDescription('username')),
+          OA.addVariable('port', '8443', OA.setEnum('8443', '443'))
+        )
+      )
+    );
+
+    expect(spec4.servers).toStrictEqual([
+      {
+        url: 'http://server.com',
+        description: 'production',
+        variables: {
+          username: { default: 'demo', description: 'username' },
+          port: { default: '8443', enum: ['8443', '443'] },
+        },
+      },
+    ]);
+  });
 });
