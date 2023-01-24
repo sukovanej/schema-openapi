@@ -158,19 +158,27 @@ export const addOperation =
   });
 
 export const setJsonRequestBody =
-  (schema: AnySchema) =>
+  (schema: AnySchema, description?: string) =>
   (
     spec: OpenAPISpecOperation<OpenAPISchemaType>
   ): OpenAPISpecOperation<OpenAPISchemaType> => ({
     ...spec,
     requestBody: {
       ...spec.requestBody,
-      content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+      content: modifyContentJsonSchema(
+        spec.requestBody?.content,
+        schema,
+        description
+      ),
     },
   });
 
 export const setJsonResponse =
-  (statusCode: OpenAPISpecStatusCode, schema: AnySchema) =>
+  (
+    statusCode: OpenAPISpecStatusCode,
+    schema: AnySchema,
+    description?: string
+  ) =>
   (
     spec: OpenAPISpecOperation<OpenAPISchemaType>
   ): OpenAPISpecOperation<OpenAPISchemaType> => ({
@@ -179,7 +187,11 @@ export const setJsonResponse =
       ...spec.responses,
       [statusCode]: {
         ...(spec.responses && spec.responses[statusCode]),
-        content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+        content: modifyContentJsonSchema(
+          spec.requestBody?.content,
+          schema,
+          description
+        ),
       },
     },
   });
@@ -199,10 +211,14 @@ export const setSummary =
 
 const modifyContentJsonSchema = (
   content: OpenApiSpecContent<OpenAPISchemaType> | undefined,
-  schema: AnySchema
+  schema: AnySchema,
+  description: string | undefined
 ): OpenApiSpecContent<OpenAPISchemaType> => ({
   'application/json': {
     ...(content && content['application/json']),
-    schema: openAPISchemaFor(schema),
+    schema: {
+      ...openAPISchemaFor(schema),
+      ...(description && { description }),
+    },
   },
 });

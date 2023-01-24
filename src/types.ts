@@ -67,6 +67,7 @@ export type OpenApiSpecResponse<S = AnySchema> = {
 export type OpenApiSpecMediaType<S = AnySchema> = {
   schema: S;
   example?: object;
+  description?: string;
 };
 
 export type OpenAPISpecRequestBody<S = AnySchema> = {
@@ -146,7 +147,9 @@ export type OpenAPISchemaObjectType = {
 
 type OpenAPISchemaAnyType = {};
 
-export type OpenAPISchemaType =
+export type OpenAPISchemaType = {
+  description?: string;
+} & (
   | OpenAPISchemaNullType
   | OpenAPISchemaStringType
   | OpenAPISchemaNumberType
@@ -157,4 +160,5 @@ export type OpenAPISchemaType =
   | OpenAPISchemaOneOfType
   | OpenAPISchemaAllOfType
   | OpenAPISchemaObjectType
-  | OpenAPISchemaAnyType;
+  | OpenAPISchemaAnyType
+);

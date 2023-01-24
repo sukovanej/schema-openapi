@@ -201,4 +201,33 @@ describe('simple', () => {
     expect(spec.paths['/pet'].post?.summary).toEqual('My summary');
     expect(spec.paths['/pet'].summary).toEqual('Pet stuff');
   });
+
+  it('schema description', () => {
+    const schema = S.string;
+
+    const spec = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addPath(
+        '/pet',
+        flow(
+          OA.addOperation(
+            'post',
+            flow(
+              OA.setJsonRequestBody(schema, 'request description'),
+              OA.setJsonResponse('200', schema, 'response description')
+            )
+          )
+        )
+      )
+    );
+
+    expect(
+      spec.paths['/pet'].post?.responses?.['200']?.content['application/json']
+        ?.schema.description
+    ).toEqual('response description');
+    expect(
+      spec.paths['/pet'].post?.requestBody?.content['application/json']?.schema
+        ?.description
+    ).toEqual('request description');
+  });
 });
