@@ -213,7 +213,7 @@ export const deprecated = <A extends { deprecated?: boolean }>(
   parameter: A
 ): A => ({
   ...parameter,
-  deprecated,
+  deprecated: true,
 });
 
 export const required: I.Setter<OpenAPISpecParameter> = (parameter) => ({

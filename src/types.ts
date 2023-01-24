@@ -101,6 +101,7 @@ export type OpenAPISpecOperation<S = AnySchema> = {
   requestBody?: OpenAPISpecRequestBody<S>;
   responses?: OpenAPISpecResponses<S>;
   description?: string;
+  parameters?: OpenAPISpecParameter[];
   summary?: string;
 };
 

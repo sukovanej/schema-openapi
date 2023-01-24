@@ -270,13 +270,13 @@ describe('simple', () => {
     ]);
   });
 
-  it('parameters', () => {
+  it('path parameters', () => {
     const schema = S.string;
 
     const spec = pipe(
       OA.openAPI('test', '0.1'),
       OA.path(
-        '/pet',
+        '/pet/{id}',
         OA.operation(
           'post',
           OA.jsonRequest(schema),
@@ -294,7 +294,7 @@ describe('simple', () => {
       )
     );
 
-    expect(spec.paths['/pet'].parameters).toEqual([
+    expect(spec.paths['/pet/{id}'].parameters).toEqual([
       {
         name: 'id',
         in: 'query',
@@ -302,6 +302,33 @@ describe('simple', () => {
         required: true,
         deprecated: true,
         allowEmptyValue: true,
+      },
+    ]);
+  });
+
+  it('operation parameters', () => {
+    const schema = S.string;
+
+    const spec = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.path(
+        '/pet/{id}',
+        OA.operation(
+          'post',
+          OA.jsonRequest(schema),
+          OA.jsonResponse('200', schema),
+          OA.parameter('id', 'query', OA.required, OA.description('id'))
+        ),
+        OA.summary('Pet stuff')
+      )
+    );
+
+    expect(spec.paths['/pet/{id}'].post?.parameters).toEqual([
+      {
+        name: 'id',
+        in: 'query',
+        description: 'id',
+        required: true,
       },
     ]);
   });
