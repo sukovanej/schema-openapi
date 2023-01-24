@@ -17,15 +17,35 @@ import {
 import * as I from './internal';
 import { openAPISchemaFor } from './compiler';
 
+/**
+ * Initialize OpenAPI schema.
+ *
+ * *Available setters*: `info`
+ *
+ * @param {string} title - title in the info section
+ * @param {string} version - version in the info section
+ *
+ *
+ */
 export const openAPI = (
   title: string,
-  version: string
-): OpenAPISpec<OpenAPISchemaType> => ({
-  openapi: '3.0.3',
-  info: { title, version },
-  paths: {},
-});
+  version: string,
+  ...setters: I.Setter<OpenAPISpec<OpenAPISchemaType>>[]
+): OpenAPISpec<OpenAPISchemaType> =>
+  I.runSetters(
+    {
+      openapi: '3.0.3',
+      info: { title, version },
+      paths: {},
+    },
+    setters
+  );
 
+/**
+ * Set `info` section.
+ *
+ * *Available setters*: `description`, `license`
+ */
 export const info =
   (
     ...setters: I.Setter<OpenAPISpecInfo>[]
@@ -35,6 +55,11 @@ export const info =
     info: I.runSetters(spec.info, setters),
   });
 
+/**
+ * Set `license` in the `info` section.
+ *
+ * *Setter of*: `license`
+ */
 export const license =
   (name: string, url?: string): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
   (spec) => ({
@@ -48,6 +73,12 @@ export const license =
     },
   });
 
+/**
+ * Set the `server` section.
+ *
+ * *Setter of*: `openAPI`
+ * *Available setters*: `description`, `variable`
+ */
 export const server =
   (
     url: string,
@@ -58,6 +89,15 @@ export const server =
     servers: [...(spec.servers ?? []), I.runSetters({ url }, setters)],
   });
 
+/**
+ * Add variable to a server section.
+ *
+ * *Setter of*: `server`
+ * *Available setters*: `description`, `enum`
+ *
+ * @param {string} name - name of the variable
+ * @param {string} defaultValue - default value of the variable
+ */
 export const variable =
   (
     name: string,
@@ -72,6 +112,13 @@ export const variable =
     },
   });
 
+/**
+ * Add possible values for a server variable.
+ *
+ * *Setter of*: `variable`
+ *
+ * @param {...string} values -
+ */
 const _enum =
   (...values: string[]): I.Setter<OpenAPISpecServerVariable> =>
   (variable) => ({
@@ -81,6 +128,14 @@ const _enum =
 
 export { _enum as enum };
 
+/**
+ * Add a path to the specification.
+ *
+ * *Available setters*: `operation`
+ * *Setter of*: `openAPI`
+ *
+ * @param {string} path - endpoint path
+ */
 export const path =
   (
     path: string,
@@ -91,6 +146,15 @@ export const path =
     paths: { ...spec.paths, [path]: I.runSetters({}, setters) },
   });
 
+/**
+ * Set operation. Method name can be one of `get`, `put`, `post`, `delete`,
+ * `options`, `head`, `patch`, `trace`.
+ *
+ * *Available setters*: `parameter`, `jsonResponse`, `jsonRequest`
+ * *Setter of*: `path`
+ *
+ * @param {OpenAPISpecMethodName} methodName - "get" | "put" ...
+ */
 export const operation =
   (
     methodName: OpenAPISpecMethodName,
@@ -104,6 +168,16 @@ export const operation =
     },
   });
 
+/**
+ * Operation parameter. One of `query`, `header`, `path`, `cookie`.
+ *
+ * *Available setters*: `parameter`, `jsonResponse`, `jsonRequest`
+ * *Setter of*: `path`
+ *
+ * @param {string} name - name of the parameter
+ * @param {'query' | 'header' | 'path' | 'cookie'} inValue - in
+ * @param {Schema} schema - Schema for the parameter
+ */
 export const parameter =
   (
     name: string,
@@ -122,24 +196,47 @@ export const parameter =
     ],
   });
 
+/**
+ * Allow an empty value for the parameter.
+ *
+ * *Setter of*: `parameter`
+ */
 export const allowEmptyValue: I.Setter<OpenAPISpecParameter> = (parameter) => ({
   ...parameter,
   allowEmptyValue: true,
 });
 
+/**
+ * Make the parameter required.
+ *
+ * *Setter of*: `parameter`, `jsonRequest`
+ */
+export const required: I.Setter<OpenAPISpecParameter> = (parameter) => ({
+  ...parameter,
+  required: true,
+});
+
+/**
+ * Allow an empty value for the parameter.
+ *
+ * *Setter of*: `parameter`
+ */
 export const deprecated: I.Setter<{ deprecated?: boolean }> = (parameter) => ({
   ...parameter,
   deprecated: true,
 });
 
-export const required: I.Setter<{ required?: boolean }> = (parameter) => ({
-  ...parameter,
-  required: true,
-});
-
+/**
+ * Set JSON request.
+ *
+ * *Avaialble setter*: `description`, `required`
+ * *Setter of*: `operation`
+ *
+ * @param {Schema} content - schema for the request body
+ */
 export const jsonRequest =
   (
-    schema: AnySchema,
+    content: AnySchema,
     ...setters: I.Setter<OpenAPISpecRequestBody<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
   (spec) => ({
@@ -147,16 +244,26 @@ export const jsonRequest =
     requestBody: I.runSetters(
       {
         ...spec.requestBody,
-        content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+        content: modifyContentJsonSchema(spec.requestBody?.content, content),
       },
       setters
     ),
   });
 
+/**
+ * Set JSON response for a HTTP status code.
+ *
+ * *Avaialble setter*: `description`
+ * *Setter of*: `operation`
+ *
+ * @param {OpenAPISpecStatusCode} statusCode - HTTP status code
+ * @param {Schema} contentSchema - schema for the request body
+ * @param {string} description - desciprition of the response
+ */
 export const jsonResponse =
   (
     statusCode: OpenAPISpecStatusCode,
-    schema: AnySchema,
+    contentSchema: AnySchema,
     description: string,
     ...setters: I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
@@ -167,7 +274,10 @@ export const jsonResponse =
       [statusCode]: I.runSetters(
         {
           ...spec.responses?.[statusCode],
-          content: modifyContentJsonSchema(spec.requestBody?.content, schema),
+          content: modifyContentJsonSchema(
+            spec.requestBody?.content,
+            contentSchema
+          ),
           description,
         },
         setters
@@ -175,10 +285,20 @@ export const jsonResponse =
     },
   });
 
+/**
+ * Set description.
+ *
+ * @param {string} description - text of the description
+ */
 export const description =
   (description: string): I.Setter<{ description?: string }> =>
   (spec) => ({ ...spec, description });
 
+/**
+ * Set description.
+ *
+ * @param {string} summary - text of the summary
+ */
 export const summary =
   (summary: string): I.Setter<{ summary?: string }> =>
   (spec) => ({ ...spec, summary });

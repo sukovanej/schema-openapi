@@ -1,4 +1,3 @@
-import { pipe } from '@fp-ts/data/Function';
 import * as S from '@fp-ts/schema/Schema';
 import * as OA from '../src/openapi';
 import SwaggerParser from '@apidevtools/swagger-parser';
@@ -7,8 +6,9 @@ describe('simple', () => {
   it('simple post', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.path(
         '/pet',
         OA.operation(
@@ -60,8 +60,9 @@ describe('simple', () => {
   it('set description', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.info(OA.description('My API')),
       OA.path(
         '/pet',
@@ -83,13 +84,14 @@ describe('simple', () => {
   });
 
   it('set license', async () => {
-    const spec1 = pipe(OA.openAPI('test', '0.1'), OA.license('MIT'));
+    const spec1 = OA.openAPI('test', '0.1', OA.license('MIT'));
 
     expect(spec1.info.license?.name).toEqual('MIT');
     await SwaggerParser.validate(spec1);
 
-    const spec2 = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec2 = OA.openAPI(
+      'test',
+      '0.1',
       OA.license('MIT', 'http://patrik.com')
     );
 
@@ -102,8 +104,9 @@ describe('simple', () => {
   it('set description', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.path(
         '/pet',
         OA.operation(
@@ -125,8 +128,9 @@ describe('simple', () => {
   it('schema description', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.path(
         '/pet',
         OA.operation(
@@ -149,16 +153,14 @@ describe('simple', () => {
   });
 
   it('servers', async () => {
-    const spec1 = pipe(
-      OA.openAPI('test', '0.1'),
-      OA.server('http://server.com')
-    );
+    const spec1 = OA.openAPI('test', '0.1', OA.server('http://server.com'));
 
     expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
     await SwaggerParser.validate(spec1);
 
-    const spec2 = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec2 = OA.openAPI(
+      'test',
+      '0.1',
       OA.server('http://server-prod.com'),
       OA.server('http://server-sandbox.com')
     );
@@ -169,8 +171,9 @@ describe('simple', () => {
     ]);
     await SwaggerParser.validate(spec2);
 
-    const spec3 = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec3 = OA.openAPI(
+      'test',
+      '0.1',
       OA.server('http://server.com', OA.description('production'))
     );
 
@@ -179,8 +182,9 @@ describe('simple', () => {
     ]);
     await SwaggerParser.validate(spec3);
 
-    const spec4 = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec4 = OA.openAPI(
+      'test',
+      '0.1',
       OA.server(
         'http://server.com',
         OA.description('production'),
@@ -205,8 +209,9 @@ describe('simple', () => {
   it('path parameters', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.path(
         '/pet/{id}',
         OA.operation(
@@ -246,8 +251,9 @@ describe('simple', () => {
   it('operation parameters', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.path(
         '/pet/{id}',
         OA.operation(
@@ -283,8 +289,9 @@ describe('simple', () => {
   it('request body', async () => {
     const schema = S.string;
 
-    const spec = pipe(
-      OA.openAPI('test', '0.1'),
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
       OA.path(
         '/pet/{id}',
         OA.operation(

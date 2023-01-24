@@ -101,6 +101,7 @@ export type OpenAPISpecOperation<S = AnySchema> = {
   description?: string;
   parameters?: OpenAPISpecParameter<S>[];
   summary?: string;
+  deprecated?: boolean;
 };
 
 // Open API schema
