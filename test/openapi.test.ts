@@ -162,4 +162,18 @@ describe('simple', () => {
     expect(spec.paths['/pet'].post?.description).toEqual('Store a pet');
     expect(spec.paths['/pet'].description).toEqual('Pet endpoint');
   });
+
+  it('set license', () => {
+    const spec1 = pipe(OA.openAPI('test', '0.1'), OA.license('MIT'));
+
+    expect(spec1.info.license?.name).toEqual('MIT');
+
+    const spec2 = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.license('MIT', 'http://patrik.com')
+    );
+
+    expect(spec2.info.license?.name).toEqual('MIT');
+    expect(spec2.info.license?.url).toEqual('http://patrik.com');
+  });
 });

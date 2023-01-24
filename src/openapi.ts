@@ -7,6 +7,7 @@ import {
   OpenApiSpecContent,
   OpenApiSpecContentType,
   OpenAPISpecInfo,
+  OpenAPISpecLicense,
   OpenAPISpecMethodName,
   OpenAPISpecOperation,
   OpenAPISpecPathItem,
@@ -113,6 +114,19 @@ export const info =
   (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
     ...spec,
     info: setInfo(spec.info),
+  });
+
+export const license =
+  (name: string, url: string | undefined = undefined) =>
+  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+    ...spec,
+    info: {
+      ...spec.info,
+      license: {
+        url,
+        name,
+      },
+    },
   });
 
 export const addPath =

@@ -12,6 +12,12 @@ export type OpenAPISpecInfo = {
   title: string;
   version: string;
   description?: string;
+  license?: OpenAPISpecLicense;
+};
+
+export type OpenAPISpecLicense = {
+  name: string;
+  url?: string;
 };
 
 export type OpenAPISpecPaths<S = AnySchema> = Record<
