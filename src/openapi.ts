@@ -209,9 +209,7 @@ export const allowEmptyValue: I.Setter<OpenAPISpecParameter> = (parameter) => ({
   allowEmptyValue: true,
 });
 
-export const deprecated = <A extends { deprecated?: boolean }>(
-  parameter: A
-): A => ({
+export const deprecated: I.Setter<{ deprecated?: boolean }> = (parameter) => ({
   ...parameter,
   deprecated: true,
 });
@@ -260,15 +258,12 @@ export const jsonResponse =
   });
 
 export const description =
-  (description: string) =>
-  <A extends { description?: string }>(spec: A): A => ({
-    ...spec,
-    description,
-  });
+  (description: string): I.Setter<{ description?: string }> =>
+  (spec) => ({ ...spec, description });
 
 export const summary =
-  (summary: string) =>
-  <A extends { summary?: string }>(spec: A): A => ({ ...spec, summary });
+  (summary: string): I.Setter<{ summary?: string }> =>
+  (spec) => ({ ...spec, summary });
 
 // internals
 
