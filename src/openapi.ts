@@ -10,6 +10,7 @@ import {
   OpenAPISpecInfo,
   OpenAPISpecMethodName,
   OpenAPISpecOperation,
+  OpenAPISpecParameter,
   OpenAPISpecPathItem,
   OpenAPISpecPaths,
   OpenAPISpecRequestBody,
@@ -191,6 +192,43 @@ export const addOperation =
       ...pathItem[methodName],
       ...setOperation({}),
     },
+  });
+
+export const addParameter =
+  (
+    name: string,
+    inValue: OpenAPISpecParameter['in'],
+    setParameter: (
+      spec: OpenAPISpecParameter
+    ) => OpenAPISpecParameter = identity
+  ) =>
+  <A extends { parameters?: OpenAPISpecParameter[] }>(spec: A): A => ({
+    ...spec,
+    parameters: [
+      ...(spec.parameters ?? []),
+      setParameter({ name, in: inValue }),
+    ],
+  });
+
+export const setAllowEmptyValue =
+  (allowEmptyValue: boolean = true) =>
+  (parameter: OpenAPISpecParameter): OpenAPISpecParameter => ({
+    ...parameter,
+    allowEmptyValue,
+  });
+
+export const setDeprecated =
+  (deprecated: boolean = true) =>
+  <A extends { deprecated?: boolean }>(parameter: A): A => ({
+    ...parameter,
+    deprecated,
+  });
+
+export const setRequired =
+  (required: boolean = true) =>
+  (parameter: OpenAPISpecParameter): OpenAPISpecParameter => ({
+    ...parameter,
+    required,
   });
 
 export const setJsonRequestBody =

@@ -59,6 +59,16 @@ export type OpenAPISpecPathItem<S = AnySchema> = {
 } & {
   summary?: string;
   description?: string;
+  parameters?: OpenAPISpecParameter[];
+};
+
+export type OpenAPISpecParameter = {
+  name: string;
+  in: 'query' | 'header' | 'path' | 'cookie';
+  description?: string;
+  required?: boolean;
+  deprecated?: boolean;
+  allowEmptyValue?: boolean;
 };
 
 export type OpenAPISpecStatusCode = '200' | '201';

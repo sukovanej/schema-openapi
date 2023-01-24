@@ -282,4 +282,46 @@ describe('simple', () => {
       },
     ]);
   });
+
+  it('parameters', () => {
+    const schema = S.string;
+
+    const spec = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.addPath(
+        '/pet',
+        flow(
+          OA.addOperation(
+            'post',
+            flow(
+              OA.setJsonRequestBody(schema),
+              OA.setJsonResponse('200', schema)
+            )
+          ),
+          OA.setSummary('Pet stuff'),
+          OA.addParameter(
+            'id',
+            'query',
+            flow(
+              OA.setRequired(),
+              OA.setDeprecated(),
+              OA.setAllowEmptyValue(),
+              OA.setDescription('id')
+            )
+          )
+        )
+      )
+    );
+
+    expect(spec.paths['/pet'].parameters).toEqual([
+      {
+        name: 'id',
+        in: 'query',
+        description: 'id',
+        required: true,
+        deprecated: true,
+        allowEmptyValue: true,
+      },
+    ]);
+  });
 });
