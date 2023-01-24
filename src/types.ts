@@ -38,21 +38,15 @@ export type OpenAPISpecPaths<S = AnySchema> = Record<
   OpenAPISpecPathItem<S>
 >;
 
-export const methodNames = [
-  'get',
-  'put',
-  'post',
-  'delete',
-  'options',
-  'head',
-  'patch',
-  'trace',
-] as const;
-
-export const isMethodName = (i: unknown): i is OpenAPISpecMethodName =>
-  methodNames.includes(i as OpenAPISpecMethodName);
-
-export type OpenAPISpecMethodName = (typeof methodNames)[number];
+export type OpenAPISpecMethodName =
+  | 'get'
+  | 'put'
+  | 'post'
+  | 'delete'
+  | 'options'
+  | 'head'
+  | 'patch'
+  | 'trace';
 
 export type OpenAPISpecPathItem<S = AnySchema> = {
   [K in OpenAPISpecMethodName]?: OpenAPISpecOperation<S>;
@@ -173,7 +167,7 @@ export type OpenAPISchemaObjectType = {
   nullable?: boolean;
 };
 
-type OpenAPISchemaAnyType = {};
+export type OpenAPISchemaAnyType = {};
 
 export type OpenAPISchemaType = {
   description?: string;

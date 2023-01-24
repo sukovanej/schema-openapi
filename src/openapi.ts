@@ -1,4 +1,3 @@
-import { openAPISchemaFor } from './compiler';
 import {
   AnySchema,
   OpenAPISchemaType,
@@ -16,6 +15,7 @@ import {
   OpenAPISpecStatusCode,
 } from './types';
 import * as I from './internal';
+import { openAPISchemaFor } from './compiler';
 
 export const openAPI = (
   title: string,
