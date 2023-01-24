@@ -11,9 +11,13 @@ export type OpenAPISpec<S = AnySchema> = {
 export type OpenAPISpecInfo = {
   title: string;
   version: string;
+  description?: string;
 };
 
-export type OpenAPISpecPaths<S = AnySchema> = Record<string, OpenAPISpecPathItem<S>>;
+export type OpenAPISpecPaths<S = AnySchema> = Record<
+  string,
+  OpenAPISpecPathItem<S>
+>;
 
 export const methodNames = [
   'get',
@@ -66,6 +70,7 @@ export type OpenAPISpecRequestBody<S = AnySchema> = {
 export type OpenAPISpecOperation<S = AnySchema> = {
   requestBody?: OpenAPISpecRequestBody<S>;
   responses?: OpenAPISpecResponses<S>;
+  description?: string;
 };
 
 // Open API schema

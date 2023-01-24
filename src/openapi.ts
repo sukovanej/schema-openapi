@@ -6,6 +6,7 @@ import {
   OpenAPISpec,
   OpenApiSpecContent,
   OpenApiSpecContentType,
+  OpenAPISpecInfo,
   OpenAPISpecMethodName,
   OpenAPISpecOperation,
   OpenAPISpecPathItem,
@@ -107,6 +108,13 @@ export const openAPI = (
   paths: {},
 });
 
+export const info =
+  (setInfo: (info: OpenAPISpecInfo) => OpenAPISpecInfo) =>
+  (spec: OpenAPISpec<OpenAPISchemaType>): OpenAPISpec<OpenAPISchemaType> => ({
+    ...spec,
+    info: setInfo(spec.info),
+  });
+
 export const addPath =
   (
     path: string,
@@ -161,6 +169,13 @@ export const setJsonResponse =
         content: modifyContentJsonSchema(spec.requestBody?.content, schema),
       },
     },
+  });
+
+export const setDescription =
+  (description: string) =>
+  <A extends { description?: string }>(spec: A): A => ({
+    ...spec,
+    description,
   });
 
 // internals

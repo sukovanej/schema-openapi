@@ -116,9 +116,9 @@ describe('simple', () => {
       requestBody: {
         content: {
           'application/json': {
-              schema: {
-                type: 'string',
-              },
+            schema: {
+              type: 'string',
+            },
           },
         },
       },
@@ -134,5 +134,32 @@ describe('simple', () => {
         },
       },
     });
+  });
+
+  it('set description', () => {
+    const schema = S.string;
+
+    const spec = pipe(
+      OA.openAPI('test', '0.1'),
+      OA.info(OA.setDescription('My API')),
+      OA.addPath(
+        '/pet',
+        flow(
+          OA.addOperation(
+            'post',
+            flow(
+              OA.setJsonRequestBody(schema),
+              OA.setJsonResponse('200', schema),
+              OA.setDescription('Store a pet')
+            )
+          ),
+          OA.setDescription('Pet endpoint')
+        )
+      )
+    );
+
+    expect(spec.info.description).toEqual('My API');
+    expect(spec.paths['/pet'].post?.description).toEqual('Store a pet');
+    expect(spec.paths['/pet'].description).toEqual('Pet endpoint');
   });
 });
