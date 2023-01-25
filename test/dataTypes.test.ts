@@ -1,4 +1,4 @@
-import { pipe } from '@fp-ts/data/Function';
+import { pipe } from '@fp-ts/core/Function';
 import * as S from '@fp-ts/schema/Schema';
 import { parseNumber } from '@fp-ts/schema/data/parser';
 import { openAPISchemaFor } from '../src/compiler';

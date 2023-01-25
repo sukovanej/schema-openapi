@@ -1,7 +1,7 @@
 /** Stolen from https://github.com/fp-ts/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
-import { flow, pipe } from '@fp-ts/data/Function';
-import * as O from '@fp-ts/data/Option';
-import * as RA from '@fp-ts/data/ReadonlyArray';
+import { flow, pipe } from '@fp-ts/core/Function';
+import * as O from '@fp-ts/core/Option';
+import * as RA from '@fp-ts/core/ReadonlyArray';
 import type { JSONSchema } from '@fp-ts/schema/annotation/AST';
 import { JSONSchemaId } from '@fp-ts/schema/annotation/AST';
 import * as AST from '@fp-ts/schema/AST';
