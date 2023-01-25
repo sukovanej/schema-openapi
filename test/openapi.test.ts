@@ -313,4 +313,33 @@ describe('simple', () => {
     });
     await SwaggerParser.validate(spec);
   });
+
+  it('tags', async () => {
+    const schema = S.string;
+
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
+      OA.path(
+        '/pet/{id}',
+        OA.operation(
+          'post',
+          OA.jsonRequest(schema, OA.description('schema'), OA.required),
+          OA.jsonResponse('200', schema, 'description'),
+          OA.tags('tag1', 'tag2')
+        )
+      ),
+      OA.path(
+        '/another-endpoint',
+        OA.operation(
+          'post',
+          OA.jsonRequest(schema, OA.description('schema'), OA.required),
+          OA.jsonResponse('200', schema, 'description'),
+          OA.tags('tag1')
+        )
+      )
+    );
+
+    await SwaggerParser.validate(spec);
+  });
 });

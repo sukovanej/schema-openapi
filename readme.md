@@ -197,6 +197,29 @@ _Available setters_: [required](#required), [description](#description),
 
 _Setter of_: [operation](#operation)
 
+### `tags`
+
+Set tags for an operation.
+
+```typescript
+OA.openAPI(
+  'My API',
+  '2.0.1',
+  OA.path(
+    '/pet/{id}',
+    OA.operation(
+      'get',
+      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
+      OA.parameter('id', 'path', S.number, OA.required),
+      OA.parameter('name', 'query', S.string),
+      OA.tags('Pets')
+    )
+  )
+);
+```
+
+_Setter of_: [operation](#operation)
+
 ### `allowEmptyValue`
 
 Configures the parameter.

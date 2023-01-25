@@ -286,6 +286,23 @@ export const jsonResponse =
   });
 
 /**
+ * Adds operation tags.
+ *
+ * *Setter of*: `operation`
+ *
+ * @param {...string} tags - one of more tag values
+ */
+export const tags =
+  (
+    tag: string,
+    ...tags: string[]
+  ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
+  (spec) => ({
+    ...spec,
+    tags: [...(spec.tags ?? []), tag, ...tags],
+  });
+
+/**
  * Set description.
  *
  * @param {string} description - text of the description
