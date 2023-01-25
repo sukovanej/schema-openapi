@@ -143,7 +143,10 @@ export const path =
   ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
   (spec) => ({
     ...spec,
-    paths: { ...spec.paths, [path]: I.runSetters({}, setters) },
+    paths: {
+      ...spec.paths,
+      [path]: { ...spec.paths[path], ...I.runSetters({}, setters) },
+    },
   });
 
 /**
