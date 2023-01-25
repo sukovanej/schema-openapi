@@ -342,4 +342,48 @@ describe('simple', () => {
 
     await SwaggerParser.validate(spec);
   });
+
+  it('tags', async () => {
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
+      OA.path(
+        '/pet',
+        OA.operation('post', OA.jsonResponse('200', S.string, 'response'))
+      ),
+      OA.path(
+        '/pet',
+        OA.operation('get', OA.jsonResponse('200', S.string, 'response'))
+      )
+    );
+
+    expect(spec.paths['/pet']).toStrictEqual({
+      post: {
+        responses: {
+          '200': {
+            content: {
+              'application/json': {
+                schema: { type: 'string' },
+              },
+            },
+            description: 'response',
+          },
+        },
+      },
+      get: {
+        responses: {
+          '200': {
+            content: {
+              'application/json': {
+                schema: { type: 'string' },
+              },
+            },
+            description: 'response',
+          },
+        },
+      },
+    });
+
+    await SwaggerParser.validate(spec);
+  });
 });
