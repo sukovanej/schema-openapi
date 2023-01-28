@@ -14,7 +14,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema, 'test')
+          OA.jsonResponse(200, schema, 'test')
         )
       )
     );
@@ -38,7 +38,7 @@ describe('simple', () => {
               },
             },
             responses: {
-              '200': {
+              200: {
                 description: 'test',
                 content: {
                   'application/json': {
@@ -69,7 +69,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema, 'description'),
+          OA.jsonResponse(200, schema, 'description'),
           OA.description('Store a pet')
         ),
         OA.description('Pet endpoint')
@@ -112,7 +112,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema, 'description'),
+          OA.jsonResponse(200, schema, 'description'),
           OA.summary('My summary')
         ),
         OA.summary('Pet stuff')
@@ -136,12 +136,12 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema, OA.description('request description')),
-          OA.jsonResponse('200', schema, 'response description')
+          OA.jsonResponse(200, schema, 'response description')
         )
       )
     );
 
-    expect(spec.paths['/pet'].post?.responses?.['200']?.description).toEqual(
+    expect(spec.paths['/pet'].post?.responses?.[200]?.description).toEqual(
       'response description'
     );
 
@@ -217,7 +217,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema, 'description')
+          OA.jsonResponse(200, schema, 'description')
         ),
         OA.summary('Pet stuff'),
         OA.parameter(
@@ -259,7 +259,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema),
-          OA.jsonResponse('200', schema, 'description'),
+          OA.jsonResponse(200, schema, 'description'),
           OA.parameter(
             'id',
             'query',
@@ -297,7 +297,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse('200', schema, 'description')
+          OA.jsonResponse(200, schema, 'description')
         )
       )
     );
@@ -325,7 +325,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse('200', schema, 'description'),
+          OA.jsonResponse(200, schema, 'description'),
           OA.tags('tag1', 'tag2')
         )
       ),
@@ -334,7 +334,7 @@ describe('simple', () => {
         OA.operation(
           'post',
           OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse('200', schema, 'description'),
+          OA.jsonResponse(200, schema, 'description'),
           OA.tags('tag1')
         )
       )
@@ -349,18 +349,18 @@ describe('simple', () => {
       '0.1',
       OA.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse('200', S.string, 'response'))
+        OA.operation('post', OA.jsonResponse(200, S.string, 'response'))
       ),
       OA.path(
         '/pet',
-        OA.operation('get', OA.jsonResponse('200', S.string, 'response'))
+        OA.operation('get', OA.jsonResponse(200, S.string, 'response'))
       )
     );
 
     expect(spec.paths['/pet']).toStrictEqual({
       post: {
         responses: {
-          '200': {
+          200: {
             content: {
               'application/json': {
                 schema: { type: 'string' },
@@ -372,7 +372,7 @@ describe('simple', () => {
       },
       get: {
         responses: {
-          '200': {
+          200: {
             content: {
               'application/json': {
                 schema: { type: 'string' },
