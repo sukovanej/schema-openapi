@@ -1,4 +1,4 @@
-/** Stolen from https://github.com/fp-ts/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
+/** Based on https://github.com/fp-ts/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
 import { flow, pipe } from '@fp-ts/core/Function';
 import * as O from '@fp-ts/core/Option';
 import * as RA from '@fp-ts/core/ReadonlyArray';

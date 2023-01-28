@@ -66,7 +66,7 @@ export type OpenAPISpecParameter<S = AnySchema> = {
   allowEmptyValue?: boolean;
 };
 
-export type OpenAPISpecStatusCode = '200' | '201';
+export type OpenAPISpecStatusCode = 200 | 201;
 
 export type OpenAPISpecResponses<S = AnySchema> = {
   [K in OpenAPISpecStatusCode]?: OpenApiSpecResponse<S>;
