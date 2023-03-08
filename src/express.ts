@@ -1,8 +1,8 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import * as P from '@fp-ts/schema/Parser';
-import * as E from '@fp-ts/core/Either';
-import { formatErrors } from '@fp-ts/schema/formatter/Tree';
+import * as P from '@effect/schema/Parser';
+import * as E from '@effect/data/Either';
+import { formatErrors } from '@effect/schema/formatter/Tree';
 import { OpenAPIApp, Path } from './app';
 
 export const registerExpress = (

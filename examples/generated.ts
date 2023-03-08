@@ -1,6 +1,6 @@
 import * as OA from '../src';
-import * as S from '@fp-ts/schema/Schema';
-import { pipe } from '@fp-ts/core/Function';
+import * as S from '@effect/schema/Schema';
+import { pipe } from '@effect/data/Function';
 import express from 'express';
 
 const milanSchema = S.struct({

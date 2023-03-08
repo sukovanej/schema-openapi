@@ -1,7 +1,7 @@
 # schema-openapi
 
 Declarative pipe-able API for OpenAPI specification construction using
-[@fp-ts/schema](https://github.com/fp-ts/schema).
+[@effect/schema](https://github.com/effect-ts/schema).
 
 # API documentation
 

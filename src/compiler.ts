@@ -1,11 +1,11 @@
-/** Based on https://github.com/fp-ts/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
-import { flow, pipe } from '@fp-ts/core/Function';
-import * as O from '@fp-ts/core/Option';
-import * as RA from '@fp-ts/core/ReadonlyArray';
-import type { JSONSchema } from '@fp-ts/schema/annotation/AST';
-import { JSONSchemaId } from '@fp-ts/schema/annotation/AST';
-import * as AST from '@fp-ts/schema/AST';
-import type { Schema } from '@fp-ts/schema/Schema';
+/** Based on https://github.com/effect/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
+import { flow, pipe } from '@effect/data/Function';
+import * as O from '@effect/data/Option';
+import * as RA from '@effect/data/ReadonlyArray';
+import type { JSONSchema } from '@effect/schema/annotation/AST';
+import { JSONSchemaId } from '@effect/schema/annotation/AST';
+import * as AST from '@effect/schema/AST';
+import type { Schema } from '@effect/schema/Schema';
 import {
   OpenAPISchemaArrayType,
   OpenAPISchemaObjectType,

@@ -1,4 +1,4 @@
-import * as S from '@fp-ts/schema/Schema';
+import * as S from '@effect/schema/Schema';
 import * as OA from '../src/openapi';
 import SwaggerParser from '@apidevtools/swagger-parser';
 

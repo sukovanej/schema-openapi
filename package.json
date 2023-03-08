@@ -14,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fp-ts/core": "^0.2.1",
-    "@fp-ts/schema": "^0.3.2"
+    "@effect/data": "^0.3.3",
+    "@effect/schema": "^0.0.5"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
