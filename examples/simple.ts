@@ -1,5 +1,5 @@
 import * as OA from '../src';
-import * as S from '@fp-ts/schema/Schema';
+import * as S from '@effect/schema/Schema';
 import express from 'express';
 
 import swaggerUi from 'swagger-ui-express';

@@ -1,4 +1,4 @@
-import * as S from '@fp-ts/schema/Schema';
+import * as S from '@effect/schema/Schema';
 import * as OA from './openapi';
 import * as I from './internal';
 import {

@@ -1,5 +1,5 @@
-import { pipe } from '@fp-ts/core/Function';
-import * as S from '@fp-ts/schema/Schema';
+import { pipe } from '@effect/data/Function';
+import * as S from '@effect/schema/Schema';
 import { openAPISchemaFor } from '../src/compiler';
 
 // https://swagger.io/docs/specification/data-models/enums/
