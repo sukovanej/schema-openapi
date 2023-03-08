@@ -1,6 +1,6 @@
 import { pipe } from '@fp-ts/core/Function';
 import * as S from '@fp-ts/schema/Schema';
-import { parseNumber } from '@fp-ts/schema/data/parser';
+import { parseNumber } from '@fp-ts/schema/data/String';
 import { openAPISchemaFor } from '../src/compiler';
 
 // https://swagger.io/docs/specification/data-models/data-types/
