@@ -63,7 +63,7 @@ const createExpressHandler =
     const responseSchema = path.schemas.responses[response.statusCode];
 
     if (responseSchema !== undefined) {
-      const maybeResponse = P.encode(responseSchema)(response.body);
+      const maybeResponse = P.encode(responseSchema.body)(response.body);
 
       if (E.isLeft(maybeResponse)) {
         res.status(500).send({ error: 'ServerInternal' });

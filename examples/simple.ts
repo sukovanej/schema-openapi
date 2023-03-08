@@ -18,7 +18,7 @@ const spec = OA.openAPI(
     OA.operation(
       'get',
       OA.tags('Pets'),
-      OA.jsonResponse('200', petSchema, 'Pet response')
+      OA.jsonResponse(200, petSchema, 'Pet response')
     ),
     OA.operation('post', OA.tags('Pets'), OA.jsonRequest(petSchema)),
     OA.operation('put', OA.tags('Pets'), OA.jsonRequest(petSchema))
