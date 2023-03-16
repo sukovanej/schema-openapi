@@ -1,8 +1,8 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import * as P from '@effect/schema/Parser';
+import * as S from '@effect/schema/Schema';
 import * as E from '@effect/data/Either';
-import { formatErrors } from '@effect/schema/formatter/Tree';
+import { formatErrors } from '@effect/schema/TreeFormatter';
 import { OpenAPIApp, Path } from './app';
 
 export const registerExpress = (
@@ -39,7 +39,7 @@ const createExpressHandler =
     let body = undefined;
 
     if (path.schemas.body !== undefined) {
-      const maybeBody = P.decode(path.schemas.body)(req.body);
+      const maybeBody = S.decodeEither(path.schemas.body)(req.body);
 
       if (E.isLeft(maybeBody)) {
         res.status(400).send({
@@ -63,7 +63,7 @@ const createExpressHandler =
     const responseSchema = path.schemas.responses[response.statusCode];
 
     if (responseSchema !== undefined) {
-      const maybeResponse = P.encode(responseSchema.body)(response.body);
+      const maybeResponse = S.encodeEither(responseSchema.body)(response.body);
 
       if (E.isLeft(maybeResponse)) {
         res.status(500).send({ error: 'ServerInternal' });

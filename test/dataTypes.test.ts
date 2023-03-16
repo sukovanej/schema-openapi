@@ -1,6 +1,5 @@
 import { pipe } from '@effect/data/Function';
 import * as S from '@effect/schema/Schema';
-import * as N from '@effect/schema/data/Number';
 import { openAPISchemaFor } from '../src/compiler';
 
 // https://swagger.io/docs/specification/data-models/data-types/
@@ -144,7 +143,7 @@ describe('data types', () => {
   });
 
   it('parsed number', () => {
-    const schema = N.parseString(S.string);
+    const schema = S.numberFromString(S.string);
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'string',

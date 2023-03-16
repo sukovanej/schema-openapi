@@ -2,8 +2,6 @@
 import { flow, pipe } from '@effect/data/Function';
 import * as O from '@effect/data/Option';
 import * as RA from '@effect/data/ReadonlyArray';
-import type { JSONSchema } from '@effect/schema/annotation/AST';
-import { JSONSchemaId } from '@effect/schema/annotation/AST';
 import * as AST from '@effect/schema/AST';
 import type { Schema } from '@effect/schema/Schema';
 import {
@@ -12,7 +10,7 @@ import {
   OpenAPISchemaType,
 } from './types';
 
-const convertJsonSchemaAnnotation = (annotations: object) => {
+const convertJsonSchemaAnnotation = (annotations: any) => {
   let newAnnotations = annotations;
 
   if ('exclusiveMinimum' in newAnnotations) {
@@ -37,7 +35,7 @@ const convertJsonSchemaAnnotation = (annotations: object) => {
 };
 
 const getJSONSchemaAnnotation = flow(
-  AST.getAnnotation<JSONSchema>(JSONSchemaId),
+  AST.getAnnotation(AST.JSONSchemaAnnotationId),
   O.map(convertJsonSchemaAnnotation)
 );
 
@@ -60,17 +58,11 @@ const createEnum = <T extends AST.LiteralValue>(
   };
 };
 
-export const openAPISchemaFor = <A>(schema: Schema<A>): OpenAPISchemaType => {
+export const openAPISchemaFor = <A>(
+  schema: Schema<A, any>
+): OpenAPISchemaType => {
   const go = (ast: AST.AST): OpenAPISchemaType => {
     switch (ast._tag) {
-      case 'TypeAlias':
-        return pipe(
-          getJSONSchemaAnnotation(ast),
-          O.match(
-            () => go(ast.type),
-            (schema) => ({ ...go(ast.type), ...schema })
-          )
-        );
       case 'Literal': {
         if (typeof ast.literal === 'bigint') {
           return { type: 'integer' };
