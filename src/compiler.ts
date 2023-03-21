@@ -1,5 +1,5 @@
 /** Based on https://github.com/effect/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
-import { flow, pipe } from '@effect/data/Function';
+import { pipe } from '@effect/data/Function';
 import * as O from '@effect/data/Option';
 import * as RA from '@effect/data/ReadonlyArray';
 import * as AST from '@effect/schema/AST';
@@ -10,7 +10,7 @@ import {
   OpenAPISchemaType,
 } from './types';
 
-const convertJsonSchemaAnnotation = (annotations: any) => {
+const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
 
   if ('exclusiveMinimum' in newAnnotations) {
@@ -34,10 +34,13 @@ const convertJsonSchemaAnnotation = (annotations: any) => {
   return newAnnotations;
 };
 
-const getJSONSchemaAnnotation = flow(
-  AST.getAnnotation(AST.JSONSchemaAnnotationId),
-  O.map(convertJsonSchemaAnnotation)
-);
+const getJSONSchemaAnnotation = (ast: AST.Annotated) =>
+  pipe(
+    AST.getAnnotation<AST.JSONSchemaAnnotation>(AST.JSONSchemaAnnotationId)(
+      ast
+    ),
+    O.map(convertJsonSchemaAnnotation)
+  );
 
 const createEnum = <T extends AST.LiteralValue>(
   types: readonly T[],
