@@ -45,7 +45,7 @@ const createExpressHandler =
         res.status(400).send({
           error: 'BadRequest',
           in: 'body',
-          message: formatErrors(maybeBody.left),
+          message: formatErrors(maybeBody.left.errors),
         });
         return;
       }
