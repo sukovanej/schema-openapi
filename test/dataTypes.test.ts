@@ -278,7 +278,7 @@ describe('objects', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
       properties: { id: { type: 'integer' }, name: { type: 'string' } },
-      required: ['id', 'name'],
+      required: ['name', 'id'],
     });
   });
 
@@ -302,7 +302,7 @@ describe('objects', () => {
         name: { type: 'string' },
         username: { type: 'string' },
       },
-      required: ['id', 'username'],
+      required: ['username', 'id'],
     });
   });
 });
