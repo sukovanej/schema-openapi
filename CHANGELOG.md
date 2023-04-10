@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.10
+
+### Patch Changes
+
+- 5faa01b: Fix: provideLayer applies for whole handler effect
+
 ## 0.0.9
 
 ### Patch Changes
