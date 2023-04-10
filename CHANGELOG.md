@@ -1,5 +1,12 @@
 # schema-openapi
 
+## 0.0.11
+
+### Patch Changes
+
+- 2c072b3: Fix: add express and swagger ui as dependencies
+- add `listen` combinator
+
 ## 0.0.10
 
 ### Patch Changes
