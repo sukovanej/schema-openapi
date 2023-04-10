@@ -2,7 +2,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 
 import { flow, pipe } from '@effect/data/Function';
-import * as Effect from '@effect/io/Effect';
+import type * as Effect from '@effect/io/Effect';
 import * as S from '@effect/schema/Schema';
 
 import * as EffectApi from './effect';

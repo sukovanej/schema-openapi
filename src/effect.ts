@@ -1,6 +1,6 @@
 import { pipe } from '@effect/data/Function';
-import * as Effect from '@effect/io/Effect';
-import { Layer } from '@effect/io/Layer';
+import type * as Effect from '@effect/io/Effect';
+import type { Layer } from '@effect/io/Layer';
 import * as S from '@effect/schema/Schema';
 
 import * as OpenApi from './openapi';
