@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.9
+
+### Patch Changes
+
+- Fix: remove app module from index
+
 ## 0.0.8
 
 ### Patch Changes
