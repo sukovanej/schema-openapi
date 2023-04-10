@@ -10,7 +10,7 @@ const milanSchema = S.struct({
 });
 
 const app = pipe(
-  EffectApi.make('My awesome pets API', '1.0.0', Effect),
+  EffectApi.make('My awesome pets API', '1.0.0'),
   EffectApi.get('/milan', S.string, () => Effect.succeed('test')),
   EffectApi.getQuery(
     '/lesnek',
