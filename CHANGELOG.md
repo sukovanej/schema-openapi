@@ -1,5 +1,12 @@
 # schema-openapi
 
+## 0.0.8
+
+### Patch Changes
+
+- d794164: Fix: EffectApi must be provided with the Effect module
+- d794164: Fix: unchanged dist folder
+
 ## 0.0.7
 
 ### Patch Changes
