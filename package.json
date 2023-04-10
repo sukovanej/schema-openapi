@@ -8,7 +8,7 @@
   "scripts": {
     "test": "vitest",
     "lint": "tsc",
-    "build": "tsup src --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
     "build:watch": "tsc -w -p tsconfig.json",
     "format": "prettier -w src test",
     "check-format": "prettier --check src test"
@@ -16,11 +16,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "peerDependencies": {
     "@effect/data": "~0.11.7",
     "@effect/schema": "^0.11.1"
   },
   "devDependencies": {
+    "@effect/data": "~0.11.7",
+    "@effect/schema": "^0.11.1",
     "@apidevtools/swagger-parser": "^10.1.0",
     "@changesets/cli": "^2.26.1",
     "@types/express": "^4.17.17",
