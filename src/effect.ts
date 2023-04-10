@@ -2,8 +2,8 @@ import express from 'express';
 import { AddressInfo } from 'net';
 import swaggerUi from 'swagger-ui-express';
 
-import { flow } from '@effect/data/Function';
-import { pipe } from '@effect/data/Function';
+import * as Context from '@effect/data/Context';
+import { flow, pipe } from '@effect/data/Function';
 import * as Effect from '@effect/io/Effect';
 import { Layer } from '@effect/io/Layer';
 import * as S from '@effect/schema/Schema';
@@ -56,7 +56,7 @@ const makeHandler = <Query, Params, Body, Response, R>(
   responseSchema: S.Schema<Response>,
   querySchema: S.Schema<Query>,
   paramsSchema: S.Schema<Params>,
-  bodySchema: S.Schema<Body>,
+  bodySchema: S.Schema<Body>
 ): Handler<Query, Params, Body, Response, R> => ({
   handler: _toEndpoint(
     method,
@@ -65,7 +65,7 @@ const makeHandler = <Query, Params, Body, Response, R>(
     querySchema,
     paramsSchema,
     bodySchema,
-    responseSchema,
+    responseSchema
   ),
   querySchema,
   paramsSchema,
@@ -75,10 +75,7 @@ const makeHandler = <Query, Params, Body, Response, R>(
   path,
 });
 
-export const make = (
-  title: string,
-  version: string,
-): Api<never> => ({
+export const make = (title: string, version: string): Api<never> => ({
   openApiSpec: OpenApi.openAPI(title, version),
   handlers: [],
 });
@@ -114,7 +111,7 @@ export const get =
           responseSchema,
           S.unknown,
           S.unknown,
-          S.unknown,
+          S.unknown
         )
       )
     );
@@ -137,7 +134,7 @@ export const getQuery =
           responseSchema,
           querySchema,
           S.unknown,
-          S.unknown,
+          S.unknown
         )
       )
     );
@@ -159,7 +156,7 @@ export const post =
           responseSchema,
           S.unknown,
           S.unknown,
-          S.unknown,
+          S.unknown
         )
       )
     );
@@ -182,7 +179,7 @@ export const postBody =
           responseSchema,
           S.unknown,
           S.unknown,
-          bodySchema,
+          bodySchema
         )
       )
     );
@@ -195,6 +192,17 @@ export const provideLayer =
       ...handler,
       handler: (req, res) =>
         pipe(handler.handler(req, res), Effect.provideLayer(layer)),
+    })),
+  });
+
+export const provideService =
+  <T extends Context.Tag<any, any>>(tag: T, service: Context.Tag.Service<T>) =>
+  <R>(api: Api<R>): Api<Exclude<R, Context.Tag.Identifier<T>>> => ({
+    ...api,
+    handlers: api.handlers.map((handler) => ({
+      ...handler,
+      handler: (req, res) =>
+        pipe(handler.handler(req, res), Effect.provideService(tag, service)),
     })),
   });
 
@@ -232,7 +240,7 @@ const handleApiFailure = (
   path: string,
   error: Error,
   statusCode: number,
-  res: express.Response,
+  res: express.Response
 ) =>
   pipe(
     Effect.logWarning(`${method} ${path} failed`),
@@ -256,7 +264,7 @@ const _toEndpoint = <Query, Params, Body, Response, R>(
   querySchema: S.Schema<Query>,
   paramsSchema: S.Schema<Params>,
   bodySchema: S.Schema<Body>,
-  responseSchema: S.Schema<Response>,
+  responseSchema: S.Schema<Response>
 ): FinalHandler<R> => {
   const parseQuery = S.parseEffect(querySchema);
   const parseParams = S.parseEffect(paramsSchema);
@@ -300,8 +308,7 @@ const _toEndpoint = <Query, Params, Body, Response, R>(
           handleApiFailure(method, path, error, 500, res),
         NotFoundError: (error) =>
           handleApiFailure(method, path, error, 404, res),
-        ServerError: (error) =>
-          handleApiFailure(method, path, error, 500, res),
+        ServerError: (error) => handleApiFailure(method, path, error, 500, res),
       })
     );
 };
