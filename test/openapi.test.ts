@@ -1,6 +1,8 @@
-import * as S from '@effect/schema/Schema';
-import * as OA from '../src/openapi';
 import SwaggerParser from '@apidevtools/swagger-parser';
+
+import * as S from '@effect/schema/Schema';
+
+import * as OA from '../src/openapi';
 
 describe('simple', () => {
   it('simple post', async () => {

@@ -1,5 +1,6 @@
 import { pipe } from '@effect/data/Function';
 import * as S from '@effect/schema/Schema';
+
 import { openAPISchemaFor } from '../src/compiler';
 
 // https://swagger.io/docs/specification/data-models/data-types/

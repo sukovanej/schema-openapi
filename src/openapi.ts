@@ -1,21 +1,21 @@
+import { openAPISchemaFor } from './compiler';
+import * as I from './internal';
 import {
   AnySchema,
   OpenAPISchemaType,
   OpenAPISpec,
-  OpenApiSpecContent,
   OpenAPISpecInfo,
   OpenAPISpecMethodName,
   OpenAPISpecOperation,
   OpenAPISpecParameter,
   OpenAPISpecPathItem,
   OpenAPISpecRequestBody,
-  OpenApiSpecResponse,
   OpenAPISpecServer,
   OpenAPISpecServerVariable,
   OpenAPISpecStatusCode,
+  OpenApiSpecContent,
+  OpenApiSpecResponse,
 } from './types';
-import * as I from './internal';
-import { openAPISchemaFor } from './compiler';
 
 /**
  * Initialize OpenAPI schema.

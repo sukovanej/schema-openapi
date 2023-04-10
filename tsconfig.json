@@ -3,12 +3,12 @@
     "target": "es2016",
     "module": "commonjs",
     "types": ["vitest/globals"],
-    "outDir": "./build-all",
+    "outDir": "./dist",
     "esModuleInterop": true,
+    "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "noEmit": true,
   },
-  "include": ["src", "examples", "test"]
+  "include": ["src"]
 }

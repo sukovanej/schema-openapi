@@ -4,6 +4,7 @@ import * as O from '@effect/data/Option';
 import * as RA from '@effect/data/ReadonlyArray';
 import * as AST from '@effect/schema/AST';
 import type { Schema } from '@effect/schema/Schema';
+
 import {
   OpenAPISchemaArrayType,
   OpenAPISchemaObjectType,

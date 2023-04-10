@@ -7,26 +7,27 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "vitest",
-    "lint": "tsc",
-    "build": "tsup-node src/index.ts --format cjs,esm --dts",
+    "lint": "tsc --noEdit",
+    "build": "tsc",
     "build:watch": "tsc -w -p tsconfig.json",
     "format": "prettier -w src test",
     "check-format": "prettier --check src test"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "peerDependencies": {
-    "@effect/data": "~0.11.7",
+    "@effect/data": "^0.11.8",
     "@effect/io": "^0.19.2",
     "@effect/schema": "^0.11.1"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@changesets/cli": "^2.26.1",
-    "@effect/data": "~0.11.7",
+    "@effect/data": "~0.11.8",
     "@effect/io": "^0.19.2",
     "@effect/schema": "^0.11.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.11",
     "@types/swagger-ui-express": "^4.1.3",

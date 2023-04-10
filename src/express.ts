@@ -1,21 +1,18 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+
+import { flow, pipe } from '@effect/data/Function';
+import * as Effect from '@effect/io/Effect';
 import * as S from '@effect/schema/Schema';
+
+import * as EffectApi from './effect';
 import * as OpenApi from './openapi';
 import { OpenAPISpec } from './types';
 import { OpenAPISchemaType } from './types';
-import * as Effect from '@effect/io/Effect';
-import * as EffectApi from './effect';
-import { flow, pipe } from '@effect/data/Function';
-import swaggerUi from 'swagger-ui-express';
 
-type AnyHandler = EffectApi.Handler<
-  unknown,
-  unknown,
-  unknown,
-  unknown,
-  never,
-  unknown
->;
+type EffectModule = typeof Effect;
+
+type AnyHandler = EffectApi.Handler<unknown, unknown, unknown, unknown, never>;
 
 type Error = { _tag: string; error: unknown };
 
@@ -38,23 +35,25 @@ const handleApiFailure = (
   handler: AnyHandler,
   error: Error,
   statusCode: number,
-  res: express.Response
+  res: express.Response,
+  Effect: EffectModule
 ) =>
   pipe(
     Effect.logWarning(`${handler.method} ${handler.path} failed`),
     Effect.logAnnotate('errorTag', error._tag),
     Effect.logAnnotate('error', JSON.stringify(error.error, undefined)),
     Effect.flatMap(() =>
-      Effect.sync(() =>
+      Effect.try(() =>
         res.status(statusCode).send({
           error: error._tag,
           details: JSON.stringify(error.error, undefined),
         })
       )
-    )
+    ),
+    Effect.ignoreLogged
   );
 
-const runEndpoint = (handler: AnyHandler) => {
+const runEndpoint = (handler: AnyHandler, Effect: EffectModule) => {
   const parseQuery = S.parseEffect(handler.querySchema);
   const parseParams = S.parseEffect(handler.paramsSchema);
   const parseBody = S.parseEffect(handler.bodySchema);
@@ -63,7 +62,6 @@ const runEndpoint = (handler: AnyHandler) => {
   return (req: express.Request, res: express.Response) => {
     return pipe(
       Effect.Do(),
-      Effect.tap(() => Effect.logDebug(`Accessed ${handler.path}`)),
       Effect.bind('query', () =>
         pipe(parseQuery(req.query), Effect.mapError(invalidQueryError))
       ),
@@ -73,9 +71,7 @@ const runEndpoint = (handler: AnyHandler) => {
       Effect.bind('body', () =>
         pipe(parseBody(req.body), Effect.mapError(invalidBodyError))
       ),
-      Effect.flatMap((input) =>
-        pipe(handler.handler(input), Effect.mapError(unexpectedServerError))
-      ),
+      Effect.flatMap((input) => handler.handler(input)),
       Effect.flatMap(
         flow(encodeResponse, Effect.mapError(invalidResponseError))
       ),
@@ -88,23 +84,28 @@ const runEndpoint = (handler: AnyHandler) => {
         )
       ),
       Effect.catchTags({
-        InvalidBodyError: (error) => handleApiFailure(handler, error, 400, res),
+        InvalidBodyError: (error) =>
+          handleApiFailure(handler, error, 400, res, Effect),
         InvalidQueryError: (error) =>
-          handleApiFailure(handler, error, 400, res),
+          handleApiFailure(handler, error, 400, res, Effect),
         InvalidParamsError: (error) =>
-          handleApiFailure(handler, error, 400, res),
+          handleApiFailure(handler, error, 400, res, Effect),
         InvalidResponseError: (error) =>
-          handleApiFailure(handler, error, 500, res),
+          handleApiFailure(handler, error, 500, res, Effect),
         UnexpectedServerError: (error) =>
-          handleApiFailure(handler, error, 500, res),
+          handleApiFailure(handler, error, 500, res, Effect),
+        NotFoundError: (error) =>
+          handleApiFailure(handler, error, 404, res, Effect),
+        ServerError: (error) =>
+          handleApiFailure(handler, error, 500, res, Effect),
       }),
       Effect.runPromise
     );
   };
 };
 
-const _handlerToRoute = (handler: AnyHandler) =>
-  express.Router()[handler.method](handler.path, runEndpoint(handler));
+const _handlerToRoute = (handler: AnyHandler, Effect: EffectModule) =>
+  express.Router()[handler.method](handler.path, runEndpoint(handler, Effect));
 
 const _createSpec = (
   self: EffectApi.Api<never>
@@ -152,7 +153,7 @@ export const make = (self: EffectApi.Api<never>): express.Express => {
   app.use(express.json());
 
   for (const handler of self.handlers) {
-    app.use(_handlerToRoute(handler));
+    app.use(_handlerToRoute(handler, self.effect));
   }
 
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(_createSpec(self)));
