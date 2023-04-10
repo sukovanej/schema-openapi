@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.6
+
+### Patch Changes
+
+- use tsup-node for build
+
 ## 0.0.5
 
 ### Patch Changes
