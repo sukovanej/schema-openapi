@@ -1,78 +1,161 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
 import * as S from '@effect/schema/Schema';
-import * as E from '@effect/data/Either';
-import { formatErrors } from '@effect/schema/TreeFormatter';
-import { OpenAPIApp, Path } from './app';
+import * as OpenApi from './openapi';
+import { OpenAPISpec } from './types';
+import { OpenAPISchemaType } from './types';
+import * as Effect from '@effect/io/Effect';
+import * as EffectApi from './effect';
+import { flow, pipe } from '@effect/data/Function';
+import swaggerUi from 'swagger-ui-express';
 
-export const registerExpress = (
-  expressApp: express.Express,
-  app: OpenAPIApp
-): express.Express => {
-  expressApp.use(express.json());
+type AnyHandler = EffectApi.Handler<
+  unknown,
+  unknown,
+  unknown,
+  unknown,
+  never,
+  unknown
+>;
 
-  for (const path of app.paths) {
-    registerExpressPath(expressApp, path);
-  }
+type Error = { _tag: string; error: unknown };
 
-  expressApp.use('/docs', swaggerUi.serve, swaggerUi.setup(app.spec));
+const invalidQueryError = <E>(error: E) =>
+  ({ _tag: 'InvalidQueryError' as const, error } satisfies Error);
 
-  return expressApp;
-};
+const invalidParamsError = <E>(error: E) =>
+  ({ _tag: 'InvalidParamsError' as const, error } satisfies Error);
 
-const registerExpressPath = (expressApp: express.Express, path: Path) => {
-  switch (path.methodName) {
-    case 'get':
-      expressApp.get(path.path, createExpressHandler(path));
-      break;
-    case 'post':
-      expressApp.post(path.path, createExpressHandler(path));
-      break;
-    default:
-      throw new Error(`Not implemented for ${path.methodName}`);
-  }
-};
+const invalidBodyError = <E>(error: E) =>
+  ({ _tag: 'InvalidBodyError' as const, error } satisfies Error);
 
-const createExpressHandler =
-  (path: Path): express.Handler =>
-  (req, res) => {
-    let body = undefined;
+const invalidResponseError = <E>(error: E) =>
+  ({ _tag: 'InvalidResponseError' as const, error } satisfies Error);
 
-    if (path.schemas.body !== undefined) {
-      const maybeBody = S.decodeEither(path.schemas.body)(req.body);
+const unexpectedServerError = <E>(error: E) =>
+  ({ _tag: 'UnexpectedServerError' as const, error } satisfies Error);
 
-      if (E.isLeft(maybeBody)) {
-        res.status(400).send({
-          error: 'BadRequest',
-          in: 'body',
-          message: formatErrors(maybeBody.left.errors),
-        });
-        return;
-      }
+const handleApiFailure = (
+  handler: AnyHandler,
+  error: Error,
+  statusCode: number,
+  res: express.Response
+) =>
+  pipe(
+    Effect.logWarning(`${handler.method} ${handler.path} failed`),
+    Effect.logAnnotate('errorTag', error._tag),
+    Effect.logAnnotate('error', JSON.stringify(error.error, undefined)),
+    Effect.flatMap(() =>
+      Effect.sync(() =>
+        res.status(statusCode).send({
+          error: error._tag,
+          details: JSON.stringify(error.error, undefined),
+        })
+      )
+    )
+  );
 
-      body = maybeBody.right;
-    }
+const runEndpoint = (handler: AnyHandler) => {
+  const parseQuery = S.parseEffect(handler.querySchema);
+  const parseParams = S.parseEffect(handler.paramsSchema);
+  const parseBody = S.parseEffect(handler.bodySchema);
+  const encodeResponse = S.parseEffect(handler.responseSchema);
 
-    const response = path.func(body);
-
-    if (response === undefined) {
-      res.status(204).send();
-      return;
-    }
-
-    const responseSchema = path.schemas.responses[response.statusCode];
-
-    if (responseSchema !== undefined) {
-      const maybeResponse = S.encodeEither(responseSchema.body)(response.body);
-
-      if (E.isLeft(maybeResponse)) {
-        res.status(500).send({ error: 'ServerInternal' });
-        return;
-      } else {
-        res.status(response.statusCode).send(maybeResponse.right);
-        return;
-      }
-    }
-
-    res.status(response.statusCode).send(response.body);
+  return (req: express.Request, res: express.Response) => {
+    return pipe(
+      Effect.Do(),
+      Effect.tap(() => Effect.logDebug(`Accessed ${handler.path}`)),
+      Effect.bind('query', () =>
+        pipe(parseQuery(req.query), Effect.mapError(invalidQueryError))
+      ),
+      Effect.bind('params', () =>
+        pipe(parseParams(req.params), Effect.mapError(invalidParamsError))
+      ),
+      Effect.bind('body', () =>
+        pipe(parseBody(req.body), Effect.mapError(invalidBodyError))
+      ),
+      Effect.flatMap((input) =>
+        pipe(handler.handler(input), Effect.mapError(unexpectedServerError))
+      ),
+      Effect.flatMap(
+        flow(encodeResponse, Effect.mapError(invalidResponseError))
+      ),
+      Effect.flatMap((response) =>
+        pipe(
+          Effect.try(() => {
+            res.status(200).send(response);
+          }),
+          Effect.mapError(unexpectedServerError)
+        )
+      ),
+      Effect.catchTags({
+        InvalidBodyError: (error) => handleApiFailure(handler, error, 400, res),
+        InvalidQueryError: (error) =>
+          handleApiFailure(handler, error, 400, res),
+        InvalidParamsError: (error) =>
+          handleApiFailure(handler, error, 400, res),
+        InvalidResponseError: (error) =>
+          handleApiFailure(handler, error, 500, res),
+        UnexpectedServerError: (error) =>
+          handleApiFailure(handler, error, 500, res),
+      }),
+      Effect.runPromise
+    );
   };
+};
+
+const _handlerToRoute = (handler: AnyHandler) =>
+  express.Router()[handler.method](handler.path, runEndpoint(handler));
+
+const _createSpec = (
+  self: EffectApi.Api<never>
+): OpenAPISpec<OpenAPISchemaType> => {
+  return self.handlers.reduce(
+    (
+      spec,
+      { path, method, responseSchema, querySchema, bodySchema, paramsSchema }
+    ) => {
+      const operationSpec = [];
+
+      if (responseSchema !== S.unknown) {
+        operationSpec.push(
+          OpenApi.jsonResponse(200, responseSchema, 'Response')
+        );
+      }
+
+      if (paramsSchema !== S.unknown) {
+        operationSpec.push(
+          OpenApi.parameter('Path parameter', 'path', paramsSchema)
+        );
+      }
+
+      if (querySchema !== S.unknown) {
+        operationSpec.push(
+          OpenApi.parameter('Query parameter', 'query', querySchema)
+        );
+      }
+
+      if (bodySchema !== S.unknown) {
+        operationSpec.push(OpenApi.jsonRequest(bodySchema));
+      }
+
+      return OpenApi.path(
+        path,
+        OpenApi.operation(method, ...operationSpec)
+      )(spec);
+    },
+    self.openApiSpec
+  );
+};
+
+export const make = (self: EffectApi.Api<never>): express.Express => {
+  const app = express();
+  app.use(express.json());
+
+  for (const handler of self.handlers) {
+    app.use(_handlerToRoute(handler));
+  }
+
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(_createSpec(self)));
+
+  return app;
+};
