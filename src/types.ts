@@ -29,7 +29,7 @@ export type OpenAPISpecServer = {
 
 export type OpenAPISpecServerVariable = {
   default: string;
-  enum?: string[];
+  enum?: [string, ...string[]];
   description?: string;
 };
 
