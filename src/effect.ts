@@ -1,4 +1,5 @@
 import express from 'express';
+import { AddressInfo } from 'net';
 import swaggerUi from 'swagger-ui-express';
 
 import { flow } from '@effect/data/Function';
@@ -375,4 +376,19 @@ export const toExpress = (self: Api<never>): express.Express => {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(_createSpec(self)));
 
   return app;
+};
+
+export const listen = (port: number) => (self: Api<never>) => {
+  const server = toExpress(self);
+
+  return self.effect.tryPromise(
+    () =>
+      new Promise<AddressInfo>((resolve, reject) => {
+        const listeningServer = server.listen(port);
+        listeningServer.on('listening', () =>
+          resolve(listeningServer.address() as AddressInfo)
+        );
+        listeningServer.on('error', reject);
+      })
+  );
 };
