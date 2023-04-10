@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest",
-    "build": "tsc -p tsconfig.build.json",
+    "lint": "tsc",
+    "build": "tsup src --format cjs,esm --dts",
     "build:watch": "tsc -w -p tsconfig.json",
     "format": "prettier -w src test",
     "check-format": "prettier --check src test"
@@ -26,6 +27,7 @@
     "prettier": "^2.8.7",
     "swagger-ui-express": "^4.6.2",
     "ts-node": "^10.9.1",
+    "tsup": "^6.7.0",
     "typescript": "^5.0.4",
     "vitest": "^0.30.0"
   }
