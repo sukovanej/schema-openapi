@@ -28,9 +28,8 @@ const app = pipe(
       {
         responseSchema: standaSchema,
         querySchema: lesnekSchema,
-        body: 'string',
       },
-      ({ query: { name }, body }) => Effect.succeed({ name })
+      ({ query: { name } }) => Effect.succeed({ name })
     )
   ),
   Api.getBody('/standa', standaSchema, standaSchema, ({ body }) =>
