@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.15
+
+### Patch Changes
+
+- Update @effect/schema and @effect/data peers deps versions
+
 ## 0.0.14
 
 ### Patch Changes

@@ -1,13 +1,5 @@
 lockfileVersion: '6.0'
 
-dependencies:
-  '@effect/data':
-    specifier: ^0.11.8
-    version: 0.11.8
-  '@effect/schema':
-    specifier: ^0.11.1
-    version: 0.11.1
-
 devDependencies:
   '@apidevtools/swagger-parser':
     specifier: ^10.1.0
@@ -15,6 +7,12 @@ devDependencies:
   '@changesets/cli':
     specifier: ^2.26.1
     version: 2.26.1
+  '@effect/data':
+    specifier: ^0.12.2
+    version: 0.12.2
+  '@effect/schema':
+    specifier: ^0.12.1
+    version: 0.12.1
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.1.1
     version: 4.1.1(prettier@2.8.7)
@@ -382,23 +380,23 @@ packages:
       prettier: 2.8.7
     dev: true
 
-  /@effect/data@0.11.8:
-    resolution: {integrity: sha512-rOyVE5rbEAbg29mrn2yU4sf9CS3GaC1n8lrc9tjEZxDluHJTS5piu0p8JYv/JzMdRHQMLz6jJhM5INT/qf8c5A==}
-    dev: false
+  /@effect/data@0.12.2:
+    resolution: {integrity: sha512-bmWRTcsSRG1FlBswT+D8SxW6r3c4B3pKJrjYfitCD03tXHnup5gLHaWqbFgIjiyYITS+UsJRRjVrNxvyGG4ZNQ==}
+    dev: true
 
-  /@effect/io@0.19.2:
-    resolution: {integrity: sha512-8h9rnVPf6afOO4a5NkgfOTdRMqgoyXYA9P1OKtj4IuFSstIf19TfBcJ2UYDGBAFMxWr36OjAOuz6gXZF87hzDQ==}
+  /@effect/io@0.20.0:
+    resolution: {integrity: sha512-6ECG566e0ZjvDQO5/KbZtQpplZiSTT+ERnxd7dEC1WjC5cF6uIICMBGWljgL5hBOEpV8p/UHs00anKxTlYomXg==}
     dependencies:
-      '@effect/data': 0.11.8
-    dev: false
+      '@effect/data': 0.12.2
+    dev: true
 
-  /@effect/schema@0.11.1:
-    resolution: {integrity: sha512-DDnSGzHRmtq4mFXe2bFGlsXrZj6/yQWsj8rpmh/7SgHecVS0Ea2hRyYRNtKr64XXuiYjF1Yesovy4hfQT/TYfA==}
+  /@effect/schema@0.12.1:
+    resolution: {integrity: sha512-ZW2+d4wIJChhpWKh3NUZpwC/GRllQSFjmOXMz3SL0XryoVt+xVosYZmowd5ufrPvttxk9BNZy/u41RjeFXp3GA==}
     dependencies:
-      '@effect/data': 0.11.8
-      '@effect/io': 0.19.2
+      '@effect/data': 0.12.2
+      '@effect/io': 0.20.0
       fast-check: 3.8.0
-    dev: false
+    dev: true
 
   /@esbuild-kit/cjs-loader@2.4.2:
     resolution: {integrity: sha512-BDXFbYOJzT/NBEtp71cvsrGPwGAMGRB/349rwKuoxNSiKjPraNNnlK6MIIabViCjqZugu6j+xeMDlEkWdHHJSg==}
@@ -1460,7 +1458,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       pure-rand: 6.0.1
-    dev: false
+    dev: true
 
   /fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -2396,7 +2394,7 @@ packages:
 
   /pure-rand@6.0.1:
     resolution: {integrity: sha512-t+x1zEHDjBwkDGY5v5ApnZ/utcd4XYDiJsaQQoptTXgUXX95sDg1elCdJghzicm7n2mbCBJ3uYWr6M22SO19rg==}
-    dev: false
+    dev: true
 
   /qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
