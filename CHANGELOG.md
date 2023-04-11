@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.14
+
+### Patch Changes
+
+- move OpenApi unrelated functionality to effect-http
+
 ## 0.0.13
 
 ### Patch Changes

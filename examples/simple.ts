@@ -1,8 +1,9 @@
-import * as OA from '../src';
-import * as S from '@effect/schema/Schema';
 import express from 'express';
-
 import swaggerUi from 'swagger-ui-express';
+
+import * as S from '@effect/schema/Schema';
+
+import * as OpenApi from '../src';
 
 const petSchema = S.struct({
   name: S.string,
@@ -10,18 +11,26 @@ const petSchema = S.struct({
 });
 
 const app = express();
-const spec = OA.openAPI(
+const spec = OpenApi.openAPI(
   'My awesome pets API',
   '1.0.0',
-  OA.path(
+  OpenApi.path(
     '/pet',
-    OA.operation(
+    OpenApi.operation(
       'get',
-      OA.tags('Pets'),
-      OA.jsonResponse(200, petSchema, 'Pet response')
+      OpenApi.tags('Pets'),
+      OpenApi.jsonResponse(200, petSchema, 'Pet response')
     ),
-    OA.operation('post', OA.tags('Pets'), OA.jsonRequest(petSchema)),
-    OA.operation('put', OA.tags('Pets'), OA.jsonRequest(petSchema))
+    OpenApi.operation(
+      'post',
+      OpenApi.tags('Pets'),
+      OpenApi.jsonRequest(petSchema)
+    ),
+    OpenApi.operation(
+      'put',
+      OpenApi.tags('Pets'),
+      OpenApi.jsonRequest(petSchema)
+    )
   )
 );
 
