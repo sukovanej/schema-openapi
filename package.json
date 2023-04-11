@@ -9,7 +9,7 @@
     "test": "vitest",
     "lint": "tsc --noEdit",
     "build": "tsc",
-    "build:watch": "tsc -w -p tsconfig.json",
+    "watch": "tsc -w -p tsconfig.json",
     "format": "prettier -w src test",
     "check-format": "prettier --check src test"
   },

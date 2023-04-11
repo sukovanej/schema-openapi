@@ -37,43 +37,99 @@ export type QueryInput<Query> = Input<Query, unknown, unknown>;
 
 export type AnyHandlerError = NotFoundError | ServerError;
 
-export interface Handler<Query, Params, Body, Response, R> {
-  handler: FinalHandler<R>;
-
+export interface HandlerSchemas<Query, Params, Body, Response> {
+  responseSchema: S.Schema<Response>;
   querySchema: S.Schema<Query>;
   paramsSchema: S.Schema<Params>;
   bodySchema: S.Schema<Body>;
-  responseSchema: S.Schema<Response>;
+}
 
+type InputHandlerSchemas<QueryS, ParamsS, BodyS, Response> = {
+  responseSchema: S.Schema<Response>;
+  querySchema?: QueryS;
+  paramsSchema?: ParamsS;
+  bodySchema?: BodyS;
+};
+
+type AnyInputHandlerSchemas = InputHandlerSchemas<
+  S.Schema<any>,
+  S.Schema<any>,
+  S.Schema<any>,
+  any
+>;
+
+type ComputeQuery<T> = T extends InputHandlerSchemas<infer Q, any, any, any>
+  ? Q extends S.Schema<infer S>
+    ? S
+    : unknown
+  : never;
+
+type ComputeParams<T> = T extends InputHandlerSchemas<any, infer P, any, any>
+  ? P extends S.Schema<infer S>
+    ? S
+    : unknown
+  : never;
+
+type ComputeBody<T> = T extends InputHandlerSchemas<any, any, infer B, any>
+  ? B extends S.Schema<infer S>
+    ? S
+    : unknown
+  : never;
+
+type ComputeResponse<T> = T extends InputHandlerSchemas<any, any, any, infer R>
+  ? R
+  : never;
+
+export interface Handler<Query, Params, Body, Response, R> {
+  handler: FinalHandler<R>;
+  schemas: HandlerSchemas<Query, Params, Body, Response>;
   method: OpenAPISpecMethodName;
   path: string;
 }
 
-const makeHandler = <Query, Params, Body, Response, R>(
-  method: OpenAPISpecMethodName,
-  path: string,
-  handler: InputHandler<Query, Params, Body, Response, R>,
-  responseSchema: S.Schema<Response>,
-  querySchema: S.Schema<Query>,
-  paramsSchema: S.Schema<Params>,
-  bodySchema: S.Schema<Body>
-): Handler<Query, Params, Body, Response, R> => ({
-  handler: _toEndpoint(
-    method,
-    path,
-    handler,
-    querySchema,
-    paramsSchema,
-    bodySchema,
-    responseSchema
-  ),
+const _fillDefaultSchemas = <I extends AnyInputHandlerSchemas>({
+  responseSchema,
   querySchema,
   paramsSchema,
   bodySchema,
+}: I): HandlerSchemas<
+  ComputeQuery<I>,
+  ComputeParams<I>,
+  ComputeBody<I>,
+  ComputeResponse<I>
+> => ({
   responseSchema,
-  method,
-  path,
+  querySchema: querySchema ?? (S.unknown as S.Schema<ComputeQuery<I>>),
+  paramsSchema: paramsSchema ?? (S.unknown as S.Schema<ComputeParams<I>>),
+  bodySchema: bodySchema ?? (S.unknown as S.Schema<ComputeBody<I>>),
 });
+
+const makeHandler = <I extends AnyInputHandlerSchemas, R>(
+  method: OpenAPISpecMethodName,
+  path: string,
+  handler: InputHandler<
+    ComputeQuery<I>,
+    ComputeParams<I>,
+    ComputeBody<I>,
+    ComputeResponse<I>,
+    R
+  >,
+  schemas: I
+): Handler<
+  ComputeQuery<I>,
+  ComputeParams<I>,
+  ComputeBody<I>,
+  ComputeResponse<I>,
+  R
+> => {
+  const filledSchemas = _fillDefaultSchemas(schemas);
+  return {
+    handler: _toEndpoint(method, path, handler, filledSchemas),
+    schemas: filledSchemas,
+    method,
+    path,
+  };
+};
 
 export const make = (title: string, version: string): Api<never> => ({
   openApiSpec: OpenApi.openAPI(title, version),
@@ -81,18 +137,23 @@ export const make = (title: string, version: string): Api<never> => ({
 });
 
 export const handle =
-  <R2>(handler: Handler<any, any, any, any, R2>) =>
+  <R2>(handler: AnyHandler<R2>) =>
   <R1>(self: Api<R1>): Api<R1 | R2> => ({
     ...self,
     handlers: [...self.handlers, handler],
   });
 
-const _addHandler =
-  <R1>(handler: AnyHandler<R1>) =>
-  <R>(self: Api<R>): Api<R1 | R> => ({
-    ...self,
-    handlers: [...self.handlers, handler],
-  });
+export const handleGet = <I extends AnyInputHandlerSchemas, R>(
+  path: string,
+  schemas: I,
+  handler: InputHandler<
+    ComputeQuery<I>,
+    ComputeParams<I>,
+    ComputeBody<I>,
+    ComputeResponse<I>,
+    R
+  >
+) => makeHandler('get', path, handler, schemas);
 
 export const get =
   <Response, R1>(
@@ -101,18 +162,26 @@ export const get =
     handler: InputHandler<unknown, unknown, unknown, Response, R1>
   ) =>
   <R>(self: Api<R>): Api<R | R1> =>
+    pipe(self, handle(makeHandler('get', path, handler, { responseSchema })));
+
+export const getBody =
+  <Body, Response, R1>(
+    path: string,
+    responseSchema: S.Schema<Response>,
+    bodySchema: S.Schema<Body>,
+    handler: InputHandler<unknown, unknown, Body, Response, R1>
+  ) =>
+  <R>(self: Api<R>): Api<R | R1> =>
     pipe(
       self,
-      _addHandler(
-        makeHandler(
-          'get',
-          path,
-          handler,
+      handle(
+        makeHandler<
+          { bodySchema: S.Schema<Body>; responseSchema: S.Schema<Response> },
+          R1
+        >('get', path, handler, {
           responseSchema,
-          S.unknown,
-          S.unknown,
-          S.unknown
-        )
+          bodySchema,
+        })
       )
     );
 
@@ -126,17 +195,7 @@ export const getQuery =
   <R>(self: Api<R>): Api<R | R1> =>
     pipe(
       self,
-      _addHandler(
-        makeHandler(
-          'get',
-          path,
-          handler,
-          responseSchema,
-          querySchema,
-          S.unknown,
-          S.unknown
-        )
-      )
+      handle(makeHandler('get', path, handler, { responseSchema, querySchema }))
     );
 
 export const post =
@@ -146,20 +205,7 @@ export const post =
     handler: InputHandler<unknown, unknown, unknown, Response, R1>
   ) =>
   <R>(self: Api<R>): Api<R | R1> =>
-    pipe(
-      self,
-      _addHandler(
-        makeHandler(
-          'post',
-          path,
-          handler,
-          responseSchema,
-          S.unknown,
-          S.unknown,
-          S.unknown
-        )
-      )
-    );
+    pipe(self, handle(makeHandler('post', path, handler, { responseSchema })));
 
 export const postBody =
   <Body, Response, R1>(
@@ -171,17 +217,7 @@ export const postBody =
   <R>(self: Api<R>): Api<R | R1> =>
     pipe(
       self,
-      _addHandler(
-        makeHandler(
-          'post',
-          path,
-          handler,
-          responseSchema,
-          S.unknown,
-          S.unknown,
-          bodySchema
-        )
-      )
+      handle(makeHandler('post', path, handler, { responseSchema, bodySchema }))
     );
 
 export const provideLayer =
@@ -261,10 +297,12 @@ const _toEndpoint = <Query, Params, Body, Response, R>(
   method: OpenAPISpecMethodName,
   path: string,
   handler: InputHandler<Query, Params, Body, Response, R>,
-  querySchema: S.Schema<Query>,
-  paramsSchema: S.Schema<Params>,
-  bodySchema: S.Schema<Body>,
-  responseSchema: S.Schema<Response>
+  {
+    querySchema,
+    paramsSchema,
+    bodySchema,
+    responseSchema,
+  }: HandlerSchemas<Query, Params, Body, Response>
 ): FinalHandler<R> => {
   const parseQuery = S.parseEffect(querySchema);
   const parseParams = S.parseEffect(paramsSchema);
@@ -324,7 +362,11 @@ const _createSpec = (self: Api<never>): OpenAPISpec<OpenAPISchemaType> => {
   return self.handlers.reduce(
     (
       spec,
-      { path, method, responseSchema, querySchema, bodySchema, paramsSchema }
+      {
+        path,
+        method,
+        schemas: { responseSchema, querySchema, bodySchema, paramsSchema },
+      }
     ) => {
       const operationSpec = [];
 
