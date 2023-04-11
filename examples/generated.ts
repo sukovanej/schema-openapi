@@ -2,44 +2,69 @@ import { pipe } from '@effect/data/Function';
 import * as Effect from '@effect/io/Effect';
 import * as S from '@effect/schema/Schema';
 
-import { EffectApi as Api } from '../src';
+import * as Api from '../src';
+
+// Schemas
 
 const milanSchema = S.struct({
   penisLength: S.number,
   name: S.string,
 });
 
+type Milan = S.To<typeof milanSchema>;
+
 const lesnekSchema = S.struct({ name: S.string });
+
+type Lesnek = S.To<typeof lesnekSchema>;
 
 const standaSchema = S.record(S.string, S.union(S.string, S.number));
 
+type Standa = S.To<typeof standaSchema>;
+
+// Handlers
+
+const handleMilan = ({ body }: Api.BodyInput<Milan>) =>
+  Effect.succeed({
+    ...body,
+    penisLength: body.penisLength + 10,
+  });
+
+const handleStanda = ({ body }: Api.BodyInput<Standa>) =>
+  Effect.succeed({ ...body, standa: 'je borec' });
+
+const handleTest = ({ query: { name } }: Api.QueryInput<Lesnek>) =>
+  Effect.succeed({ name });
+
+const handleLesnek = ({ query }: Api.QueryInput<Lesnek>) =>
+  pipe(
+    Effect.succeed(`hello ${query.name}`),
+    Effect.tap(() => Effect.logDebug('hello world'))
+  );
+
+// Api
+
 const app = pipe(
   Api.make('My awesome pets API', '1.0.0'),
-  Api.get('/milan', S.string, () => Effect.succeed('test')),
-  Api.getQuery('/lesnek', lesnekSchema, S.string, ({ query }) =>
-    pipe(
-      Effect.succeed(`hello ${query.name}`),
-      Effect.tap(() => Effect.logDebug('hello world'))
-    )
+  Api.useGet('/milan', { response: S.string }, () => Effect.succeed('test')),
+  Api.useGet(
+    '/lesnek',
+    { response: S.string, query: lesnekSchema },
+    handleLesnek
   ),
-  Api.handle(
-    Api.handleGet(
-      '/test',
-      {
-        responseSchema: standaSchema,
-        querySchema: lesnekSchema,
-      },
-      ({ query: { name } }) => Effect.succeed({ name })
-    )
+  Api.useGet(
+    '/test',
+    { response: standaSchema, query: lesnekSchema },
+    handleTest
   ),
-  Api.getBody('/standa', standaSchema, standaSchema, ({ body }) =>
-    Effect.succeed({ ...body, standa: 'je borec' })
+  Api.usePost(
+    '/standa',
+    { response: standaSchema, body: standaSchema },
+    handleStanda
   ),
-  Api.postBody('/milan', milanSchema, milanSchema, ({ body }) =>
-    Effect.succeed({
-      ...body,
-      penisLength: body.penisLength + 10,
-    })
+  Api.usePost(
+    '/milan',
+    { response: milanSchema, body: milanSchema },
+    handleMilan
   ),
   Api.listen(4000),
   Effect.flatMap(({ address, port }) =>

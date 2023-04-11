@@ -8,217 +8,100 @@ import * as Effect from '@effect/io/Effect';
 import { Layer } from '@effect/io/Layer';
 import * as S from '@effect/schema/Schema';
 
+import {
+  AnyHandler,
+  AnyHandlerError,
+  AnyInputHandlerSchemas,
+  Api,
+  ApiError,
+  ComputeHandler,
+  ComputeHandlerSchemas,
+  ComputeInputHandler,
+  FinalHandler,
+  HandlerSchemas,
+  InputHandler,
+  InvalidBodyError,
+  InvalidParamsError,
+  InvalidQueryError,
+  InvalidResponseError,
+  NotFoundError,
+  ServerError,
+  UnexpectedServerError,
+} from './effect-types';
 import * as OpenApi from './openapi';
 import { OpenAPISpec, OpenAPISpecMethodName } from './types';
 import { OpenAPISchemaType } from './types';
-
-type InputHandler<Query, Params, Body, Response, R> = (
-  input: Input<Query, Params, Body>
-) => Effect.Effect<R, AnyHandlerError, Response>;
-
-type FinalHandler<R> = (
-  req: express.Request,
-  res: express.Response
-) => Effect.Effect<R, AnyHandlerError, void>;
-
-export interface Api<R> {
-  openApiSpec: OpenAPISpec<OpenAPISchemaType>;
-  handlers: readonly Handler<unknown, unknown, unknown, unknown, R>[];
-}
-
-export interface Input<Query, Params, Body> {
-  query: Query;
-  params: Params;
-  body: Body;
-}
-
-export type BodyInput<Body> = Input<unknown, unknown, Body>;
-export type QueryInput<Query> = Input<Query, unknown, unknown>;
-
-export type AnyHandlerError = NotFoundError | ServerError;
-
-export interface HandlerSchemas<Query, Params, Body, Response> {
-  responseSchema: S.Schema<Response>;
-  querySchema: S.Schema<Query>;
-  paramsSchema: S.Schema<Params>;
-  bodySchema: S.Schema<Body>;
-}
-
-type InputHandlerSchemas<QueryS, ParamsS, BodyS, Response> = {
-  responseSchema: S.Schema<Response>;
-  querySchema?: QueryS;
-  paramsSchema?: ParamsS;
-  bodySchema?: BodyS;
-};
-
-type AnyInputHandlerSchemas = InputHandlerSchemas<
-  S.Schema<any>,
-  S.Schema<any>,
-  S.Schema<any>,
-  any
->;
-
-type ComputeQuery<T> = T extends InputHandlerSchemas<infer Q, any, any, any>
-  ? Q extends S.Schema<infer S>
-    ? S
-    : unknown
-  : never;
-
-type ComputeParams<T> = T extends InputHandlerSchemas<any, infer P, any, any>
-  ? P extends S.Schema<infer S>
-    ? S
-    : unknown
-  : never;
-
-type ComputeBody<T> = T extends InputHandlerSchemas<any, any, infer B, any>
-  ? B extends S.Schema<infer S>
-    ? S
-    : unknown
-  : never;
-
-type ComputeResponse<T> = T extends InputHandlerSchemas<any, any, any, infer R>
-  ? R
-  : never;
-
-export interface Handler<Query, Params, Body, Response, R> {
-  handler: FinalHandler<R>;
-  schemas: HandlerSchemas<Query, Params, Body, Response>;
-  method: OpenAPISpecMethodName;
-  path: string;
-}
-
-const _fillDefaultSchemas = <I extends AnyInputHandlerSchemas>({
-  responseSchema,
-  querySchema,
-  paramsSchema,
-  bodySchema,
-}: I): HandlerSchemas<
-  ComputeQuery<I>,
-  ComputeParams<I>,
-  ComputeBody<I>,
-  ComputeResponse<I>
-> => ({
-  responseSchema,
-  querySchema: querySchema ?? (S.unknown as S.Schema<ComputeQuery<I>>),
-  paramsSchema: paramsSchema ?? (S.unknown as S.Schema<ComputeParams<I>>),
-  bodySchema: bodySchema ?? (S.unknown as S.Schema<ComputeBody<I>>),
-});
-
-const makeHandler = <I extends AnyInputHandlerSchemas, R>(
-  method: OpenAPISpecMethodName,
-  path: string,
-  handler: InputHandler<
-    ComputeQuery<I>,
-    ComputeParams<I>,
-    ComputeBody<I>,
-    ComputeResponse<I>,
-    R
-  >,
-  schemas: I
-): Handler<
-  ComputeQuery<I>,
-  ComputeParams<I>,
-  ComputeBody<I>,
-  ComputeResponse<I>,
-  R
-> => {
-  const filledSchemas = _fillDefaultSchemas(schemas);
-  return {
-    handler: _toEndpoint(method, path, handler, filledSchemas),
-    schemas: filledSchemas,
-    method,
-    path,
-  };
-};
 
 export const make = (title: string, version: string): Api<never> => ({
   openApiSpec: OpenApi.openAPI(title, version),
   handlers: [],
 });
 
-export const handle =
+export const use =
   <R2>(handler: AnyHandler<R2>) =>
   <R1>(self: Api<R1>): Api<R1 | R2> => ({
     ...self,
     handlers: [...self.handlers, handler],
   });
 
-export const handleGet = <I extends AnyInputHandlerSchemas, R>(
-  path: string,
-  schemas: I,
-  handler: InputHandler<
-    ComputeQuery<I>,
-    ComputeParams<I>,
-    ComputeBody<I>,
-    ComputeResponse<I>,
-    R
-  >
-) => makeHandler('get', path, handler, schemas);
+const _fillDefaultSchemas = <I extends AnyInputHandlerSchemas>({
+  response,
+  query,
+  params,
+  body,
+}: I): ComputeHandlerSchemas<I> => ({
+  response,
+  query: query ?? (S.unknown as ComputeHandlerSchemas<I>['query']),
+  params: params ?? (S.unknown as ComputeHandlerSchemas<I>['params']),
+  body: body ?? (S.unknown as ComputeHandlerSchemas<I>['body']),
+});
 
-export const get =
-  <Response, R1>(
+export const handler =
+  (method: OpenAPISpecMethodName) =>
+  <I extends AnyInputHandlerSchemas, R>(
     path: string,
-    responseSchema: S.Schema<Response>,
-    handler: InputHandler<unknown, unknown, unknown, Response, R1>
+    schemas: I,
+    handler: ComputeInputHandler<I, R>
+  ): ComputeHandler<I, R> => {
+    const filledSchemas = _fillDefaultSchemas(schemas);
+    return {
+      handler: _toEndpoint(method, path, handler, filledSchemas),
+      schemas: filledSchemas,
+      method,
+      path,
+    };
+  };
+
+export const useHandler =
+  (method: OpenAPISpecMethodName) =>
+  <I extends AnyInputHandlerSchemas, R1>(
+    path: string,
+    schemas: I,
+    inputHandler: ComputeInputHandler<I, R1>
   ) =>
   <R>(self: Api<R>): Api<R | R1> =>
-    pipe(self, handle(makeHandler('get', path, handler, { responseSchema })));
+    pipe(self, use(handler(method)(path, schemas, inputHandler)));
 
-export const getBody =
-  <Body, Response, R1>(
-    path: string,
-    responseSchema: S.Schema<Response>,
-    bodySchema: S.Schema<Body>,
-    handler: InputHandler<unknown, unknown, Body, Response, R1>
-  ) =>
-  <R>(self: Api<R>): Api<R | R1> =>
-    pipe(
-      self,
-      handle(
-        makeHandler<
-          { bodySchema: S.Schema<Body>; responseSchema: S.Schema<Response> },
-          R1
-        >('get', path, handler, {
-          responseSchema,
-          bodySchema,
-        })
-      )
-    );
+export const get = handler('get');
+export const post = handler('post');
+export const put = handler('put');
+export const head = handler('head');
+export const patch = handler('patch');
+export const trace = handler('trace');
+export const _delete = handler('delete');
+export { _delete as delete };
+export const options = handler('options');
 
-export const getQuery =
-  <Query, Response, R1>(
-    path: string,
-    querySchema: S.Schema<Query>,
-    responseSchema: S.Schema<Response>,
-    handler: InputHandler<Query, unknown, unknown, Response, R1>
-  ) =>
-  <R>(self: Api<R>): Api<R | R1> =>
-    pipe(
-      self,
-      handle(makeHandler('get', path, handler, { responseSchema, querySchema }))
-    );
+export const useGet = useHandler('get');
+export const usePost = useHandler('post');
+export const usePut = useHandler('put');
+export const useHead = useHandler('head');
+export const usePatch = useHandler('patch');
+export const useTrace = useHandler('trace');
+export const useDelete = useHandler('delete');
+export const useOptions = useHandler('options');
 
-export const post =
-  <Response, R1>(
-    path: string,
-    responseSchema: S.Schema<Response>,
-    handler: InputHandler<unknown, unknown, unknown, Response, R1>
-  ) =>
-  <R>(self: Api<R>): Api<R | R1> =>
-    pipe(self, handle(makeHandler('post', path, handler, { responseSchema })));
-
-export const postBody =
-  <Body, Response, R1>(
-    path: string,
-    bodySchema: S.Schema<Body>,
-    responseSchema: S.Schema<Response>,
-    handler: InputHandler<unknown, unknown, Body, Response, R1>
-  ) =>
-  <R>(self: Api<R>): Api<R | R1> =>
-    pipe(
-      self,
-      handle(makeHandler('post', path, handler, { responseSchema, bodySchema }))
-    );
+// Services
 
 export const provideLayer =
   <R0, R>(layer: Layer<R0, AnyHandlerError, R>) =>
@@ -242,39 +125,45 @@ export const provideService =
     })),
   });
 
-export const notFoundError = <E>(error?: E) =>
+// Errors
+
+export const notFoundError = (error: unknown): NotFoundError =>
   ({ _tag: 'NotFoundError', error } as const);
 
-export type NotFoundError = ReturnType<typeof notFoundError>;
-
-export const serverError = <E>(error?: E) =>
+export const serverError = (error: unknown): ServerError =>
   ({ _tag: 'ServerError', error } as const);
 
-export type ServerError = ReturnType<typeof serverError>;
+const invalidQueryError = (error: unknown): InvalidQueryError => ({
+  _tag: 'InvalidQueryError',
+  error,
+});
 
-type AnyHandler<R = never> = Handler<any, any, any, any, R>;
+const invalidParamsError = (error: unknown): InvalidParamsError => ({
+  _tag: 'InvalidParamsError',
+  error,
+});
 
-type Error = { _tag: string; error: unknown };
+const invalidBodyError = (error: unknown): InvalidBodyError => ({
+  _tag: 'InvalidBodyError',
+  error,
+});
 
-const invalidQueryError = <E>(error: E) =>
-  ({ _tag: 'InvalidQueryError' as const, error } satisfies Error);
+const invalidResponseError = (error: unknown): InvalidResponseError => ({
+  _tag: 'InvalidResponseError',
+  error,
+});
 
-const invalidParamsError = <E>(error: E) =>
-  ({ _tag: 'InvalidParamsError' as const, error } satisfies Error);
+const unexpectedServerError = (error: unknown): UnexpectedServerError => ({
+  _tag: 'UnexpectedServerError',
+  error,
+});
 
-const invalidBodyError = <E>(error: E) =>
-  ({ _tag: 'InvalidBodyError' as const, error } satisfies Error);
-
-const invalidResponseError = <E>(error: E) =>
-  ({ _tag: 'InvalidResponseError' as const, error } satisfies Error);
-
-const unexpectedServerError = <E>(error: E) =>
-  ({ _tag: 'UnexpectedServerError' as const, error } satisfies Error);
+// Impl
 
 const handleApiFailure = (
   method: OpenAPISpecMethodName,
   path: string,
-  error: Error,
+  error: ApiError,
   statusCode: number,
   res: express.Response
 ) =>
@@ -297,17 +186,12 @@ const _toEndpoint = <Query, Params, Body, Response, R>(
   method: OpenAPISpecMethodName,
   path: string,
   handler: InputHandler<Query, Params, Body, Response, R>,
-  {
-    querySchema,
-    paramsSchema,
-    bodySchema,
-    responseSchema,
-  }: HandlerSchemas<Query, Params, Body, Response>
+  schemas: HandlerSchemas<Query, Params, Body, Response>
 ): FinalHandler<R> => {
-  const parseQuery = S.parseEffect(querySchema);
-  const parseParams = S.parseEffect(paramsSchema);
-  const parseBody = S.parseEffect(bodySchema);
-  const encodeResponse = S.parseEffect(responseSchema);
+  const parseQuery = S.parseEffect(schemas.query);
+  const parseParams = S.parseEffect(schemas.params);
+  const parseBody = S.parseEffect(schemas.body);
+  const encodeResponse = S.parseEffect(schemas.response);
 
   return (req: express.Request, res: express.Response) =>
     pipe(
@@ -359,47 +243,39 @@ const _handlerToRoute = (handler: AnyHandler<never>) =>
     );
 
 const _createSpec = (self: Api<never>): OpenAPISpec<OpenAPISchemaType> => {
-  return self.handlers.reduce(
-    (
-      spec,
-      {
-        path,
-        method,
-        schemas: { responseSchema, querySchema, bodySchema, paramsSchema },
-      }
-    ) => {
-      const operationSpec = [];
+  return self.handlers.reduce((spec, { path, method, schemas }) => {
+    const operationSpec = [];
 
-      if (responseSchema !== S.unknown) {
-        operationSpec.push(
-          OpenApi.jsonResponse(200, responseSchema, 'Response')
-        );
-      }
+    if (schemas.response !== S.unknown) {
+      operationSpec.push(
+        OpenApi.jsonResponse(200, schemas.response, 'Response')
+      );
+    }
 
-      if (paramsSchema !== S.unknown) {
-        operationSpec.push(
-          OpenApi.parameter('Path parameter', 'path', paramsSchema)
-        );
-      }
+    if (schemas.params !== S.unknown) {
+      operationSpec.push(
+        OpenApi.parameter('Path parameter', 'path', schemas.params)
+      );
+    }
 
-      if (querySchema !== S.unknown) {
-        operationSpec.push(
-          OpenApi.parameter('Query parameter', 'query', querySchema)
-        );
-      }
+    if (schemas.query !== S.unknown) {
+      operationSpec.push(
+        OpenApi.parameter('Query parameter', 'query', schemas.query)
+      );
+    }
 
-      if (bodySchema !== S.unknown) {
-        operationSpec.push(OpenApi.jsonRequest(bodySchema));
-      }
+    if (schemas.body !== S.unknown) {
+      operationSpec.push(OpenApi.jsonRequest(schemas.body));
+    }
 
-      return OpenApi.path(
-        path,
-        OpenApi.operation(method, ...operationSpec)
-      )(spec);
-    },
-    self.openApiSpec
-  );
+    return OpenApi.path(
+      path,
+      OpenApi.operation(method, ...operationSpec)
+    )(spec);
+  }, self.openApiSpec);
 };
+
+// Compilers
 
 export const toExpress = (self: Api<never>): express.Express => {
   const app = express();
