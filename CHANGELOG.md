@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.16
+
+### Patch Changes
+
+- c9bc56b: add operationId
+
 ## 0.0.15
 
 ### Patch Changes
