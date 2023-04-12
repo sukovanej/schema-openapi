@@ -306,6 +306,15 @@ export const tags =
   });
 
 /**
+ * Set operationId.
+ *
+ * @param {string} operationId
+ */
+export const operationId =
+  (operationId: string): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
+  (spec) => ({ ...spec, operationId });
+
+/**
  * Set description.
  *
  * @param {string} description - text of the description

@@ -5,6 +5,12 @@ Declarative pipe-able API for OpenAPI specification construction using
 
 **Tihis package is unnder development.** Stability of the API is not guaranteed.
 
+## Installation
+
+```
+pnpm add schema-openapi
+```
+
 # API documentation
 
 Top-level
@@ -20,6 +26,7 @@ Operations
 
 - [path](#path)
 - [operation](#operation)
+- [operationId](#operationId)
 - [parameter](#parameter)
 - [allowEmptyValue](#allowEmptyValue)
 - [jsonRequest](#jsonRequest)
@@ -34,6 +41,10 @@ General
 
 ## Top-level
 
+```typescript
+import * as OpenApi from 'schema-openapi';
+```
+
 ### `openAPI`
 
 Use `openAPI('Name of you API', 'version')` to initialize a new
@@ -46,10 +57,10 @@ _Available setters_: [info](#info)
 Sets info section of the specification.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.info(OA.description('This is my awesome API'))
+  OpenApi.info(OpenApi.description('This is my awesome API'))
 );
 ```
 
@@ -63,12 +74,12 @@ _Setter of_: [openAPI](#openAPI)
 Sets a license in the info section.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.info(
-    OA.description('This is my awesome API'),
-    OA.license('MIT', 'http://license-url')
+  OpenApi.info(
+    OpenApi.description('This is my awesome API'),
+    OpenApi.license('MIT', 'http://license-url')
   )
 );
 ```
@@ -80,7 +91,7 @@ _Setter of_: [info](#info)
 Sets a server section.
 
 ```typescript
-OA.openAPI('My API', '2.0.1', OA.server('http://my-production.com'));
+OpenApi.openAPI('My API', '2.0.1', OpenApi.server('http://my-production.com'));
 ```
 
 _Available setters_: [description](#description), [variable](#variable)
@@ -92,10 +103,13 @@ _Setter of_: [openAPI](#openAPI)
 Adds a variable to the server section.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.server('http://my-production:{port}.com', OA.variable('port', '3000'))
+  OpenApi.server(
+    'http://my-production:{port}.com',
+    OpenApi.variable('port', '3000')
+  )
 );
 ```
 
@@ -108,12 +122,12 @@ _Setter of_: [server](#server)
 Adds possible values of a server variable.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.server(
+  OpenApi.server(
     'http://my-production:{port}.com',
-    OA.variable('port', '3000', OA.enum('3000', '3001'))
+    OpenApi.variable('port', '3000', OpenApi.enum('3000', '3001'))
   )
 );
 ```
@@ -127,16 +141,22 @@ _Setter of_: [variable](#variable)
 Add a new path.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet',
-    OA.operation('get', OA.jsonResponse('200', S.string, 'Returns a pet'))
+    OpenApi.operation(
+      'get',
+      OpenApi.jsonResponse('200', S.string, 'Returns a pet')
+    )
   ),
-  OA.path(
+  OpenApi.path(
     '/note',
-    OA.operation('get', OA.jsonResponse('200', S.string, 'Returns a note'))
+    OpenApi.operation(
+      'get',
+      OpenApi.jsonResponse('200', S.string, 'Returns a note')
+    )
   )
 );
 ```
@@ -151,16 +171,19 @@ Set operation. Method name can be one of `get`, `put`, `post`, `delete`,
 `options`, `head`, `patch`, `trace`.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet',
-    OA.operation('get', OA.jsonResponse('200', S.string, 'Returns a pet')),
-    OA.operation(
+    OpenApi.operation(
+      'get',
+      OpenApi.jsonResponse('200', S.string, 'Returns a pet')
+    ),
+    OpenApi.operation(
       'post',
-      OA.jsonRequest(S.struct({ value: S.number })),
-      OA.jsonResponse('200', S.string, 'Returns a pet')
+      OpenApi.jsonRequest(S.struct({ value: S.number })),
+      OpenApi.jsonResponse('200', S.string, 'Returns a pet')
     )
   )
 );
@@ -168,7 +191,7 @@ OA.openAPI(
 
 _Available setters_: [description](#description), [parameter](#parameter),
 [jsonResponse](#jsonResponse), [jsonRequest](#jsonRequest),
-[deprecated](#deprecated),
+[deprecated](#deprecated), [operationId](#operationId)
 
 _Setter of_: [path](#path)
 
@@ -179,16 +202,41 @@ Set a parameter. The (second) `in` parameter is one of `query`, `header`,
 for the parameter.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'get',
-      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
-      OA.parameter('id', 'path', S.number, OA.required),
-      OA.parameter('name', 'query', S.string),
+      OpenApi.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
+      OpenApi.parameter('id', 'path', S.number, OpenApi.required),
+      OpenApi.parameter('name', 'query', S.string),
+      OpenApi.operationId('getPet')
+    )
+  )
+);
+```
+
+_Setter of_: [operation](#operation)
+
+### `parameter`
+
+Set a parameter. The (second) `in` parameter is one of `query`, `header`,
+`path`, `cookie`. If the `in` is `path`, [required](#required) must be set
+for the parameter.
+
+```typescript
+OpenApi.openAPI(
+  'My API',
+  '2.0.1',
+  OpenApi.path(
+    '/pet/{id}',
+    OpenApi.operation(
+      'get',
+      OpenApi.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
+      OpenApi.parameter('id', 'path', S.number, OpenApi.required),
+      OpenApi.parameter('name', 'query', S.string),
     )
   )
 );
@@ -204,17 +252,17 @@ _Setter of_: [operation](#operation)
 Set tags for an operation.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'get',
-      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
-      OA.parameter('id', 'path', S.number, OA.required),
-      OA.parameter('name', 'query', S.string),
-      OA.tags('Pets')
+      OpenApi.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
+      OpenApi.parameter('id', 'path', S.number, OpenApi.required),
+      OpenApi.parameter('name', 'query', S.string),
+      OpenApi.tags('Pets')
     )
   )
 );
@@ -227,16 +275,16 @@ _Setter of_: [operation](#operation)
 Configures the parameter.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'get',
-      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
-      OA.parameter('id', 'path', S.number, OA.required),
-      OA.parameter('name', 'query', S.string, OA.allowEmptyValue),
+      OpenApi.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
+      OpenApi.parameter('id', 'path', S.number, OpenApi.required),
+      OpenApi.parameter('name', 'query', S.string, OpenApi.allowEmptyValue),
     )
   )
 );
@@ -249,15 +297,19 @@ _Setter of_: [parameter](#parameter)
 Set the JSON request body specification.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'post',
-      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet'),
-      OA.jsonRequest(S.struct({ value: S.number }))
+      OpenApi.jsonResponse(
+        '200',
+        S.struct({ value: S.number }),
+        'Returns a pet'
+      ),
+      OpenApi.jsonRequest(S.struct({ value: S.number }))
     )
   )
 );
@@ -272,14 +324,18 @@ _Setter of_: [operation](#operation)
 Set the JSON response specification.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'post',
-      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet')
+      OpenApi.jsonResponse(
+        '200',
+        S.struct({ value: S.number }),
+        'Returns a pet'
+      )
     )
   )
 );
@@ -308,18 +364,22 @@ _Setter of_: [path](#path), [operation](#operation)
 Sets the spec as deprecated.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'get',
-      OA.jsonResponse('200', S.struct({ value: S.number }), 'Returns a pet'),
-      OA.parameter('name', 'query', S.string, OA.deprecated),
-      OA.deprecated
+      OpenApi.jsonResponse(
+        '200',
+        S.struct({ value: S.number }),
+        'Returns a pet'
+      ),
+      OpenApi.parameter('name', 'query', S.string, OpenApi.deprecated),
+      OpenApi.deprecated
     ),
-    OA.deprecated
+    OpenApi.deprecated
   )
 );
 ```
@@ -331,20 +391,20 @@ _Setter of_: [parameter](#path), [operation](#operation), [parameter](#parameter
 Sets the parameter as required.
 
 ```typescript
-OA.openAPI(
+OpenApi.openAPI(
   'My API',
   '2.0.1',
-  OA.path(
+  OpenApi.path(
     '/pet/{id}',
-    OA.operation(
+    OpenApi.operation(
       'post',
-      OA.jsonRequest(S.struct({ value: S.number }), OA.required),
-      OA.jsonResponse(
+      OpenApi.jsonRequest(S.struct({ value: S.number }), OpenApi.required),
+      OpenApi.jsonResponse(
         '201',
         S.struct({ value: S.literal('success') }),
         'Returns a pet'
       ),
-      OA.parameter('name', 'path', S.string, OA.required)
+      OpenApi.parameter('name', 'path', S.string, OpenApi.required)
     )
   )
 );

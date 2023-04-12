@@ -19,17 +19,20 @@ const spec = OpenApi.openAPI(
     OpenApi.operation(
       'get',
       OpenApi.tags('Pets'),
-      OpenApi.jsonResponse(200, petSchema, 'Pet response')
+      OpenApi.jsonResponse(200, petSchema, 'Pet response'),
+      OpenApi.operationId('getPet')
     ),
     OpenApi.operation(
       'post',
       OpenApi.tags('Pets'),
-      OpenApi.jsonRequest(petSchema)
+      OpenApi.jsonRequest(petSchema),
+      OpenApi.operationId('savePet')
     ),
     OpenApi.operation(
       'put',
       OpenApi.tags('Pets'),
-      OpenApi.jsonRequest(petSchema)
+      OpenApi.jsonRequest(petSchema),
+      OpenApi.operationId('replacePet')
     )
   )
 );
