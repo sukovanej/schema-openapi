@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.18
+
+### Patch Changes
+
+- fdddaa3: examples -> randomExample
+
 ## 0.0.17
 
 ### Patch Changes
