@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.17
+
+### Patch Changes
+
+- 3bcd5c5: introduce example compiler
+
 ## 0.0.16
 
 ### Patch Changes
