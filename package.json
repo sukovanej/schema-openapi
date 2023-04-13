@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "vitest run",
-    "lint": "tsc --noEdit",
+    "lint": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
     "watch": "tsc -w",
     "format": "prettier -w src test",
