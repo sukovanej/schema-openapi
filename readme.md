@@ -26,7 +26,7 @@ Operations
 
 - [path](#path)
 - [operation](#operation)
-- [operationId](#operationId)
+- [operationId](#parameter)
 - [parameter](#parameter)
 - [allowEmptyValue](#allowEmptyValue)
 - [jsonRequest](#jsonRequest)
@@ -191,7 +191,7 @@ OpenApi.openAPI(
 
 _Available setters_: [description](#description), [parameter](#parameter),
 [jsonResponse](#jsonResponse), [jsonRequest](#jsonRequest),
-[deprecated](#deprecated), [operationId](#operationId)
+[deprecated](#deprecated), [operationId](#parameter)
 
 _Setter of_: [path](#path)
 
@@ -200,6 +200,8 @@ _Setter of_: [path](#path)
 Set a parameter. The (second) `in` parameter is one of `query`, `header`,
 `path`, `cookie`. If the `in` is `path`, [required](#required) must be set
 for the parameter.
+
+Set the operation id using `OpenApi.operationId`.
 
 ```typescript
 OpenApi.openAPI(
