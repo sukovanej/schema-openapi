@@ -1,60 +1,98 @@
+import * as O from '@effect/data/Option';
 import * as S from '@effect/schema/Schema';
 
-import { examples } from '../src/example-compiler';
+import { randomExample } from '../src/example-compiler';
 
 test('struct', () => {
-  const es = examples(S.struct({ name: S.number }));
+  const es = O.getOrThrow(randomExample(S.struct({ name: S.number })));
 
-  expect(es.length).toBeGreaterThan(0);
+  expect(typeof es).toBe('object');
+  expect(Object.getOwnPropertyNames(es).length).toBe(1);
+  expect(typeof es.name).toBe('number');
+});
 
-  for (const example of es) {
-    expect(typeof example).toBe('object');
-    expect(Object.getOwnPropertyNames(example).length).toBe(1);
-    expect(typeof example.name).toBe('number');
-  }
+test('big struct', () => {
+  O.getOrThrow(
+    randomExample(
+      S.struct({
+        name: S.number,
+        value: S.string,
+        another: S.boolean,
+        hello: S.struct({
+          patrik: S.literal('borec'),
+          another: S.array(S.union(S.string, S.number)),
+        }),
+        another3: S.boolean,
+        another4: S.boolean,
+        another5: S.boolean,
+      })
+    )
+  );
 });
 
 test('list', () => {
-  const es = examples(S.array(S.string));
+  const example = O.getOrThrow(randomExample(S.array(S.string)));
 
-  expect(es.length).toBeGreaterThan(0);
+  expect(Array.isArray(example)).toBe(true);
 
-  let atLeastOneNonEmpty = false;
-
-  for (const example of es) {
-    expect(Array.isArray(example)).toBe(true);
-
-    for (const value of example) {
-      expect(typeof value).toBe('string');
-    }
-
-    atLeastOneNonEmpty = atLeastOneNonEmpty || example.length > 0;
+  for (const value of example) {
+    expect(typeof value).toBe('string');
   }
-
-  expect(atLeastOneNonEmpty).toBe(true);
 });
 
 test('tuple', () => {
-  const es = examples(S.tuple(S.literal('a'), S.literal('b')));
+  const example = O.getOrThrow(
+    randomExample(
+      S.tuple(S.literal('a'), S.union(S.literal('b'), S.literal('c')))
+    )
+  );
 
-  expect(es.length).toBe(1);
-  expect(es[0]).toEqual(['a', 'b']);
+  expect(example[0]).toEqual('a');
+  expect(example[1]).oneOf(['b', 'c']);
 });
 
-//test('template literal', () => {
-//  const es = examples(
-//    S.templateLiteral(
-//      S.literal(1),
-//      S.literal('e'),
-//      S.literal('l'),
-//      S.string,
-//      S.literal('x')
-//    )
-//  );
-//
-//  expect(es.length).toBeGreaterThan(0);
-//  for (const example of es) {
-//    expect(example.startsWith('1el')).toBe(true);
-//    expect(example.endsWith('x')).toBe(true);
-//  }
-//});
+describe('template literal', () => {
+  test('simple', () => {
+    const es = O.getOrThrow(
+      randomExample(S.templateLiteral(S.literal('zdar')))
+    );
+
+    expect(es).toBe('zdar');
+  });
+
+  test('number literal', () => {
+    const es = O.getOrThrow(
+      randomExample(S.templateLiteral(S.literal(1), S.literal('2')))
+    );
+
+    expect(es).toBe('12');
+  });
+
+  test('number schema', () => {
+    const example = O.getOrThrow(
+      randomExample(S.templateLiteral(S.number, S.literal('test'), S.number))
+    );
+
+    const reg = /(\d+)(\.\d+)?(test)(\d+)(\.\d+)?/;
+    expect(reg.test(example)).toBe(true);
+  });
+
+  test('string schema', () => {
+    const example = O.getOrThrow(
+      randomExample(S.templateLiteral(S.number, S.string))
+    );
+
+    const reg = /(\d+)(\.\d+)?/;
+    expect(reg.test(example)).toBe(true);
+  });
+
+  test('union', () => {
+    const es = O.getOrThrow(
+      randomExample(
+        S.templateLiteral(S.literal(1), S.union(S.literal('2'), S.literal(3)))
+      )
+    );
+
+    expect(es).oneOf(['12', '13']);
+  });
+});

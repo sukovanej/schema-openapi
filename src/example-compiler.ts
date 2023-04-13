@@ -1,4 +1,4 @@
-import { flow, pipe } from '@effect/data/Function';
+import { pipe } from '@effect/data/Function';
 import * as O from '@effect/data/Option';
 import * as RA from '@effect/data/ReadonlyArray';
 import * as AST from '@effect/schema/AST';
@@ -10,55 +10,54 @@ const getExampleValue = (ast: AST.Annotated) =>
     O.getOrUndefined
   );
 
-const randomIntBetween = (min: number, max: number) =>
-  Math.floor(min + max * Math.random());
+const randomChoice = <A>(xs: readonly A[]): O.Option<A> => {
+  const randomIndex = Math.round(Math.random() * (xs.length - 1));
 
-const randomChoice = <A>(as: readonly A[]): A => {
-  const index = randomIntBetween(0, as.length - 1);
-
-  if (index < 0 || index >= as.length) {
-    throw new Error('Cannot choose an element');
+  if (randomIndex < 0) {
+    return O.none();
   }
 
-  return as[index];
+  return O.some(xs[randomIndex]);
 };
 
-const randomBool = () => Math.random() > 0.5;
-
-export const examples = <A>(schema: S.Schema<any, A>): A[] => {
-  const go = (ast: AST.AST): any => {
+export const randomExample = <A>(schema: S.Schema<any, A>): O.Option<A> => {
+  const go = (ast: AST.AST): O.Option<any> => {
     const exampleFromAnnotation = getExampleValue(ast);
 
     if (exampleFromAnnotation) {
-      return exampleFromAnnotation;
+      return O.some(exampleFromAnnotation);
     }
 
     switch (ast._tag) {
       case 'Literal': {
-        return [ast.literal];
+        return O.some(ast.literal);
       }
       case 'UnknownKeyword':
-        return undefined;
+        return O.some(undefined);
       case 'AnyKeyword':
-        return {};
+        return randomChoice([{}, 'hello-world', 69, undefined]);
       case 'StringKeyword':
-        return ['string', 'patrik'];
+        return randomChoice(['string', 'patrik']);
       case 'NumberKeyword':
-        return [69, 420, 3.14];
+        return randomChoice([69, 420, 3.14]);
       case 'BooleanKeyword':
-        return [true, false];
+        return randomChoice([true, false]);
       case 'ObjectKeyword':
-        return { iam: 'object' };
+        return randomChoice([{ iam: 'object' }]);
       case 'Tuple': {
-        let elements = ast.elements.map((e) => randomChoice(go(e.type)));
         const rest = pipe(
-          ast.rest,
-          O.map(RA.mapNonEmpty(flow(go, randomChoice)))
+          O.flatMap(ast.rest, RA.traverse(O.Applicative)(go)),
+          O.orElse(() => O.some([]))
         );
-        if (O.isSome(rest)) {
-          elements = elements.concat(rest.value);
-        }
-        return [elements];
+
+        const elements = pipe(
+          ast.elements.values(),
+          RA.traverse(O.Applicative)((element) => go(element.type))
+        );
+
+        return O.flatMap(rest, (rest) =>
+          O.map(elements, (elements) => [...elements, ...rest])
+        );
       }
       case 'TypeLiteral': {
         if (
@@ -70,40 +69,60 @@ export const examples = <A>(schema: S.Schema<any, A>): A[] => {
           throw new Error(`Cannot create example for some index signatures`);
         }
 
-        const object = ast.propertySignatures.reduce(
-          (acc, ps) => ({ ...acc, [ps.name]: randomChoice(go(ps.type)) }),
-          {}
+        const result = ast.propertySignatures.reduce(
+          (acc, ps) =>
+            pipe(
+              acc,
+              O.flatMap((acc) =>
+                pipe(
+                  go(ps.type),
+                  O.map((v) => ({ ...acc, [ps.name]: v }))
+                )
+              )
+            ),
+          O.some({})
         );
 
-        return [object];
+        return result;
       }
       case 'Union': {
-        return go(randomChoice(ast.types));
+        return O.flatten(randomChoice(ast.types.map(go)));
       }
       case 'Enums': {
-        return randomChoice(ast.enums)[1];
+        return randomChoice(ast.enums);
       }
       case 'Refinement': {
-        return go(ast.from);
+        return O.none(); // TODO
       }
       case 'Transform':
         return go(ast.to);
       case 'UniqueSymbol':
-        return [];
+        return O.none();
       case 'UndefinedKeyword':
-        return undefined;
+        return O.some(undefined);
       case 'VoidKeyword':
-        return [];
+        return O.none();
       case 'NeverKeyword': {
-        return [];
+        return O.none();
       }
       case 'BigIntKeyword': {
-        return [BigInt(69), BigInt(420), BigInt(3.14)];
+        return randomChoice([BigInt(69), BigInt(420), BigInt(3.14)]);
       }
       case 'SymbolKeyword':
-        return [];
+        return O.none();
       case 'Lazy':
         return go(ast.f());
+      case 'TemplateLiteral': {
+        const result = ast.spans.reduce(
+          (acc, v) =>
+            O.flatMap(acc, (acc) =>
+              O.map(go(v.type), (x) => `${acc}${x}${v.literal}`)
+            ),
+          O.some(ast.head)
+        );
+
+        return result;
+      }
     }
     throw new Error(`TODO: unhandled ${JSON.stringify(ast)}`);
   };
