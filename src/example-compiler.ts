@@ -81,7 +81,11 @@ export const randomExample = <A>(
             (is) => is.parameter._tag === 'StringKeyword'
           ).length
         ) {
-          throw new Error(`Cannot create example for some index signatures`);
+          return Effect.fail(
+            randomExampleError(
+              Error(`Cannot create example for some index signatures`)
+            )
+          );
         }
 
         const result = pipe(
