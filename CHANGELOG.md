@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.19
+
+### Patch Changes
+
+- d9b58c2: randomExample returns `Effect`
+
 ## 0.0.18
 
 ### Patch Changes
