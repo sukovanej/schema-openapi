@@ -1,6 +1,7 @@
 import { pipe } from '@effect/data/Function';
 import * as O from '@effect/data/Option';
 import * as RA from '@effect/data/ReadonlyArray';
+import * as Effect from '@effect/io/Effect';
 import * as AST from '@effect/schema/AST';
 import * as S from '@effect/schema/Schema';
 
@@ -10,34 +11,48 @@ const getExampleValue = (ast: AST.Annotated) =>
     O.getOrUndefined
   );
 
-const randomChoice = <A>(xs: readonly A[]): O.Option<A> => {
-  const randomIndex = Math.round(Math.random() * (xs.length - 1));
+const randomChoice = <A>(
+  xs: readonly A[]
+): Effect.Effect<never, RandomExampleError, A> =>
+  pipe(
+    Effect.randomWith((r) => r.nextIntBetween(0, xs.length - 1)),
+    Effect.filterOrFail(
+      (i) => i >= 0,
+      () => randomExampleError(`Can choose from ${xs}`)
+    ),
+    Effect.map((i) => xs[i])
+  );
 
-  if (randomIndex < 0) {
-    return O.none();
-  }
-
-  return O.some(xs[randomIndex]);
+export type RandomExampleError = {
+  _tag: 'RandomExampleError';
+  error: unknown;
 };
 
-export const randomExample = <A>(schema: S.Schema<any, A>): O.Option<A> => {
-  const go = (ast: AST.AST): O.Option<any> => {
+export const randomExampleError = (error: unknown): RandomExampleError => ({
+  _tag: 'RandomExampleError',
+  error,
+});
+
+export const randomExample = <A>(
+  schema: S.Schema<any, A>
+): Effect.Effect<never, RandomExampleError, A> => {
+  const go = (ast: AST.AST): Effect.Effect<never, RandomExampleError, any> => {
     const exampleFromAnnotation = getExampleValue(ast);
 
     if (exampleFromAnnotation) {
-      return O.some(exampleFromAnnotation);
+      return randomChoice(exampleFromAnnotation);
     }
 
     switch (ast._tag) {
       case 'Literal': {
-        return O.some(ast.literal);
+        return Effect.succeed(ast.literal);
       }
       case 'UnknownKeyword':
-        return O.some(undefined);
+        return Effect.succeed(undefined);
       case 'AnyKeyword':
         return randomChoice([{}, 'hello-world', 69, undefined]);
       case 'StringKeyword':
-        return randomChoice(['string', 'patrik']);
+        return randomChoice(['hello world', 'patrik']);
       case 'NumberKeyword':
         return randomChoice([69, 420, 3.14]);
       case 'BooleanKeyword':
@@ -46,17 +61,17 @@ export const randomExample = <A>(schema: S.Schema<any, A>): O.Option<A> => {
         return randomChoice([{ iam: 'object' }]);
       case 'Tuple': {
         const rest = pipe(
-          O.flatMap(ast.rest, RA.traverse(O.Applicative)(go)),
-          O.orElse(() => O.some([]))
+          O.map(ast.rest, RA.traverse(Effect.Applicative)(go)),
+          O.getOrElse(() => Effect.succeed([] as any[]))
         );
 
         const elements = pipe(
           ast.elements.values(),
-          RA.traverse(O.Applicative)((element) => go(element.type))
+          RA.traverse(Effect.Applicative)((element) => go(element.type))
         );
 
-        return O.flatMap(rest, (rest) =>
-          O.map(elements, (elements) => [...elements, ...rest])
+        return Effect.flatMap(rest, (rest) =>
+          Effect.map(elements, (elements) => [...elements, ...rest])
         );
       }
       case 'TypeLiteral': {
@@ -69,62 +84,57 @@ export const randomExample = <A>(schema: S.Schema<any, A>): O.Option<A> => {
           throw new Error(`Cannot create example for some index signatures`);
         }
 
-        const result = ast.propertySignatures.reduce(
-          (acc, ps) =>
-            pipe(
-              acc,
-              O.flatMap((acc) =>
-                pipe(
-                  go(ps.type),
-                  O.map((v) => ({ ...acc, [ps.name]: v }))
-                )
-              )
-            ),
-          O.some({})
+        const result = pipe(
+          ast.propertySignatures,
+          Effect.reduce({}, (acc, ps) =>
+            Effect.map(go(ps.type), (v) => ({ ...acc, [ps.name]: v }))
+          )
         );
 
         return result;
       }
       case 'Union': {
-        return O.flatten(randomChoice(ast.types.map(go)));
+        return Effect.flatten(randomChoice(ast.types.map(go)));
       }
       case 'Enums': {
         return randomChoice(ast.enums);
       }
       case 'Refinement': {
-        return O.none(); // TODO
+        return Effect.fail(randomExampleError(`Refinement not implemented`)); // TODO
       }
       case 'Transform':
         return go(ast.to);
       case 'UniqueSymbol':
-        return O.none();
+        return Effect.fail(randomExampleError(`UniqueSymbol`));
       case 'UndefinedKeyword':
-        return O.some(undefined);
+        return Effect.fail(randomExampleError(`UndefinedKeyword`));
       case 'VoidKeyword':
-        return O.none();
+        return Effect.fail(randomExampleError(`VoidKeyword`));
       case 'NeverKeyword': {
-        return O.none();
+        return Effect.fail(randomExampleError(`NeverKeyword`));
       }
       case 'BigIntKeyword': {
         return randomChoice([BigInt(69), BigInt(420), BigInt(3.14)]);
       }
       case 'SymbolKeyword':
-        return O.none();
+        return Effect.fail(randomExampleError(`SymbolKeyword`));
       case 'Lazy':
         return go(ast.f());
       case 'TemplateLiteral': {
-        const result = ast.spans.reduce(
-          (acc, v) =>
-            O.flatMap(acc, (acc) =>
-              O.map(go(v.type), (x) => `${acc}${x}${v.literal}`)
-            ),
-          O.some(ast.head)
+        const result = pipe(
+          ast.spans,
+          Effect.reduce(ast.head, (acc, v) =>
+            Effect.map(go(v.type), (x) => `${acc}${x}${v.literal}`)
+          )
         );
 
         return result;
       }
     }
-    throw new Error(`TODO: unhandled ${JSON.stringify(ast)}`);
+
+    return Effect.fail(
+      randomExampleError(Error(`TODO: unhandled ${JSON.stringify(ast)}`))
+    );
   };
 
   return go(schema.ast);

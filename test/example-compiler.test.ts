@@ -1,18 +1,27 @@
-import * as O from '@effect/data/Option';
+import { pipe } from '@effect/data/Function';
+import * as Effect from '@effect/io/Effect';
 import * as S from '@effect/schema/Schema';
 
 import { randomExample } from '../src/example-compiler';
 
 test('struct', () => {
-  const es = O.getOrThrow(randomExample(S.struct({ name: S.number })));
+  const es = Effect.runSync(randomExample(S.struct({ name: S.number })));
 
   expect(typeof es).toBe('object');
   expect(Object.getOwnPropertyNames(es).length).toBe(1);
   expect(typeof es.name).toBe('number');
 });
 
+test('with test annotation', () => {
+  const es = Effect.runSync(
+    randomExample(S.struct({ name: pipe(S.number, S.examples([1])) }))
+  );
+
+  expect(es).toEqual({ name: 1 });
+});
+
 test('big struct', () => {
-  O.getOrThrow(
+  const example = Effect.runSync(
     randomExample(
       S.struct({
         name: S.number,
@@ -28,10 +37,13 @@ test('big struct', () => {
       })
     )
   );
+  expect(typeof example).toBe('object');
+  expect(Object.getOwnPropertyNames(example).length).toBe(7);
+  expect(example.another3).oneOf([true, false]);
 });
 
 test('list', () => {
-  const example = O.getOrThrow(randomExample(S.array(S.string)));
+  const example = Effect.runSync(randomExample(S.array(S.string)));
 
   expect(Array.isArray(example)).toBe(true);
 
@@ -41,7 +53,7 @@ test('list', () => {
 });
 
 test('tuple', () => {
-  const example = O.getOrThrow(
+  const example = Effect.runSync(
     randomExample(
       S.tuple(S.literal('a'), S.union(S.literal('b'), S.literal('c')))
     )
@@ -53,7 +65,7 @@ test('tuple', () => {
 
 describe('template literal', () => {
   test('simple', () => {
-    const es = O.getOrThrow(
+    const es = Effect.runSync(
       randomExample(S.templateLiteral(S.literal('zdar')))
     );
 
@@ -61,7 +73,7 @@ describe('template literal', () => {
   });
 
   test('number literal', () => {
-    const es = O.getOrThrow(
+    const es = Effect.runSync(
       randomExample(S.templateLiteral(S.literal(1), S.literal('2')))
     );
 
@@ -69,7 +81,7 @@ describe('template literal', () => {
   });
 
   test('number schema', () => {
-    const example = O.getOrThrow(
+    const example = Effect.runSync(
       randomExample(S.templateLiteral(S.number, S.literal('test'), S.number))
     );
 
@@ -78,7 +90,7 @@ describe('template literal', () => {
   });
 
   test('string schema', () => {
-    const example = O.getOrThrow(
+    const example = Effect.runSync(
       randomExample(S.templateLiteral(S.number, S.string))
     );
 
@@ -87,7 +99,7 @@ describe('template literal', () => {
   });
 
   test('union', () => {
-    const es = O.getOrThrow(
+    const es = Effect.runSync(
       randomExample(
         S.templateLiteral(S.literal(1), S.union(S.literal('2'), S.literal(3)))
       )
