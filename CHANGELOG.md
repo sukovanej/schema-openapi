@@ -1,5 +1,13 @@
 # schema-openapi
 
+## 0.0.20
+
+### Patch Changes
+
+- 765ca5c: update dependencies
+- f72147c: update dependencies
+- 47e62e1: update dependencies
+
 ## 0.0.19
 
 ### Patch Changes
