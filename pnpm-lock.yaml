@@ -11,8 +11,8 @@ devDependencies:
     specifier: ^0.12.2
     version: 0.12.2
   '@effect/io':
-    specifier: ^0.22.4
-    version: 0.22.4
+    specifier: ^0.22.5
+    version: 0.22.5
   '@effect/schema':
     specifier: ^0.14.0
     version: 0.14.0
@@ -387,8 +387,8 @@ packages:
     resolution: {integrity: sha512-bmWRTcsSRG1FlBswT+D8SxW6r3c4B3pKJrjYfitCD03tXHnup5gLHaWqbFgIjiyYITS+UsJRRjVrNxvyGG4ZNQ==}
     dev: true
 
-  /@effect/io@0.22.4:
-    resolution: {integrity: sha512-WdZDvPaynYV/3QB7dm0Jnis3QIp1zrjaIGVEKpzGsradnxTFkdxqWBQvIADLQ5wBIZzYJ60aQmpuepnaAKDJAA==}
+  /@effect/io@0.22.5:
+    resolution: {integrity: sha512-mJmIpkFyFauzqsyM5DSVZY3LNwRbHwgmJGIuOPzTCEQvJRI89/bTSVf444ZtwR3OLrHSxt3u0U/vofyQYTDzwA==}
     dependencies:
       '@effect/data': 0.12.2
     dev: true
@@ -397,7 +397,7 @@ packages:
     resolution: {integrity: sha512-vFnxOcFC1NvHzdTSIvR3D5nw6h8pV8t1oibDjk7V2xa8ddARnQXXbRPcV2YOPt4iKV39ASWjYWNOmpLFv3/v8Q==}
     dependencies:
       '@effect/data': 0.12.2
-      '@effect/io': 0.22.4
+      '@effect/io': 0.22.5
       fast-check: 3.8.0
     dev: true
 
@@ -2517,8 +2517,8 @@ packages:
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
     dev: true
 
-  /rollup@3.20.5:
-    resolution: {integrity: sha512-Mx6NE3nLPIP6a9ReV4dTPOYYmDiyarJNtSbc37Jx0jvh8SHySoFPgyZAp9aDP3LnYvaJOrz+fclcwq3oZDzlnA==}
+  /rollup@3.20.6:
+    resolution: {integrity: sha512-2yEB3nQXp/tBQDN0hJScJQheXdvU2wFhh6ld7K/aiZ1vYcak6N/BKjY1QrU6BvO2JWYS8bEs14FRaxXosxy2zw==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3029,7 +3029,7 @@ packages:
       esbuild: 0.17.17
       postcss: 8.4.22
       resolve: 1.22.2
-      rollup: 3.20.5
+      rollup: 3.20.6
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
