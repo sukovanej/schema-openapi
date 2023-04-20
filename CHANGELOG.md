@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.21
+
+### Patch Changes
+
+- eb49c47: update dependencies + make /io, /data and /schema direct dependencies
+
 ## 0.0.20
 
 ### Patch Changes
