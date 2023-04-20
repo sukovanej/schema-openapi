@@ -3,7 +3,7 @@
 Declarative pipe-able API for OpenAPI specification construction using
 [@effect/schema](https://github.com/effect-ts/schema).
 
-**Tihis package is unnder development.** Stability of the API is not guaranteed.
+:construction: **Under development.**
 
 ## Installation
 
