@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.22
+
+### Patch Changes
+
+- c6ece9e: update /io and /schema
+
 ## 0.0.21
 
 ### Patch Changes
