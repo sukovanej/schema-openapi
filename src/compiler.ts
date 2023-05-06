@@ -78,6 +78,7 @@ export const openAPISchemaFor = <A>(
       case 'UnknownKeyword':
       case 'AnyKeyword':
         return {};
+      case 'TemplateLiteral':
       case 'StringKeyword':
         return { type: 'string' };
       case 'NumberKeyword':
@@ -231,15 +232,19 @@ export const openAPISchemaFor = <A>(
       }
       case 'Transform':
         return go(ast.from);
+      case 'Declaration':
+        return go(ast.type);
+      case 'Lazy':
       case 'UniqueSymbol':
       case 'UndefinedKeyword':
       case 'VoidKeyword':
       case 'NeverKeyword':
       case 'BigIntKeyword':
-      case 'SymbolKeyword':
-        throw new Error(`cannot convert '${ast._tag}' to OpenAPISchema Schema`);
+      case 'SymbolKeyword': {
+        console.warn(`Schema tag "${ast._tag}" is not supported for OpenAPI.`);
+        return {};
+      }
     }
-    throw new Error(`TODO: unhandled ${JSON.stringify(ast)}`);
   };
 
   return go(schema.ast);

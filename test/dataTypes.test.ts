@@ -18,6 +18,12 @@ describe('data types', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'string' });
   });
 
+  it('branded string', () => {
+    const schema = pipe(S.string, S.brand('my-string'));
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'string' });
+  });
+
   it('string with minLength', () => {
     const schema = pipe(S.string, S.minLength(1));
 
@@ -295,6 +301,27 @@ describe('objects', () => {
       username: S.string,
       name: S.optional(S.string),
     });
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: 'object',
+      properties: {
+        id: { type: 'integer' },
+        name: { type: 'string' },
+        username: { type: 'string' },
+      },
+      required: ['username', 'id'],
+    });
+  });
+
+  it('brands', () => {
+    const schema = pipe(
+      S.struct({
+        id: S.int()(S.number),
+        username: S.string,
+        name: S.optional(S.string),
+      }),
+      S.brand('my-schema')
+    );
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
