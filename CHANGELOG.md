@@ -1,5 +1,12 @@
 # schema-openapi
 
+## 0.0.26
+
+### Patch Changes
+
+- 1df6897: Update dependencies
+- 68a4c9b: Support `TemplateLiteral` and `Declaration`.
+
 ## 0.0.25
 
 ### Patch Changes
