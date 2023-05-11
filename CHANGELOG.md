@@ -1,5 +1,13 @@
 # schema-openapi
 
+## 0.0.28
+
+### Patch Changes
+
+- ec81f25: Filter `undefined` from union. The expectation is `UndefinedKeyword` occurs
+  when using the `Schema.optionFromNullable` for which the `undefined` case can
+  never happen.
+
 ## 0.0.27
 
 ### Patch Changes
