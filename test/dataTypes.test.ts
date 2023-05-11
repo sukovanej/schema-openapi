@@ -334,3 +334,15 @@ describe('objects', () => {
     });
   });
 });
+
+it('optionFromNullable', () => {
+  const schema = S.struct({
+    value: S.optionFromNullable(S.string),
+  });
+
+  expect(openAPISchemaFor(schema)).toStrictEqual({
+    type: 'object',
+    properties: { value: { type: 'string', nullable: true } },
+    required: ['value']
+  });
+});
