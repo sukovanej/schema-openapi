@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.29
+
+### Patch Changes
+
+- db67fff: Remove union undefined filtering. Update dependencies.
+
 ## 0.0.28
 
 ### Patch Changes
