@@ -189,12 +189,7 @@ export const openAPISchemaFor = <A>(
         const nullable = ast.types.find(
           (a) => a._tag === 'Literal' && a.literal === null
         );
-        const undefinedElement = ast.types.find(
-          (a) => a._tag === 'UndefinedKeyword'
-        );
-        const nonNullables = ast.types.filter(
-          (a) => a !== nullable && a !== undefinedElement
-        );
+        const nonNullables = ast.types.filter((a) => a !== nullable);
         const nullableObj = nullable && { nullable: true };
 
         if (nonNullables.length === 1) {
