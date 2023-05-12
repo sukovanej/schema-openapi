@@ -343,6 +343,6 @@ it('optionFromNullable', () => {
   expect(openAPISchemaFor(schema)).toStrictEqual({
     type: 'object',
     properties: { value: { type: 'string', nullable: true } },
-    required: ['value']
+    required: ['value'],
   });
 });
