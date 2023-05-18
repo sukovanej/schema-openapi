@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.31
+
+### Patch Changes
+
+- 85761ab: Update dependencies.
+
 ## 0.0.30
 
 ### Patch Changes
