@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.32
+
+### Patch Changes
+
+- b58efe1: Update dependencies.
+
 ## 0.0.31
 
 ### Patch Changes
