@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.0.33
+
+### Patch Changes
+
+- cd8e75d: Update /data.
+
 ## 0.0.32
 
 ### Patch Changes
