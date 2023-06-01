@@ -3,13 +3,21 @@
   "version": "0.0.33",
   "description": "Pipeable API for OpenAPI specification and @effect/schemas compilers",
   "homepage": "https://github.com/sukovanej/schema-openapi",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "type": "module",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsup",
     "watch": "tsc -w",
     "format": "prettier -w src test",
     "check-format": "prettier --check src test",
@@ -27,6 +35,7 @@
     "express": "^4.18.2",
     "prettier": "^2.8.8",
     "swagger-ui-express": "^4.6.3",
+    "tsup": "^6.7.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4",
     "vitest": "^0.31.3"
