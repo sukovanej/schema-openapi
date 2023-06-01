@@ -1,3 +1,4 @@
+import path from "path";
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -8,6 +9,11 @@ export default defineConfig({
       reporter: ['cobertura', 'text'],
       all: true,
       include: ['src'],
+    },
+  },
+  resolve: {
+    alias: {
+      "schema-openapi": path.resolve(__dirname, "/src"),
     },
   },
 });

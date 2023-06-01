@@ -1,6 +1,7 @@
-import { openAPISchemaFor } from './compiler';
-import * as I from './internal';
-import {
+import { openAPISchemaFor } from 'schema-openapi/compiler';
+import * as I from 'schema-openapi/internal';
+
+import type {
   AnySchema,
   OpenAPISchemaType,
   OpenAPISpec,

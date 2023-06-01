@@ -1,3 +1,3 @@
-export * from './openapi';
-export * from './types';
-export * from './example-compiler';
+export * from 'schema-openapi/openapi';
+export * from 'schema-openapi/types';
+export * from 'schema-openapi/example-compiler';
