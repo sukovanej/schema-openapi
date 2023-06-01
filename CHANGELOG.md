@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.1.1
+
+### Patch Changes
+
+- 21a7499: Fix imports.
+
 ## 0.1.0
 
 ### Minor Changes
