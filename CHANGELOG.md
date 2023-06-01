@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.1.0
+
+### Minor Changes
+
+- 3eb2942: Add esm support.
+
 ## 0.0.33
 
 ### Patch Changes
