@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.2.1
+
+### Patch Changes
+
+- 372cf73: Update /data.
+
 ## 0.2.0
 
 ### Minor Changes
