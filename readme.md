@@ -11,6 +11,17 @@ Declarative pipe-able API for OpenAPI specification construction using
 pnpm add schema-openapi
 ```
 
+## OpenAPI schema derivation from `@effect/schema`
+
+The heart of this library is a compiler that derives an OpenAPI schema
+from an effect-ts `Schema` declaration. Generated schema can be adjusted
+using annotations. Following annotations are supported:
+
+- `DescriptionAnnotation`
+- `JSONSchemaAnnotation`
+
+Please, consult the schema [API documentation](https://effect-ts.github.io/schema/modules/Schema.ts.html#annotationoptions-type-alias).
+
 # API documentation
 
 Top-level
