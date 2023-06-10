@@ -10,6 +10,7 @@ export default defineConfig({
       all: true,
       include: ['src'],
     },
+    setupFiles: './test/setup.ts',
   },
   resolve: {
     alias: {
