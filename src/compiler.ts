@@ -43,19 +43,17 @@ const getJSONSchemaAnnotation = (ast: AST.Annotated) =>
     O.map(convertJsonSchemaAnnotation)
   );
 
-const getDescription = (ast: AST.Annotated) =>
+const addDescription = (ast: AST.Annotated) => (schema: OpenAPISchemaType) =>
   pipe(
-    AST.getAnnotation<AST.DescriptionAnnotation>(AST.DescriptionAnnotationId)(
-      ast
-    ),
-    O.map((description) => ({ description })),
-    O.getOrUndefined
+    ast,
+    AST.getAnnotation<AST.DescriptionAnnotation>(AST.DescriptionAnnotationId),
+    O.map((description) => ({ ...schema, description })),
+    O.getOrElse(() => schema)
   );
 
 const createEnum = <T extends AST.LiteralValue>(
   types: readonly T[],
-  nullable: boolean,
-  ast: AST.Annotated
+  nullable: boolean
 ) => {
   const type = typeof types[0];
 
@@ -69,35 +67,34 @@ const createEnum = <T extends AST.LiteralValue>(
     type,
     enum: nullable ? [...types, null] : types,
     ...nullableObj,
-    ...getDescription(ast),
   };
 };
 
 export const openAPISchemaFor = <A>(
   schema: Schema<A, any>
 ): OpenAPISchemaType => {
-  const go = (ast: AST.AST): OpenAPISchemaType => {
+  const map = (ast: AST.AST): OpenAPISchemaType => {
     switch (ast._tag) {
       case 'Literal': {
         if (typeof ast.literal === 'bigint') {
-          return { type: 'integer', ...getDescription(ast) };
+          return { type: 'integer' };
         } else if (ast.literal === null) {
-          return { type: 'null', ...getDescription(ast) };
+          return { type: 'null' };
         }
-        return { const: ast.literal, ...getDescription(ast) };
+        return { const: ast.literal };
       }
       case 'UnknownKeyword':
       case 'AnyKeyword':
         return {};
       case 'TemplateLiteral':
       case 'StringKeyword':
-        return { type: 'string', ...getDescription(ast) };
+        return { type: 'string' };
       case 'NumberKeyword':
-        return { type: 'number', ...getDescription(ast) };
+        return { type: 'number' };
       case 'BooleanKeyword':
-        return { type: 'boolean', ...getDescription(ast) };
+        return { type: 'boolean' };
       case 'ObjectKeyword':
-        return { type: 'object', ...getDescription(ast) };
+        return { type: 'object' };
       case 'Tuple': {
         const elements = ast.elements.map((e) => go(e.type));
         const rest = pipe(ast.rest, O.map(RA.mapNonEmpty(go)));
@@ -144,7 +141,6 @@ export const openAPISchemaFor = <A>(
           ...maxItemsObj,
           items,
           ...additionalItemsObj,
-          ...getDescription(ast),
         };
       }
       case 'TypeLiteral': {
@@ -195,7 +191,7 @@ export const openAPISchemaFor = <A>(
               : { oneOf: indexSignatures };
         }
 
-        return { ...output, ...getDescription(ast) };
+        return output;
       }
       case 'Union': {
         const nullable = ast.types.find(
@@ -208,36 +204,31 @@ export const openAPISchemaFor = <A>(
           if (nonNullables[0]._tag === 'Enums') {
             return createEnum(
               nonNullables[0].enums.map(([_, value]) => value),
-              nullable !== undefined,
-              ast
+              nullable !== undefined
             );
           }
           return {
             ...go(nonNullables[0]),
             ...nullableObj,
-            ...getDescription(ast),
           };
         }
 
         if (nonNullables.every((i): i is AST.Literal => i._tag === 'Literal')) {
           return createEnum(
             nonNullables.map((i) => i.literal),
-            nullable !== undefined,
-            ast
+            nullable !== undefined
           );
         }
 
         return {
           oneOf: nonNullables.map(go),
           ...nullableObj,
-          ...getDescription(ast),
         };
       }
       case 'Enums': {
         return createEnum(
           ast.enums.map(([_, value]) => value),
-          false,
-          ast
+          false
         );
       }
       case 'Refinement': {
@@ -247,14 +238,13 @@ export const openAPISchemaFor = <A>(
           O.match(
             () => from,
             (schema) => ({ ...from, ...schema })
-          ),
-          (obj) => ({ ...obj, ...getDescription(ast) })
+          )
         );
       }
       case 'Transform':
-        return { ...go(ast.from), ...getDescription(ast) };
+        return go(ast.from);
       case 'Declaration':
-        return { ...go(ast.type), ...getDescription(ast) };
+        return go(ast.type);
       case 'Lazy':
       case 'UniqueSymbol':
       case 'UndefinedKeyword':
@@ -267,6 +257,9 @@ export const openAPISchemaFor = <A>(
       }
     }
   };
+
+  const go = (ast: AST.AST): OpenAPISchemaType =>
+    pipe(map(ast), addDescription(ast));
 
   return go(schema.ast);
 };
