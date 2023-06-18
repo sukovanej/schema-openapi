@@ -1,5 +1,12 @@
 # schema-openapi
 
+## 0.2.3
+
+### Patch Changes
+
+- dbd33e4: Update dependencies.
+- c3dddd8: Remove unnecessary files from the build.
+
 ## 0.2.2
 
 ### Patch Changes
