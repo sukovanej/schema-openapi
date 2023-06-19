@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@effect/data':
-    specifier: ^0.12.7
-    version: 0.12.7
+    specifier: ^0.12.8
+    version: 0.12.8
   '@effect/io':
-    specifier: ^0.26.0
-    version: 0.26.0
+    specifier: ^0.26.1
+    version: 0.26.1
   '@effect/schema':
     specifier: ^0.20.2
     version: 0.20.2
@@ -392,21 +392,21 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@effect/data@0.12.7:
-    resolution: {integrity: sha512-f/NRMyxOIPnxz2kRxUbSv0UFeELjruI+yqMpuoGKbmd3Ji5DP2SAQNF0LXESuZ0AucqRdxKT6odyjuAOZBXyKA==}
+  /@effect/data@0.12.8:
+    resolution: {integrity: sha512-Wm5tOFHrgKreMp0NCveNfGDOnTcufZGDCXYIDHBI/hqlTujbigi3DZpDm4pf4DfUhnY5JAh0pisSyjnWw5gVFg==}
     dev: false
 
-  /@effect/io@0.26.0:
-    resolution: {integrity: sha512-umwZ/sRoV7zb/8WwoiK7xWoypqvY6C1EXWEGORpViAFUTx3/bXc9i7JtdttTWVokXb3qogrxGX2SHopB20I4vQ==}
+  /@effect/io@0.26.1:
+    resolution: {integrity: sha512-HBVgiVOqZFgYXQ5DlJHL3DCZRRO5osmlS3TdtCjlWtncqlbxqKpEkwwJbz5hbZSsNwC1O6X6kclGvjw97X+AzQ==}
     dependencies:
-      '@effect/data': 0.12.7
+      '@effect/data': 0.12.8
     dev: false
 
   /@effect/schema@0.20.2:
     resolution: {integrity: sha512-TNnsSvkNfTaGWVdsxxjPnRS4FbyV5LR4Hdhq6GeKNbMocM/Yikdfqei8IkonjaRxo8vDr6qSvXDhNWk0b3ttPw==}
     dependencies:
-      '@effect/data': 0.12.7
-      '@effect/io': 0.26.0
+      '@effect/data': 0.12.8
+      '@effect/io': 0.26.1
       fast-check: 3.10.0
     dev: false
 
@@ -3368,8 +3368,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /swagger-ui-dist@5.0.0:
-    resolution: {integrity: sha512-bwl6og9I9CAHKGSnYLKydjhBuH7d3oU6RX6uKN8oDCkLusTHXOW3sZMyBWjRtjGFnCMmN085oZoaR/4Wm9nIaQ==}
+  /swagger-ui-dist@5.1.0:
+    resolution: {integrity: sha512-c1KmAjuVODxw+vwkNLALQZrgdlBAuBbr2xSPfYrJgseEi7gFKcTvShysPmyuDI4kcUa1+5rFpjWvXdusKY74mg==}
     dev: true
 
   /swagger-ui-express@4.6.3(express@4.18.2):
@@ -3379,7 +3379,7 @@ packages:
       express: '>=4.0.0 || >=5.0.0-beta'
     dependencies:
       express: 4.18.2
-      swagger-ui-dist: 5.0.0
+      swagger-ui-dist: 5.1.0
     dev: true
 
   /term-size@2.2.1:
