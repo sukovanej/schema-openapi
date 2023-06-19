@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.2.4
+
+### Patch Changes
+
+- 1bd29db: Update dependencies.
+
 ## 0.2.3
 
 ### Patch Changes
