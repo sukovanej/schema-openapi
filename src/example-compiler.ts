@@ -61,13 +61,13 @@ export const randomExample = <A>(
         return randomChoice([{ iam: 'object' }]);
       case 'Tuple': {
         const rest = pipe(
-          O.map(ast.rest, RA.traverse(Effect.Applicative)(go)),
+          O.map(ast.rest, Effect.forEach(go)),
           O.getOrElse(() => Effect.succeed([] as any[]))
         );
 
         const elements = pipe(
           ast.elements.values(),
-          RA.traverse(Effect.Applicative)((element) => go(element.type))
+          Effect.forEach((element) => go(element.type))
         );
 
         return Effect.flatMap(rest, (rest) =>

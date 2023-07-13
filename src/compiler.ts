@@ -235,10 +235,10 @@ export const openAPISchemaFor = <A>(
         const from = go(ast.from);
         return pipe(
           getJSONSchemaAnnotation(ast),
-          O.match(
-            () => from,
-            (schema) => ({ ...from, ...schema })
-          )
+          O.match({
+            onNone: () => from,
+            onSome: (schema) => ({ ...from, ...schema }),
+          })
         );
       }
       case 'Transform':
