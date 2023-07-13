@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.3.0
+
+### Minor Changes
+
+- 88bb2ed: Update dependencies.
+
 ## 0.2.7
 
 ### Patch Changes
