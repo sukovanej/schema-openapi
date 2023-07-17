@@ -1,6 +1,5 @@
 import { pipe } from '@effect/data/Function';
 import * as O from '@effect/data/Option';
-import * as RA from '@effect/data/ReadonlyArray';
 import * as Effect from '@effect/io/Effect';
 import * as AST from '@effect/schema/AST';
 import * as S from '@effect/schema/Schema';
