@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.6.1
+
+### Patch Changes
+
+- 22b0894: Update /schema.
+
 ## 0.6.0
 
 ### Minor Changes
