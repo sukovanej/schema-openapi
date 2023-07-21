@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.6.2
+
+### Patch Changes
+
+- 3fad549: Update /data and /io.
+
 ## 0.6.1
 
 ### Patch Changes
