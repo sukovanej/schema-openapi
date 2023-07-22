@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.8.0
+
+### Minor Changes
+
+- 47b9dbb: Enable empty response.
+
 ## 0.7.0
 
 ### Minor Changes
