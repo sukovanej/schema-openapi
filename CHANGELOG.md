@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.7.0
+
+### Minor Changes
+
+- c9834f7: Add response headers.
+
 ## 0.6.2
 
 ### Patch Changes
