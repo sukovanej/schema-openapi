@@ -272,7 +272,7 @@ export const jsonRequest =
 export const jsonResponse =
   (
     statusCode: OpenAPISpecStatusCode,
-    contentSchema: AnySchema,
+    contentSchema: AnySchema | undefined,
     description: string,
     ...setters: I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
@@ -283,10 +283,12 @@ export const jsonResponse =
       [statusCode]: I.runSetters(
         {
           ...spec.responses?.[statusCode],
-          content: modifyContentJsonSchema(
-            spec.requestBody?.content,
-            contentSchema
-          ),
+          ...(contentSchema && {
+            content: modifyContentJsonSchema(
+              spec.responses?.[statusCode]?.content,
+              contentSchema
+            ),
+          }),
           description,
         },
         setters
@@ -375,12 +377,14 @@ export const responseHeaders =
 
 const modifyContentJsonSchema = (
   content: OpenApiSpecContent<OpenAPISchemaType> | undefined,
-  schema: AnySchema
+  schema: AnySchema | undefined
 ): OpenApiSpecContent<OpenAPISchemaType> => ({
   'application/json': {
     ...(content && content['application/json']),
-    schema: {
-      ...openAPISchemaFor(schema),
-    },
+    ...(schema && {
+      schema: {
+        ...openAPISchemaFor(schema),
+      },
+    }),
   },
 });

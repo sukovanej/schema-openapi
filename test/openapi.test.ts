@@ -448,4 +448,26 @@ describe('simple', () => {
     // @ts-ignore
     SwaggerParser.validate(spec);
   });
+
+  it('empty response schema', async () => {
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
+      OA.path(
+        '/pet',
+        OA.operation('post', OA.jsonResponse(200, undefined, 'test'))
+      )
+    );
+
+    expect(spec).toStrictEqual({
+      openapi: '3.0.3',
+      info: { title: 'test', version: '0.1' },
+      paths: {
+        '/pet': { post: { responses: { 200: { description: 'test' } } } },
+      },
+    });
+
+    // @ts-ignore
+    SwaggerParser.validate(spec);
+  });
 });

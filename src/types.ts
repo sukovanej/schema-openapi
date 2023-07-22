@@ -95,7 +95,7 @@ export type OpenApiSpecResponse<S = AnySchema> = {
 };
 
 export type OpenApiSpecMediaType<S = AnySchema> = {
-  schema: S;
+  schema?: S;
   example?: object;
   description?: string;
 };
