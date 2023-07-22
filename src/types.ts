@@ -78,8 +78,19 @@ export type OpenApiSpecContent<S = AnySchema> = {
   [K in OpenApiSpecContentType]?: OpenApiSpecMediaType<S>;
 };
 
+export type OpenApiSpecResponseHeader<S = AnySchema> = {
+  description?: string;
+  schema: S;
+};
+
+export type OpenApiSpecResponseHeaders<S = AnySchema> = Record<
+  string,
+  OpenApiSpecResponseHeader<S>
+>;
+
 export type OpenApiSpecResponse<S = AnySchema> = {
   content: OpenApiSpecContent<S>;
+  headers?: OpenApiSpecResponseHeaders<S>;
   description: string;
 };
 

@@ -42,6 +42,7 @@ Operations
 - [allowEmptyValue](#allowEmptyValue)
 - [jsonRequest](#jsonRequest)
 - [jsonResponse](#jsonResponse)
+- [responseHeaders](#responseHeaders)
 
 General
 
@@ -354,9 +355,34 @@ OpenApi.openAPI(
 );
 ```
 
-_Available setters_: [description](#description)
+_Available setters_: [description](#description), [responseHeaders](#responseHeaders)
 
 _Setter of_: [operation](#operation)
+
+### `responseHeaders`
+
+Set the response headers.
+
+```typescript
+OpenApi.openAPI(
+  'My API',
+  '2.0.1',
+  OpenApi.path(
+    '/pet/{id}',
+    OpenApi.operation(
+      'post',
+      OpenApi.jsonResponse(
+        '200',
+        S.struct({ value: S.number }),
+        'Returns a pet',
+        OpenApi.responseHeaders({ 'My-Header': S.string })
+      )
+    )
+  )
+);
+```
+
+_Setter of_: [jsonResponse](#jsonResponse)
 
 ## General
 

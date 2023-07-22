@@ -1,6 +1,11 @@
 import { openAPISchemaFor } from 'schema-openapi/compiler';
 import * as I from 'schema-openapi/internal';
 
+import { pipe } from '@effect/data/Function';
+import * as Option from '@effect/data/Option';
+import * as AST from '@effect/schema/AST';
+import type * as Schema from '@effect/schema/Schema';
+
 import type {
   AnySchema,
   OpenAPISchemaType,
@@ -332,6 +337,39 @@ export const description =
 export const summary =
   (summary: string): I.Setter<{ summary?: string }> =>
   (spec) => ({ ...spec, summary });
+
+/**
+ * Set response headers.
+ *
+ * @param {string} headers
+ */
+export const responseHeaders =
+  (
+    headers: Record<string, Schema.Schema<string, any>>
+  ): I.Setter<OpenApiSpecResponse<OpenAPISchemaType>> =>
+  (spec) => ({
+    ...spec,
+    headers: Object.entries(headers).reduce((obj, [name, schema]) => {
+      const descriptionObj = pipe(
+        schema.ast,
+        AST.getAnnotation<AST.DescriptionAnnotation>(
+          AST.DescriptionAnnotationId
+        ),
+        Option.match({
+          onNone: () => undefined,
+          onSome: (description) => ({ description }),
+        })
+      );
+
+      return {
+        ...obj,
+        [name]: {
+          schema: openAPISchemaFor(schema),
+          ...descriptionObj,
+        },
+      };
+    }, {}),
+  });
 
 // internals
 

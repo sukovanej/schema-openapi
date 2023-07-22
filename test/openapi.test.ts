@@ -403,4 +403,49 @@ describe('simple', () => {
     // @ts-ignore
     SwaggerParser.validate(spec);
   });
+
+  it('tags', async () => {
+    const spec = OA.openAPI(
+      'test',
+      '0.1',
+      OA.path(
+        '/pet',
+        OA.operation(
+          'post',
+          OA.jsonResponse(
+            200,
+            S.string,
+            'response',
+            OA.responseHeaders({
+              'My-Header': S.description('My description')(S.string),
+            })
+          )
+        )
+      )
+    );
+
+    expect(spec.paths['/pet']).toStrictEqual({
+      post: {
+        responses: {
+          200: {
+            content: {
+              'application/json': {
+                schema: { type: 'string' },
+              },
+            },
+            headers: {
+              'My-Header': {
+                description: 'My description',
+                schema: { description: 'My description', type: 'string' },
+              },
+            },
+            description: 'response',
+          },
+        },
+      },
+    });
+
+    // @ts-ignore
+    SwaggerParser.validate(spec);
+  });
 });
