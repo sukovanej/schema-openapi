@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.8.2
+
+### Patch Changes
+
+- 9b1a6ce: Update /data.
+
 ## 0.8.1
 
 ### Patch Changes
