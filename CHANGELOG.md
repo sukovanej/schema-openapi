@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.8.1
+
+### Patch Changes
+
+- bcf6fa1: Update /schema and /data.
+
 ## 0.8.0
 
 ### Minor Changes
