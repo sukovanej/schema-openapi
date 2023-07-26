@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.8.3
+
+### Patch Changes
+
+- 66521da: Update /io and /schema.
+
 ## 0.8.2
 
 ### Patch Changes
