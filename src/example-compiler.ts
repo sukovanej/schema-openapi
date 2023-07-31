@@ -14,7 +14,7 @@ const randomChoice = <A>(
   xs: readonly A[]
 ): Effect.Effect<never, RandomExampleError, A> =>
   pipe(
-    Effect.randomWith((r) => r.nextIntBetween(0, xs.length - 1)),
+    Effect.randomWith((r) => r.nextIntBetween(0, xs.length)),
     Effect.filterOrFail(
       (i) => i >= 0,
       () => randomExampleError(`Can choose from ${xs}`)
