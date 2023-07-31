@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.10.0
+
+### Minor Changes
+
+- 0e9323f: Update /io and /schema.
+
 ## 0.9.0
 
 ### Minor Changes
