@@ -1,33 +1,37 @@
 {
   "name": "schema-openapi",
+  "type": "module",
   "version": "0.11.0",
   "description": "Pipeable API for OpenAPI specification and @effect/schemas compilers",
   "homepage": "https://github.com/sukovanej/schema-openapi",
-  "main": "dist/index.cjs",
-  "types": "dist/index.d.ts",
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./index.cjs",
+      "import": "./index.js",
+      "types": "./index.d.ts"
     },
     "./*": {
       "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
+        "types": "./*.d.ts",
+        "default": "./*.js"
       },
       "require": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.cjs"
+        "types": "./*.d.cts",
+        "default": "./*.cjs"
       }
     }
   },
-  "type": "module",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
-    "build": "tsup",
+    "build": "tsup && cp package.json dist/ && cp readme.md dist/",
     "watch": "tsc -w",
     "format": "prettier -w src test",
     "check-format": "prettier --check src test",

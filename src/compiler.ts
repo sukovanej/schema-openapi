@@ -9,7 +9,7 @@ import {
   OpenAPISchemaArrayType,
   OpenAPISchemaObjectType,
   OpenAPISchemaType,
-} from './types';
+} from 'schema-openapi/types';
 
 const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
