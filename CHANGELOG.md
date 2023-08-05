@@ -1,5 +1,12 @@
 # schema-openapi
 
+## 0.12.0
+
+### Minor Changes
+
+- ea23ea6: Publish dist folder.
+- 7998775: Use /data, /io and /schema as peer dependencies.
+
 ## 0.11.0
 
 ### Minor Changes
