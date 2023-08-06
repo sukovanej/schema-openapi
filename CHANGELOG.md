@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.12.1
+
+### Patch Changes
+
+- 1b6efb7: Improve error reporting for refinment example.
+
 ## 0.12.0
 
 ### Minor Changes

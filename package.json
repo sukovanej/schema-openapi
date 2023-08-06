@@ -1,7 +1,7 @@
 {
   "name": "schema-openapi",
   "type": "module",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "Pipeable API for OpenAPI specification and @effect/schemas compilers",
   "homepage": "https://github.com/sukovanej/schema-openapi",
   "main": "index.cjs",
