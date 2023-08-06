@@ -103,7 +103,10 @@ export const randomExample = <A>(
         return randomChoice(ast.enums);
       }
       case 'Refinement': {
-        return Effect.fail(randomExampleError(`Refinement not implemented`)); // TODO
+        const message = `Couldn't create an example for refinement AST, please specify example for ${JSON.stringify(
+          ast
+        )}`;
+        return Effect.fail(randomExampleError(message));
       }
       case 'Transform':
         return go(ast.to);
