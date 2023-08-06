@@ -1,11 +1,14 @@
 import { pipe } from '@effect/data/Function';
 import * as Effect from '@effect/io/Effect';
-import * as S from '@effect/schema/Schema';
+import * as ParseResult from '@effect/schema/ParseResult';
+import * as Schema from '@effect/schema/Schema';
 
 import { randomExample } from '../src/example-compiler';
 
 test('struct', () => {
-  const es = Effect.runSync(randomExample(S.struct({ name: S.number })));
+  const es = Effect.runSync(
+    randomExample(Schema.struct({ name: Schema.number }))
+  );
 
   expect(typeof es).toBe('object');
   expect(Object.getOwnPropertyNames(es).length).toBe(1);
@@ -13,27 +16,55 @@ test('struct', () => {
 });
 
 test('with test annotation', () => {
-  const es = Effect.runSync(
-    randomExample(S.struct({ name: pipe(S.number, S.examples([1])) }))
+  const example1 = Effect.runSync(
+    randomExample(
+      Schema.struct({ name: pipe(Schema.number, Schema.examples([1])) })
+    )
   );
 
-  expect(es).toEqual({ name: 1 });
+  expect(example1).toEqual({ name: 1 });
+
+  const IntegerFromString = pipe(
+    Schema.NumberFromString,
+    Schema.int({ examples: [42, 69] }),
+    Schema.brand('Integer')
+  );
+
+  const example2 = Effect.runSync(randomExample(IntegerFromString));
+  expect(example2).oneOf([42, 69]);
+
+  class MyClass {}
+
+  const MyClassSchema = Schema.instanceOf(MyClass, {
+    examples: [new MyClass()],
+  });
+  const example3 = Effect.runSync(randomExample(MyClassSchema));
+  expect(example3).toBeInstanceOf(MyClass);
+
+  const TransformedSchema = Schema.transformResult(
+    Schema.string,
+    MyClassSchema,
+    () => ParseResult.success(new MyClass()),
+    () => ParseResult.success('hello')
+  );
+  const example4 = Effect.runSync(randomExample(TransformedSchema));
+  expect(example4).toBeInstanceOf(MyClass);
 });
 
 test('big struct', () => {
   const example = Effect.runSync(
     randomExample(
-      S.struct({
-        name: S.number,
-        value: S.string,
-        another: S.boolean,
-        hello: S.struct({
-          patrik: S.literal('borec'),
-          another: S.array(S.union(S.string, S.number)),
+      Schema.struct({
+        name: Schema.number,
+        value: Schema.string,
+        another: Schema.boolean,
+        hello: Schema.struct({
+          patrik: Schema.literal('borec'),
+          another: Schema.array(Schema.union(Schema.string, Schema.number)),
         }),
-        another3: S.boolean,
-        another4: S.boolean,
-        another5: S.boolean,
+        another3: Schema.boolean,
+        another4: Schema.boolean,
+        another5: Schema.boolean,
       })
     )
   );
@@ -43,7 +74,7 @@ test('big struct', () => {
 });
 
 test('list', () => {
-  const example = Effect.runSync(randomExample(S.array(S.string)));
+  const example = Effect.runSync(randomExample(Schema.array(Schema.string)));
 
   expect(Array.isArray(example)).toBe(true);
 
@@ -55,7 +86,10 @@ test('list', () => {
 test('tuple', () => {
   const example = Effect.runSync(
     randomExample(
-      S.tuple(S.literal('a'), S.union(S.literal('b'), S.literal('c')))
+      Schema.tuple(
+        Schema.literal('a'),
+        Schema.union(Schema.literal('b'), Schema.literal('c'))
+      )
     )
   );
 
@@ -66,7 +100,7 @@ test('tuple', () => {
 describe('template literal', () => {
   test('simple', () => {
     const es = Effect.runSync(
-      randomExample(S.templateLiteral(S.literal('zdar')))
+      randomExample(Schema.templateLiteral(Schema.literal('zdar')))
     );
 
     expect(es).toBe('zdar');
@@ -74,7 +108,9 @@ describe('template literal', () => {
 
   test('number literal', () => {
     const es = Effect.runSync(
-      randomExample(S.templateLiteral(S.literal(1), S.literal('2')))
+      randomExample(
+        Schema.templateLiteral(Schema.literal(1), Schema.literal('2'))
+      )
     );
 
     expect(es).toBe('12');
@@ -82,7 +118,13 @@ describe('template literal', () => {
 
   test('number schema', () => {
     const example = Effect.runSync(
-      randomExample(S.templateLiteral(S.number, S.literal('test'), S.number))
+      randomExample(
+        Schema.templateLiteral(
+          Schema.number,
+          Schema.literal('test'),
+          Schema.number
+        )
+      )
     );
 
     const reg = /(\d+)(\.\d+)?(test)(\d+)(\.\d+)?/;
@@ -91,7 +133,7 @@ describe('template literal', () => {
 
   test('string schema', () => {
     const example = Effect.runSync(
-      randomExample(S.templateLiteral(S.number, S.string))
+      randomExample(Schema.templateLiteral(Schema.number, Schema.string))
     );
 
     const reg = /(\d+)(\.\d+)?/;
@@ -101,7 +143,10 @@ describe('template literal', () => {
   test('union', () => {
     const es = Effect.runSync(
       randomExample(
-        S.templateLiteral(S.literal(1), S.union(S.literal('2'), S.literal(3)))
+        Schema.templateLiteral(
+          Schema.literal(1),
+          Schema.union(Schema.literal('2'), Schema.literal(3))
+        )
       )
     );
 
