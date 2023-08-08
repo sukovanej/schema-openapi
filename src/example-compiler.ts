@@ -1,5 +1,5 @@
 import { pipe } from '@effect/data/Function';
-import * as O from '@effect/data/Option';
+import * as Option from '@effect/data/Option';
 import * as Effect from '@effect/io/Effect';
 import * as AST from '@effect/schema/AST';
 import * as S from '@effect/schema/Schema';
@@ -7,7 +7,15 @@ import * as S from '@effect/schema/Schema';
 const getExampleValue = (ast: AST.Annotated) =>
   pipe(
     AST.getAnnotation<AST.ExamplesAnnotation>(AST.ExamplesAnnotationId)(ast),
-    O.getOrUndefined
+    Option.getOrUndefined
+  );
+
+const getIdentifier = (ast: AST.Annotated) =>
+  pipe(
+    AST.getAnnotation<AST.IdentifierAnnotation>(AST.IdentifierAnnotationId)(
+      ast
+    ),
+    Option.getOrUndefined
   );
 
 const randomChoice = <A>(
@@ -60,8 +68,8 @@ export const randomExample = <A>(
         return randomChoice([{ iam: 'object' }]);
       case 'Tuple': {
         const rest = pipe(
-          O.map(ast.rest, Effect.forEach(go)),
-          O.getOrElse(() => Effect.succeed([] as any[]))
+          Option.map(ast.rest, Effect.forEach(go)),
+          Option.getOrElse(() => Effect.succeed([] as any[]))
         );
 
         const elements = pipe(
@@ -82,7 +90,7 @@ export const randomExample = <A>(
         ) {
           return Effect.fail(
             randomExampleError(
-              Error(`Cannot create example for some index signatures`)
+              `Cannot create example for some index signatures`
             )
           );
         }
@@ -136,11 +144,26 @@ export const randomExample = <A>(
 
         return result;
       }
-    }
+      case 'Declaration': {
+        const identifier = getIdentifier(ast);
 
-    return Effect.fail(
-      randomExampleError(Error(`TODO: unhandled ${JSON.stringify(ast)}`))
-    );
+        if (identifier === 'Option') {
+          return pipe(
+            randomChoice([
+              () => Effect.succeed(Option.none()),
+              () => Effect.map(go(ast.typeParameters[0]), (v) => Option.some(v)),
+            ]),
+            Effect.flatMap((fn) => fn()),
+          );
+        }
+
+        return Effect.fail(
+          randomExampleError(
+            `Can't give an example for declaration: ${JSON.stringify(ast)}`
+          )
+        );
+      }
+    }
   };
 
   return go(schema.ast);

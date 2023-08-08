@@ -1,5 +1,6 @@
 import { pipe } from '@effect/data/Function';
 import * as Effect from '@effect/io/Effect';
+import * as Option from '@effect/data/Option';
 import * as ParseResult from '@effect/schema/ParseResult';
 import * as Schema from '@effect/schema/Schema';
 
@@ -153,3 +154,10 @@ describe('template literal', () => {
     expect(es).oneOf(['12', '13']);
   });
 });
+
+test('Declaration', () => {
+  const schema = Schema.optionFromNullable(Schema.string);
+  const example = Effect.runSync((randomExample(schema)));
+
+  expect(Option.isOption(example)).toBe(true);
+})
