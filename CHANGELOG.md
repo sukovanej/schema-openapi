@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.12.2
+
+### Patch Changes
+
+- e85d7a2: Handle `Schema.optionFromNullable` in example compiler.
+
 ## 0.12.1
 
 ### Patch Changes
