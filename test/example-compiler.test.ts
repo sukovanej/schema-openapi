@@ -157,7 +157,14 @@ describe('template literal', () => {
 
 test('Declaration', () => {
   const schema = Schema.optionFromNullable(Schema.string);
-  const example = Effect.runSync((randomExample(schema)));
+  const example = Effect.runSync(randomExample(schema));
 
   expect(Option.isOption(example)).toBe(true);
+})
+
+test('Integers', () => {
+  const schema = Schema.tuple(Schema.number, Schema.bigint);
+  const example = Effect.runSync(randomExample(schema));
+
+  expect(example).toEqual([1, BigInt(2)]);
 })

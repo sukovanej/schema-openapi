@@ -1,6 +1,8 @@
+import * as Context from '@effect/data/Context';
 import { pipe } from '@effect/data/Function';
 import * as Option from '@effect/data/Option';
 import * as Effect from '@effect/io/Effect';
+import * as Ref from '@effect/io/Ref';
 import * as AST from '@effect/schema/AST';
 import * as S from '@effect/schema/Schema';
 
@@ -17,6 +19,16 @@ const getIdentifier = (ast: AST.Annotated) =>
     ),
     Option.getOrUndefined
   );
+
+type IntegerCounter = Ref.Ref<number>;
+const IntegerCounter = Context.Tag<IntegerCounter>(
+  'schema-openapi/example/integer-counter'
+);
+
+const nextInteger = Effect.flatMap(
+  IntegerCounter,
+  Ref.getAndUpdate((n) => n + 1)
+);
 
 const randomChoice = <A>(
   xs: readonly A[]
@@ -43,7 +55,9 @@ export const randomExampleError = (error: unknown): RandomExampleError => ({
 export const randomExample = <A>(
   schema: S.Schema<any, A>
 ): Effect.Effect<never, RandomExampleError, A> => {
-  const go = (ast: AST.AST): Effect.Effect<never, RandomExampleError, any> => {
+  const go = (
+    ast: AST.AST
+  ): Effect.Effect<IntegerCounter, RandomExampleError, any> => {
     const exampleFromAnnotation = getExampleValue(ast);
 
     if (exampleFromAnnotation) {
@@ -61,7 +75,7 @@ export const randomExample = <A>(
       case 'StringKeyword':
         return randomChoice(['hello world', 'patrik']);
       case 'NumberKeyword':
-        return randomChoice([69, 420, 3.14]);
+        return nextInteger;
       case 'BooleanKeyword':
         return randomChoice([true, false]);
       case 'ObjectKeyword':
@@ -128,7 +142,7 @@ export const randomExample = <A>(
         return Effect.fail(randomExampleError(`NeverKeyword`));
       }
       case 'BigIntKeyword': {
-        return randomChoice([BigInt(69), BigInt(420), BigInt(3.14)]);
+        return Effect.map(nextInteger, BigInt);
       }
       case 'SymbolKeyword':
         return Effect.fail(randomExampleError(`SymbolKeyword`));
@@ -151,9 +165,10 @@ export const randomExample = <A>(
           return pipe(
             randomChoice([
               () => Effect.succeed(Option.none()),
-              () => Effect.map(go(ast.typeParameters[0]), (v) => Option.some(v)),
+              () =>
+                Effect.map(go(ast.typeParameters[0]), (v) => Option.some(v)),
             ]),
-            Effect.flatMap((fn) => fn()),
+            Effect.flatMap((fn) => fn())
           );
         }
 
@@ -166,5 +181,7 @@ export const randomExample = <A>(
     }
   };
 
-  return go(schema.ast);
+  return go(schema.ast).pipe(
+    Effect.provideServiceEffect(IntegerCounter, Ref.make(1))
+  );
 };
