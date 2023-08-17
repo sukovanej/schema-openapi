@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.12.4
+
+### Patch Changes
+
+- 5e4dfee: Use counter to generate numbers for examples.
+
 ## 0.12.3
 
 ### Patch Changes
