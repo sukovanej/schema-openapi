@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.12.5
+
+### Patch Changes
+
+- d584fcd: Example of constrained numbers.
+
 ## 0.12.4
 
 ### Patch Changes
