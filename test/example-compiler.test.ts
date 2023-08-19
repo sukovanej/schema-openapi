@@ -1,6 +1,6 @@
 import { pipe } from '@effect/data/Function';
-import * as Effect from '@effect/io/Effect';
 import * as Option from '@effect/data/Option';
+import * as Effect from '@effect/io/Effect';
 import * as ParseResult from '@effect/schema/ParseResult';
 import * as Schema from '@effect/schema/Schema';
 
@@ -160,11 +160,55 @@ test('Declaration', () => {
   const example = Effect.runSync(randomExample(schema));
 
   expect(Option.isOption(example)).toBe(true);
-})
+});
 
 test('Integers', () => {
-  const schema = Schema.tuple(Schema.number, Schema.bigint);
+  const schema = Schema.tuple(
+    Schema.number,
+    Schema.bigint,
+    Schema.number.pipe(Schema.int(), Schema.brand('Integer'))
+  );
   const example = Effect.runSync(randomExample(schema));
 
-  expect(example).toEqual([1, BigInt(2)]);
-})
+  expect(example).toEqual([1, BigInt(2), 3]);
+});
+
+describe('constraints', () => {
+  test('int', () => {
+    const schema = Schema.number.pipe(Schema.int());
+    const example = Effect.runSync(randomExample(schema));
+
+    expect(example).toEqual(1);
+  });
+
+  test('int between', () => {
+    const schema = Schema.number.pipe(Schema.int(), Schema.between(5, 10));
+    const example = Effect.runSync(randomExample(schema));
+
+    expect(example).toEqual(5);
+  });
+  test('bigint constraints', () => {
+    const schema = Schema.tuple(
+      Schema.bigint.pipe(Schema.greaterThanBigint(BigInt(-1))),
+      Schema.bigint.pipe(Schema.greaterThanOrEqualToBigint(BigInt(12))),
+      Schema.bigint.pipe(Schema.lessThanBigint(BigInt(-1))),
+      Schema.bigint.pipe(Schema.lessThanOrEqualToBigint(BigInt(12)))
+    );
+    const example = Effect.runSync(randomExample(schema));
+
+    expect(example).toEqual([BigInt(1), BigInt(12), BigInt(-2), BigInt(4)]);
+  });
+
+  test('multiple constraints', () => {
+    const schema = Schema.tuple(
+      Schema.number.pipe(Schema.int(), Schema.between(5, 10)),
+      Schema.number.pipe(Schema.greaterThan(-1)),
+      Schema.number.pipe(Schema.greaterThanOrEqualTo(12)),
+      Schema.number.pipe(Schema.lessThan(3)),
+      Schema.number.pipe(Schema.lessThanOrEqualTo(7))
+    );
+    const example = Effect.runSync(randomExample(schema));
+
+    expect(example).toEqual([5, 2, 12, 2, 5]);
+  });
+});
