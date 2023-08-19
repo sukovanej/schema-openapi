@@ -1,15 +1,15 @@
 /** Based on https://github.com/effect/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
-import { pipe } from '@effect/data/Function';
-import * as O from '@effect/data/Option';
-import * as RA from '@effect/data/ReadonlyArray';
-import * as AST from '@effect/schema/AST';
-import type { Schema } from '@effect/schema/Schema';
-
 import {
   OpenAPISchemaArrayType,
   OpenAPISchemaObjectType,
   OpenAPISchemaType,
 } from 'schema-openapi/types';
+
+import { pipe } from '@effect/data/Function';
+import * as O from '@effect/data/Option';
+import * as RA from '@effect/data/ReadonlyArray';
+import * as AST from '@effect/schema/AST';
+import type { Schema } from '@effect/schema/Schema';
 
 const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
