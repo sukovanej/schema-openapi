@@ -42,7 +42,7 @@ test('with test annotation', () => {
   const example3 = Effect.runSync(randomExample(MyClassSchema));
   expect(example3).toBeInstanceOf(MyClass);
 
-  const TransformedSchema = Schema.transformResult(
+  const TransformedSchema = Schema.transformOrFail(
     Schema.string,
     MyClassSchema,
     () => ParseResult.success(new MyClass()),

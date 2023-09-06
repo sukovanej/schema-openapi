@@ -11,6 +11,7 @@ describe('records', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
       additionalProperties: {
+        description: 'a string',
         type: 'string',
       },
     });
@@ -28,9 +29,11 @@ describe('records', () => {
         type: 'object',
         properties: {
           code: {
+            description: 'a number',
             type: 'number',
           },
           text: {
+            description: 'a string',
             type: 'string',
           },
         },

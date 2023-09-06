@@ -1,11 +1,11 @@
 import * as Context from '@effect/data/Context';
 import { pipe } from '@effect/data/Function';
 import * as Option from '@effect/data/Option';
-import * as Predicate from '@effect/data/Predicate';
 import { unify } from '@effect/data/Unify';
 import * as Effect from '@effect/io/Effect';
 import * as Ref from '@effect/io/Ref';
 import * as AST from '@effect/schema/AST';
+import * as Parser from '@effect/schema/Parser';
 import * as S from '@effect/schema/Schema';
 
 const getExampleValue = (ast: AST.Annotated) =>
@@ -145,16 +145,23 @@ export const randomExample = <A>(
           Effect.flatMap((constraint2) =>
             go(ast.from, { ...constraint, ...constraint2 })
           ),
-          Effect.tap(ast.decode),
-          Effect.mapError((error) =>
-            randomExampleError(
-              `Cannot create an example for refinement ${JSON.stringify(
-                error,
-                (_, value) =>
-                  typeof value === 'bigint' ? value.toString() : value
-              )}`
-            )
-          )
+          Effect.flatMap((a) => {
+            const error = ast.filter(a, Parser.defaultParseOption, ast);
+
+            if (Option.isNone(error)) {
+              return Effect.succeed(a);
+            }
+
+            return Effect.fail(
+              randomExampleError(
+                `Cannot create an example for refinement ${JSON.stringify(
+                  error,
+                  (_, value) =>
+                    typeof value === 'bigint' ? value.toString() : value
+                )}`
+              )
+            );
+          })
         );
       }
       case 'Transform':

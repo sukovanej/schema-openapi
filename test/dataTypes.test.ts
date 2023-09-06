@@ -9,19 +9,28 @@ describe('data types', () => {
   it('boolean', () => {
     const schema = Schema.boolean;
 
-    expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'boolean' });
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      description: 'a boolean',
+      type: 'boolean',
+    });
   });
 
   it('string', () => {
     const schema = Schema.string;
 
-    expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'string' });
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      description: 'a string',
+      type: 'string',
+    });
   });
 
   it('branded string', () => {
     const schema = pipe(Schema.string, Schema.brand('my-string'));
 
-    expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'string' });
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      description: 'a string',
+      type: 'string',
+    });
   });
 
   it('string with minLength', () => {
@@ -72,7 +81,10 @@ describe('data types', () => {
   it('number', () => {
     const schema = Schema.number;
 
-    expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'number' });
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      description: 'a number',
+      type: 'number',
+    });
   });
 
   it('integer', () => {
@@ -181,6 +193,7 @@ describe('data types', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'string',
+      description: 'a string',
     });
   });
 });
@@ -191,6 +204,7 @@ describe('nullable data types', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'number',
+      description: 'a number',
       nullable: true,
     });
   });
@@ -200,6 +214,7 @@ describe('nullable data types', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'string',
+      description: 'a string',
       nullable: true,
     });
   });
@@ -209,7 +224,7 @@ describe('nullable data types', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'array',
-      items: { type: 'string' },
+      items: { type: 'string', description: 'a string' },
       nullable: true,
     });
   });
@@ -221,7 +236,7 @@ describe('arrays', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'array',
-      items: { type: 'number' },
+      items: { type: 'number', description: 'a number' },
     });
   });
 
@@ -230,7 +245,7 @@ describe('arrays', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'array',
-      items: { type: 'string' },
+      items: { type: 'string', description: 'a string' },
     });
   });
 
@@ -239,7 +254,10 @@ describe('arrays', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'array',
-      items: { type: 'array', items: { type: 'number' } },
+      items: {
+        type: 'array',
+        items: { type: 'number', description: 'a number' },
+      },
     });
   });
 
@@ -250,7 +268,7 @@ describe('arrays', () => {
       type: 'array',
       items: {
         type: 'object',
-        properties: { id: { type: 'number' } },
+        properties: { id: { type: 'number', description: 'a number' } },
         required: ['id'],
       },
     });
@@ -265,7 +283,10 @@ describe('arrays', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'array',
       items: {
-        oneOf: [{ type: 'number' }, { type: 'string' }],
+        oneOf: [
+          { type: 'number', description: 'a number' },
+          { type: 'string', description: 'a string' },
+        ],
       },
     });
   });
@@ -286,6 +307,7 @@ describe('arrays', () => {
       type: 'array',
       items: {
         type: 'string',
+        description: 'a string',
       },
       minItems: 1,
       maxItems: 1,
@@ -299,6 +321,7 @@ describe('arrays', () => {
       type: 'array',
       items: {
         type: 'string',
+        description: 'a string',
       },
       minItems: 1,
     });
@@ -319,7 +342,7 @@ describe('objects', () => {
       type: 'object',
       properties: {
         id: { type: 'integer', description: 'integer' },
-        name: { type: 'string' },
+        name: { type: 'string', description: 'a string' },
       },
       required: ['name', 'id'],
     });
@@ -328,7 +351,10 @@ describe('objects', () => {
   it('object with non-required', () => {
     const schema = Schema.object;
 
-    expect(openAPISchemaFor(schema)).toStrictEqual({ type: 'object' });
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: 'object',
+      description: 'an object',
+    });
   });
 
   it('object with non-required', () => {
@@ -342,8 +368,8 @@ describe('objects', () => {
       type: 'object',
       properties: {
         id: { type: 'integer', description: 'integer' },
-        name: { type: 'string' },
-        username: { type: 'string' },
+        name: { type: 'string', description: 'a string' },
+        username: { type: 'string', description: 'a string' },
       },
       required: ['username', 'id'],
     });
@@ -363,8 +389,8 @@ describe('objects', () => {
       type: 'object',
       properties: {
         id: { type: 'integer', description: 'integer' },
-        name: { type: 'string' },
-        username: { type: 'string' },
+        name: { description: 'a string', type: 'string' },
+        username: { description: 'a string', type: 'string' },
       },
       required: ['username', 'id'],
     });
@@ -378,7 +404,9 @@ it('optionFromNullable', () => {
 
   expect(openAPISchemaFor(schema)).toStrictEqual({
     type: 'object',
-    properties: { value: { type: 'string', nullable: true } },
+    properties: {
+      value: { description: 'a string', type: 'string', nullable: true },
+    },
     required: ['value'],
   });
 });
