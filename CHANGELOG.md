@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.14.0
+
+### Minor Changes
+
+- cae9e26: Update effect dependencies.
+
 ## 0.13.0
 
 ### Minor Changes
