@@ -33,9 +33,7 @@ describe('simple', () => {
             requestBody: {
               content: {
                 'application/json': {
-                  schema: {
-                    type: 'string',
-                  },
+                  schema: { description: 'a string', type: 'string' },
                 },
               },
             },
@@ -44,9 +42,7 @@ describe('simple', () => {
                 description: 'test',
                 content: {
                   'application/json': {
-                    schema: {
-                      type: 'string',
-                    },
+                    schema: { description: 'a string', type: 'string' },
                   },
                 },
               },
@@ -249,6 +245,7 @@ describe('simple', () => {
         name: 'id',
         in: 'query',
         schema: {
+          description: 'a string',
           type: 'string',
         },
         description: 'id',
@@ -290,6 +287,7 @@ describe('simple', () => {
         name: 'id',
         in: 'query',
         schema: {
+          description: 'a string',
           type: 'string',
         },
         description: 'id',
@@ -319,7 +317,7 @@ describe('simple', () => {
     expect(spec.paths['/pet/{id}'].post?.requestBody).toEqual({
       content: {
         'application/json': {
-          schema: { type: 'string' },
+          schema: { description: 'a string', type: 'string' },
         },
       },
       required: true,
@@ -379,7 +377,7 @@ describe('simple', () => {
           200: {
             content: {
               'application/json': {
-                schema: { type: 'string' },
+                schema: { description: 'a string', type: 'string' },
               },
             },
             description: 'response',
@@ -391,7 +389,7 @@ describe('simple', () => {
           200: {
             content: {
               'application/json': {
-                schema: { type: 'string' },
+                schema: { description: 'a string', type: 'string' },
               },
             },
             description: 'response',
@@ -430,7 +428,7 @@ describe('simple', () => {
           200: {
             content: {
               'application/json': {
-                schema: { type: 'string' },
+                schema: { description: 'a string', type: 'string' },
               },
             },
             headers: {
