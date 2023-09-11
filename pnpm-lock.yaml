@@ -18,8 +18,8 @@ devDependencies:
     specifier: ^0.40.0
     version: 0.40.0(@effect/data@0.18.4)
   '@effect/schema':
-    specifier: ^0.35.0
-    version: 0.35.0(@effect/data@0.18.4)(@effect/io@0.40.0)
+    specifier: ^0.36.0
+    version: 0.36.0(@effect/data@0.18.4)(@effect/io@0.40.0)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.2.0
     version: 4.2.0(prettier@3.0.3)
@@ -403,11 +403,11 @@ packages:
       '@effect/data': 0.18.4
     dev: true
 
-  /@effect/schema@0.35.0(@effect/data@0.18.4)(@effect/io@0.40.0):
-    resolution: {integrity: sha512-NRlBGW/L1z9mi9M2U1YudD5rMOHm/IvIsL7CT2r8d2oDKuM4iY+R/43IV5lfi458nwtDBn60StzG9t5SPHwL3w==}
+  /@effect/schema@0.36.0(@effect/data@0.18.4)(@effect/io@0.40.0):
+    resolution: {integrity: sha512-KiE/Ptt+hSivXM3cfe2RTnJg0fgRqa8lpreprEpHg5d8c8tOTWIS86anvicSNlPgWe99RlUOvLTf9vSwPzAjXQ==}
     peerDependencies:
-      '@effect/data': ^0.18.3
-      '@effect/io': ^0.40.0
+      '@effect/data': ^0.18.5
+      '@effect/io': ^0.40.1
     dependencies:
       '@effect/data': 0.18.4
       '@effect/io': 0.40.0(@effect/data@0.18.4)
