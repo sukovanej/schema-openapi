@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.14.1
+
+### Patch Changes
+
+- df7e656: Update effect dependencies.
+
 ## 0.14.0
 
 ### Minor Changes
