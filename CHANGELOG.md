@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.15.1
+
+### Patch Changes
+
+- 456918c: Broken release.
+
 ## 0.15.0
 
 ### Minor Changes
