@@ -1,15 +1,12 @@
 /** Based on https://github.com/effect/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
+import { Option, ReadonlyArray, pipe } from 'effect';
 import {
   OpenAPISchemaArrayType,
   OpenAPISchemaObjectType,
   OpenAPISchemaType,
 } from 'schema-openapi/types';
 
-import { pipe } from '@effect/data/Function';
-import * as O from '@effect/data/Option';
-import * as RA from '@effect/data/ReadonlyArray';
-import * as AST from '@effect/schema/AST';
-import type { Schema } from '@effect/schema/Schema';
+import { AST, type Schema } from '@effect/schema';
 
 const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
@@ -40,15 +37,15 @@ const getJSONSchemaAnnotation = (ast: AST.Annotated) =>
     AST.getAnnotation<AST.JSONSchemaAnnotation>(AST.JSONSchemaAnnotationId)(
       ast
     ),
-    O.map(convertJsonSchemaAnnotation)
+    Option.map(convertJsonSchemaAnnotation)
   );
 
 const addDescription = (ast: AST.Annotated) => (schema: OpenAPISchemaType) =>
   pipe(
     ast,
     AST.getAnnotation<AST.DescriptionAnnotation>(AST.DescriptionAnnotationId),
-    O.map((description) => ({ ...schema, description })),
-    O.getOrElse(() => schema)
+    Option.map((description) => ({ ...schema, description })),
+    Option.getOrElse(() => schema)
   );
 
 const createEnum = <T extends AST.LiteralValue>(
@@ -71,7 +68,7 @@ const createEnum = <T extends AST.LiteralValue>(
 };
 
 export const openAPISchemaFor = <A>(
-  schema: Schema<A, any>
+  schema: Schema.Schema<A, any>
 ): OpenAPISchemaType => {
   const map = (ast: AST.AST): OpenAPISchemaType => {
     switch (ast._tag) {
@@ -97,7 +94,7 @@ export const openAPISchemaFor = <A>(
         return { type: 'object' };
       case 'Tuple': {
         const elements = ast.elements.map((e) => go(e.type));
-        const rest = pipe(ast.rest, O.map(RA.mapNonEmpty(go)));
+        const rest = pipe(ast.rest, Option.map(ReadonlyArray.mapNonEmpty(go)));
 
         let minItems =
           ast.elements.filter((e) => !e.isOptional).length || undefined;
@@ -113,8 +110,8 @@ export const openAPISchemaFor = <A>(
         // ---------------------------------------------
         // handle rest element
         // ---------------------------------------------
-        if (O.isSome(rest)) {
-          const head = RA.headNonEmpty(rest.value);
+        if (Option.isSome(rest)) {
+          const head = ReadonlyArray.headNonEmpty(rest.value);
           if (items !== undefined) {
             maxItems = undefined;
 
@@ -235,7 +232,7 @@ export const openAPISchemaFor = <A>(
         const from = go(ast.from);
         return pipe(
           getJSONSchemaAnnotation(ast),
-          O.match({
+          Option.match({
             onNone: () => from,
             onSome: (schema) => ({ ...from, ...schema }),
           })

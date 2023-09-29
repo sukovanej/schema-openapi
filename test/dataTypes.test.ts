@@ -1,5 +1,6 @@
-import { pipe } from '@effect/data/Function';
-import * as Schema from '@effect/schema/Schema';
+import { pipe } from 'effect';
+
+import { Schema } from '@effect/schema';
 
 import { openAPISchemaFor } from '../src/compiler';
 

@@ -1,8 +1,6 @@
-import { pipe } from '@effect/data/Function';
-import * as Option from '@effect/data/Option';
-import * as Effect from '@effect/io/Effect';
-import * as ParseResult from '@effect/schema/ParseResult';
-import * as Schema from '@effect/schema/Schema';
+import { Effect, Option, pipe } from 'effect';
+
+import { ParseResult, Schema } from '@effect/schema';
 
 import { randomExample } from '../src/example-compiler';
 

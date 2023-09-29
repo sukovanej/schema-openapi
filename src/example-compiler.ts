@@ -1,12 +1,6 @@
-import * as Context from '@effect/data/Context';
-import { pipe } from '@effect/data/Function';
-import * as Option from '@effect/data/Option';
-import { unify } from '@effect/data/Unify';
-import * as Effect from '@effect/io/Effect';
-import * as Ref from '@effect/io/Ref';
-import * as AST from '@effect/schema/AST';
-import * as Parser from '@effect/schema/Parser';
-import * as S from '@effect/schema/Schema';
+import { Context, Effect, Option, Ref, Unify, pipe } from 'effect';
+
+import { AST, Parser, Schema } from '@effect/schema';
 
 const getExampleValue = (ast: AST.Annotated) =>
   pipe(
@@ -55,7 +49,7 @@ export const randomExampleError = (error: unknown): RandomExampleError => ({
 });
 
 export const randomExample = <A>(
-  schema: S.Schema<any, A>
+  schema: Schema.Schema<any, A>
 ): Effect.Effect<never, RandomExampleError, A> => {
   const go = (
     ast: AST.AST,
@@ -227,7 +221,7 @@ export const randomExample = <A>(
   );
 };
 
-const createConstraintFromRefinement = unify((ast: AST.Refinement) => {
+const createConstraintFromRefinement = Unify.unify((ast: AST.Refinement) => {
   const typeId = pipe(
     ast,
     AST.getAnnotation<AST.TypeAnnotation>(AST.TypeAnnotationId),
@@ -302,33 +296,33 @@ const createNumberConstraint = (
 ): TypeConstraint | undefined => {
   const jsonSchema: any = ast.annotations[AST.JSONSchemaAnnotationId];
 
-  if (typeId === S.IntTypeId) {
+  if (typeId === Schema.IntTypeId) {
     return TypeConstraint({ integer: true });
-  } else if (typeId === S.BetweenTypeId) {
+  } else if (typeId === Schema.BetweenTypeId) {
     const [min, max] = [jsonSchema.minimum, jsonSchema.maximum];
     return TypeConstraint({ min, max });
-  } else if (typeId === S.GreaterThanTypeId) {
+  } else if (typeId === Schema.GreaterThanTypeId) {
     const min = jsonSchema.exclusiveMinimum;
     return TypeConstraint({ min, minExclusive: true });
-  } else if (typeId === S.GreaterThanBigintTypeId) {
+  } else if (typeId === Schema.GreaterThanBigintTypeId) {
     const min = jsonSchema.exclusiveMinimum;
     return TypeConstraint({ min, minExclusive: true });
-  } else if (typeId === S.GreaterThanOrEqualToTypeId) {
+  } else if (typeId === Schema.GreaterThanOrEqualToTypeId) {
     const min = jsonSchema.minimum;
     return TypeConstraint({ min });
-  } else if (typeId === S.GreaterThanOrEqualToBigintTypeId) {
+  } else if (typeId === Schema.GreaterThanOrEqualToBigintTypeId) {
     const min = jsonSchema.minimum;
     return TypeConstraint({ min });
-  } else if (typeId === S.LessThanTypeId) {
+  } else if (typeId === Schema.LessThanTypeId) {
     const max = jsonSchema.exclusiveMaximum;
     return TypeConstraint({ max, maxExclusive: true });
-  } else if (typeId === S.LessThanBigintTypeId) {
+  } else if (typeId === Schema.LessThanBigintTypeId) {
     const max = jsonSchema.exclusiveMaximum;
     return TypeConstraint({ max, maxExclusive: true });
-  } else if (typeId === S.LessThanOrEqualToTypeId) {
+  } else if (typeId === Schema.LessThanOrEqualToTypeId) {
     const max = jsonSchema.maximum;
     return TypeConstraint({ max });
-  } else if (typeId === S.LessThanOrEqualToBigintTypeId) {
+  } else if (typeId === Schema.LessThanOrEqualToBigintTypeId) {
     const max = jsonSchema.maximum;
     return TypeConstraint({ max });
   }
