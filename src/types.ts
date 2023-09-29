@@ -1,6 +1,6 @@
-import * as S from '@effect/schema/Schema';
+import { Schema } from '@effect/schema';
 
-export type AnySchema = S.Schema<any>;
+export type AnySchema = Schema.Schema<any>;
 
 export type OpenAPISpec<S = AnySchema> = {
   openapi: '3.0.3';

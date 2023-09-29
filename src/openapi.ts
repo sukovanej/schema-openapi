@@ -1,11 +1,6 @@
+import { Option, pipe } from 'effect';
 import { openAPISchemaFor } from 'schema-openapi/compiler';
 import * as I from 'schema-openapi/internal';
-
-import { pipe } from '@effect/data/Function';
-import * as Option from '@effect/data/Option';
-import * as AST from '@effect/schema/AST';
-import type * as Schema from '@effect/schema/Schema';
-
 import type {
   AnySchema,
   OpenAPISchemaType,
@@ -21,7 +16,9 @@ import type {
   OpenAPISpecStatusCode,
   OpenApiSpecContent,
   OpenApiSpecResponse,
-} from './types';
+} from 'schema-openapi/types';
+
+import { AST, type Schema } from '@effect/schema';
 
 /**
  * Initialize OpenAPI schema.

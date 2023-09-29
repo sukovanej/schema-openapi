@@ -1,16 +1,15 @@
 import express from 'express';
+import * as OpenApi from 'schema-openapi';
 import swaggerUi from 'swagger-ui-express';
 
-import * as S from '@effect/schema/Schema';
+import { Schema } from '@effect/schema';
 
-import * as OpenApi from '../src';
-
-const Pet = S.struct({
-  name: S.string,
-  id: S.number,
+const Pet = Schema.struct({
+  name: Schema.string,
+  id: Schema.number,
 });
 
-const UsageId = S.description('Usage identifier')(S.string);
+const UsageId = Schema.description('Usage identifier')(Schema.string);
 
 const app = express();
 const spec = OpenApi.openAPI(
