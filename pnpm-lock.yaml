@@ -13,7 +13,7 @@ devDependencies:
     version: 2.26.2
   '@effect/schema':
     specifier: ^0.39.2
-    version: 0.39.2(effect@2.0.0-next.40)
+    version: 0.39.2(effect@2.0.0-next.41)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.2.0
     version: 4.2.0(prettier@3.0.3)
@@ -24,8 +24,8 @@ devDependencies:
     specifier: ^4.1.4
     version: 4.1.4
   effect:
-    specifier: 2.0.0-next.40
-    version: 2.0.0-next.40
+    specifier: 2.0.0-next.41
+    version: 2.0.0-next.41
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -388,12 +388,12 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@effect/schema@0.39.2(effect@2.0.0-next.40):
+  /@effect/schema@0.39.2(effect@2.0.0-next.41):
     resolution: {integrity: sha512-UolykyRtrg+JHflZBfHK2p+w8IgP8u6kSkTq9VIggure12/2CFvlib9vphw4fJCN8cRd3gZo4LevU4FfS+ZLxw==}
     peerDependencies:
       effect: ^2.0.0-next.39
     dependencies:
-      effect: 2.0.0-next.40
+      effect: 2.0.0-next.41
       fast-check: 3.13.1
     dev: true
 
@@ -837,7 +837,7 @@ packages:
   /@vitest/spy@0.34.6:
     resolution: {integrity: sha512-xaCvneSaeBw/cz8ySmF7ZwGvL0lBjfvqc1LpQ/vcdHEvpLn3Ff1vAvjw+CoGn0802l++5L/pxb7whwcWAw+DUQ==}
     dependencies:
-      tinyspy: 2.1.1
+      tinyspy: 2.2.0
     dev: true
 
   /@vitest/utils@0.34.6:
@@ -1362,8 +1362,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /effect@2.0.0-next.40:
-    resolution: {integrity: sha512-UIUCOHZHFbubTXEYNGHeC4JeW44DjrOauik1ZCuaMpwZoQiDtyyY781nrxKqxPvmLiT458xbeWol/7PWuREzlw==}
+  /effect@2.0.0-next.41:
+    resolution: {integrity: sha512-1bExxFIv9/i9dr7XATkP6goh6HlAA1Ar0RwHRkbFYSBZ/8olx0dVPZ6Lewlo/9B4Zt2+hIu/OtbjplVaItGQwQ==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -3172,8 +3172,8 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: true
 
-  /tinyspy@2.1.1:
-    resolution: {integrity: sha512-XPJL2uSzcOyBMky6OFrusqWlzfFrXtE0hPuMgW8A2HmaqrPo4ZQHRN/V0QXN3FSjKxpsbRrFc5LI7KOwBsT1/w==}
+  /tinyspy@2.2.0:
+    resolution: {integrity: sha512-d2eda04AN/cPOR89F7Xv5bK/jrQEhmcLFe6HFldoeO9AJtps+fqEnh486vnT/8y4bw38pSyxDcTCAq+Ks2aJTg==}
     engines: {node: '>=14.0.0'}
     dev: true
 
