@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.15.5
+
+### Patch Changes
+
+- 936deb2: Update effect.
+
 ## 0.15.4
 
 ### Patch Changes
