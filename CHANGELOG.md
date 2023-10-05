@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.15.6
+
+### Patch Changes
+
+- 98b6eb6: Update effect + @effect/schema peer dependencies.
+
 ## 0.15.5
 
 ### Patch Changes
