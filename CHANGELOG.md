@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.15.7
+
+### Patch Changes
+
+- 6daad5a: Update @effect/schema.
+
 ## 0.15.6
 
 ### Patch Changes
