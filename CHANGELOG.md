@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.15.9
+
+### Patch Changes
+
+- 6946339: Update effect dependencies.
+
 ## 0.15.8
 
 ### Patch Changes
