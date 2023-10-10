@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.16.0
+
+### Minor Changes
+
+- 8073e83: Update effect.
+
 ## 0.15.9
 
 ### Patch Changes
