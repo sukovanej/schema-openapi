@@ -12,8 +12,8 @@ devDependencies:
     specifier: ^2.26.2
     version: 2.26.2
   '@effect/schema':
-    specifier: ^0.43.2
-    version: 0.43.2(effect@2.0.0-next.48)(fast-check@3.13.1)
+    specifier: ^0.44.0
+    version: 0.44.0(effect@2.0.0-next.49)(fast-check@3.13.1)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.2.0
     version: 4.2.0(prettier@3.0.3)
@@ -24,8 +24,8 @@ devDependencies:
     specifier: ^4.1.4
     version: 4.1.4
   effect:
-    specifier: 2.0.0-next.48
-    version: 2.0.0-next.48
+    specifier: 2.0.0-next.49
+    version: 2.0.0-next.49
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -388,13 +388,13 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@effect/schema@0.43.2(effect@2.0.0-next.48)(fast-check@3.13.1):
-    resolution: {integrity: sha512-xXmRYsL/ykbrMeP+7HYx3O2xAfaa64VJQiPW+ml8xbP2QDAZbOO1uedSqHkIMK3Xzh49KLR4JprR1vGPf4EZ9A==}
+  /@effect/schema@0.44.0(effect@2.0.0-next.49)(fast-check@3.13.1):
+    resolution: {integrity: sha512-sUQrGJEtn4tRv6OChdfIPMWhOwSaOivrEksGQYxQ7OpKpXASoeNDBZK++Pb8wI25VREBvBPttXw7racsbvAfXA==}
     peerDependencies:
-      effect: 2.0.0-next.48
+      effect: 2.0.0-next.49
       fast-check: ^3.13.1
     dependencies:
-      effect: 2.0.0-next.48
+      effect: 2.0.0-next.49
       fast-check: 3.13.1
     dev: true
 
@@ -1365,8 +1365,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /effect@2.0.0-next.48:
-    resolution: {integrity: sha512-vwMIl39m8fMBeXoGIdSwMi2lrg7NltyrGMK0N/liGDl7G9LXvERKOCipNcobSIGO0V7hjaXEWgL6W/KEWEww+g==}
+  /effect@2.0.0-next.49:
+    resolution: {integrity: sha512-FiOQ2Khm2REPQOkxkRPyTVyfPCUNecDopz1ZOKzZrZyCAzDqWiFYvdPwX/nYQrXY77/DBGcaLEsQ4/1BpG1bAg==}
     dev: true
 
   /emoji-regex@8.0.0:
