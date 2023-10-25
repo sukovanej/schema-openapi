@@ -93,7 +93,7 @@ describe('data types', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'integer',
-      description: 'integer',
+      description: 'an integer',
     });
   });
 
@@ -342,7 +342,7 @@ describe('objects', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
       properties: {
-        id: { type: 'integer', description: 'integer' },
+        id: { type: 'integer', description: 'an integer' },
         name: { type: 'string', description: 'a string' },
       },
       required: ['name', 'id'],
@@ -368,7 +368,7 @@ describe('objects', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
       properties: {
-        id: { type: 'integer', description: 'integer' },
+        id: { type: 'integer', description: 'an integer' },
         name: { type: 'string', description: 'a string' },
         username: { type: 'string', description: 'a string' },
       },
@@ -389,7 +389,7 @@ describe('objects', () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
       properties: {
-        id: { type: 'integer', description: 'integer' },
+        id: { type: 'integer', description: 'an integer' },
         name: { description: 'a string', type: 'string' },
         username: { description: 'a string', type: 'string' },
       },

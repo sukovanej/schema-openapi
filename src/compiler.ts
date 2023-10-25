@@ -94,7 +94,7 @@ export const openAPISchemaFor = <A>(
         return { type: 'object' };
       case 'Tuple': {
         const elements = ast.elements.map((e) => go(e.type));
-        const rest = pipe(ast.rest, Option.map(ReadonlyArray.mapNonEmpty(go)));
+        const rest = Option.map(ast.rest, ReadonlyArray.map(go));
 
         let minItems =
           ast.elements.filter((e) => !e.isOptional).length || undefined;
