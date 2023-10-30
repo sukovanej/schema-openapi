@@ -1,6 +1,10 @@
 import { Option, pipe } from 'effect';
-import { openAPISchemaFor } from 'schema-openapi/compiler';
+import { openAPISchemaFor, openAPISchemaForAst } from 'schema-openapi/compiler';
 import * as I from 'schema-openapi/internal';
+import {
+  ComponentSchemaCallback,
+  removeIdentifierAnnotation,
+} from 'schema-openapi/internal';
 import type {
   AnySchema,
   OpenAPISchemaType,
@@ -10,6 +14,7 @@ import type {
   OpenAPISpecOperation,
   OpenAPISpecParameter,
   OpenAPISpecPathItem,
+  OpenAPISpecReference,
   OpenAPISpecRequestBody,
   OpenAPISpecServer,
   OpenAPISpecServerVariable,
@@ -34,15 +39,32 @@ export const openAPI = (
   title: string,
   version: string,
   ...setters: I.Setter<OpenAPISpec<OpenAPISchemaType>>[]
-): OpenAPISpec<OpenAPISchemaType> =>
-  I.runSetters(
+): OpenAPISpec<OpenAPISchemaType> => {
+  const componentSchemasFromReference: I.Setter<
+    OpenAPISpec<OpenAPISchemaType>
+  >[] = [];
+  const addedSchemaComponents = new Set<string>();
+  const addComponentSchemaCallback: ComponentSchemaCallback = (id, ast) => {
+    if (!addedSchemaComponents.has(id)) {
+      componentSchemasFromReference.push(componentSchema(id, ast));
+      addedSchemaComponents.add(id);
+    }
+  };
+  let spec = I.runSetters(
     {
       openapi: '3.0.3',
       info: { title, version },
       paths: {},
     },
-    setters
+    setters,
+    addComponentSchemaCallback
   );
+  let setter;
+  while ((setter = componentSchemasFromReference.pop())) {
+    spec = setter(spec, addComponentSchemaCallback);
+  }
+  return spec;
+};
 
 /**
  * Set `info` section.
@@ -87,9 +109,12 @@ export const server =
     url: string,
     ...setters: I.Setter<OpenAPISpecServer>[]
   ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
-  (spec) => ({
+  (spec, componentSchemaCallback) => ({
     ...spec,
-    servers: [...(spec.servers ?? []), I.runSetters({ url }, setters)],
+    servers: [
+      ...(spec.servers ?? []),
+      I.runSetters({ url }, setters, componentSchemaCallback),
+    ],
   });
 
 /**
@@ -107,11 +132,15 @@ export const variable =
     defaultValue: string,
     ...setters: I.Setter<OpenAPISpecServerVariable>[]
   ): I.Setter<OpenAPISpecServer> =>
-  (server) => ({
+  (server, componentSchemaCallback) => ({
     ...server,
     variables: {
       ...server.variables,
-      [name]: I.runSetters({ default: defaultValue }, setters),
+      [name]: I.runSetters(
+        { default: defaultValue },
+        setters,
+        componentSchemaCallback
+      ),
     },
   });
 
@@ -144,11 +173,14 @@ export const path =
     path: string,
     ...setters: I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
-  (spec) => ({
+  (spec, componentSchemaCallback) => ({
     ...spec,
     paths: {
       ...spec.paths,
-      [path]: { ...spec.paths[path], ...I.runSetters({}, setters) },
+      [path]: {
+        ...spec.paths[path],
+        ...I.runSetters({}, setters, componentSchemaCallback),
+      },
     },
   });
 
@@ -166,11 +198,11 @@ export const operation =
     methodName: OpenAPISpecMethodName,
     ...setters: I.Setter<OpenAPISpecOperation<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecPathItem<OpenAPISchemaType>> =>
-  (pathItem) => ({
+  (pathItem, componentSchemaCallback) => ({
     ...pathItem,
     [methodName]: {
       ...pathItem[methodName],
-      ...I.runSetters({}, setters),
+      ...I.runSetters({}, setters, componentSchemaCallback),
     },
   });
 
@@ -191,13 +223,18 @@ export const parameter =
     schema: AnySchema,
     ...setters: I.Setter<OpenAPISpecParameter<OpenAPISchemaType>>[]
   ): I.Setter<{ parameters?: OpenAPISpecParameter<OpenAPISchemaType>[] }> =>
-  (spec) => ({
+  (spec, componentSchemaCallback) => ({
     ...spec,
     parameters: [
       ...(spec.parameters ?? []),
       I.runSetters(
-        { name, in: inValue, schema: openAPISchemaFor(schema) },
-        setters
+        {
+          name,
+          in: inValue,
+          schema: openAPISchemaFor(schema, componentSchemaCallback),
+        },
+        setters,
+        componentSchemaCallback
       ),
     ],
   });
@@ -245,26 +282,31 @@ export const jsonRequest =
     content: AnySchema,
     ...setters: I.Setter<OpenAPISpecRequestBody<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
-  (spec) => ({
+  (spec, componentSchemaCallback) => ({
     ...spec,
     requestBody: I.runSetters(
       {
         ...spec.requestBody,
-        content: modifyContentJsonSchema(spec.requestBody?.content, content),
+        content: modifyContentJsonSchema(
+          spec.requestBody?.content,
+          content,
+          componentSchemaCallback
+        ),
       },
-      setters
+      setters,
+      componentSchemaCallback
     ),
   });
 
 /**
  * Set JSON response for a HTTP status code.
  *
- * *Avaialble setter*: `description`
+ * *Available setter*: `description`
  * *Setter of*: `operation`
  *
  * @param {OpenAPISpecStatusCode} statusCode - HTTP status code
  * @param {Schema} contentSchema - schema for the request body
- * @param {string} description - desciprition of the response
+ * @param {string} description - description of the response
  */
 export const jsonResponse =
   (
@@ -273,7 +315,7 @@ export const jsonResponse =
     description: string,
     ...setters: I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>[]
   ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
-  (spec) => ({
+  (spec, componentSchemaCallback) => ({
     ...spec,
     responses: {
       ...spec.responses,
@@ -283,12 +325,14 @@ export const jsonResponse =
           ...(contentSchema && {
             content: modifyContentJsonSchema(
               spec.responses?.[statusCode]?.content,
-              contentSchema
+              contentSchema,
+              componentSchemaCallback
             ),
           }),
           description,
         },
-        setters
+        setters,
+        componentSchemaCallback
       ),
     },
   });
@@ -329,6 +373,34 @@ export const description =
   (spec) => ({ ...spec, description });
 
 /**
+ * Adds component schema
+ */
+export const componentSchema =
+  (name: string, ast: AST.AST): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
+  (spec, componentSchemaCallback) => ({
+    ...spec,
+    components: {
+      ...spec.components,
+      schemas: {
+        ...spec.components?.schemas,
+        [name]: openAPISchemaForAst(
+          removeIdentifierAnnotation(
+            ast
+          ) /* Remove identifier, so we don't create infinite loop */,
+          componentSchemaCallback
+        ),
+      },
+    },
+  });
+
+/**
+ * Adds reference
+ */
+export const reference = (referenceName: string): OpenAPISpecReference => ({
+  $ref: `#/components/schemas/${referenceName}`,
+});
+
+/**
  * Set description.
  *
  * @param {string} summary - text of the summary
@@ -346,7 +418,7 @@ export const responseHeaders =
   (
     headers: Record<string, Schema.Schema<string, any>>
   ): I.Setter<OpenApiSpecResponse<OpenAPISchemaType>> =>
-  (spec) => ({
+  (spec, componentSchemaCallback) => ({
     ...spec,
     headers: Object.entries(headers).reduce((obj, [name, schema]) => {
       const descriptionObj = pipe(
@@ -363,7 +435,7 @@ export const responseHeaders =
       return {
         ...obj,
         [name]: {
-          schema: openAPISchemaFor(schema),
+          schema: openAPISchemaFor(schema, componentSchemaCallback),
           ...descriptionObj,
         },
       };
@@ -374,13 +446,14 @@ export const responseHeaders =
 
 const modifyContentJsonSchema = (
   content: OpenApiSpecContent<OpenAPISchemaType> | undefined,
-  schema: AnySchema | undefined
+  schema: AnySchema | undefined,
+  componentSchemaCallback: ComponentSchemaCallback
 ): OpenApiSpecContent<OpenAPISchemaType> => ({
   'application/json': {
     ...(content && content['application/json']),
     ...(schema && {
       schema: {
-        ...openAPISchemaFor(schema),
+        ...openAPISchemaFor(schema, componentSchemaCallback),
       },
     }),
   },
