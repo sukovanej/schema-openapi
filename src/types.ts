@@ -7,6 +7,7 @@ export type OpenAPISpec<S = AnySchema> = {
   info: OpenAPISpecInfo;
   servers?: OpenAPISpecServer[];
   paths: OpenAPISpecPaths<S>;
+  components?: OpenAPIComponents<S>;
 };
 
 export type OpenAPISpecInfo = {
@@ -106,6 +107,14 @@ export type OpenAPISpecRequestBody<S = AnySchema> = {
   required?: boolean;
 };
 
+export type OpenAPISpecReference = {
+  $ref: string;
+};
+
+export type OpenAPIComponents<S = AnySchema> = {
+  schemas: Record<string, S>;
+};
+
 export type OpenAPISpecOperation<S = AnySchema> = {
   requestBody?: OpenAPISpecRequestBody<S>;
   responses?: OpenAPISpecResponses<S>;
@@ -197,4 +206,5 @@ export type OpenAPISchemaType = {
   | OpenAPISchemaAllOfType
   | OpenAPISchemaObjectType
   | OpenAPISchemaAnyType
+  | OpenAPISpecReference
 );

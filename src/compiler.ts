@@ -1,12 +1,15 @@
 /** Based on https://github.com/effect/schema/blob/0.1.0/test/compiler/JSONSchema.ts */
 import { Option, ReadonlyArray, pipe } from 'effect';
+import { ComponentSchemaCallback } from 'schema-openapi/internal';
+import { reference } from 'schema-openapi/openapi';
 import {
   OpenAPISchemaArrayType,
   OpenAPISchemaObjectType,
   OpenAPISchemaType,
 } from 'schema-openapi/types';
 
-import { AST, type Schema } from '@effect/schema';
+import { AST, Schema } from '@effect/schema';
+import { getIdentifierAnnotation } from '@effect/schema/AST';
 
 const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
@@ -67,8 +70,9 @@ const createEnum = <T extends AST.LiteralValue>(
   };
 };
 
-export const openAPISchemaFor = <A>(
-  schema: Schema.Schema<A, any>
+export const openAPISchemaForAst = (
+  ast: AST.AST,
+  componentSchemaCallback: ComponentSchemaCallback
 ): OpenAPISchemaType => {
   const map = (ast: AST.AST): OpenAPISchemaType => {
     switch (ast._tag) {
@@ -150,6 +154,11 @@ export const openAPISchemaFor = <A>(
           throw new Error(
             `Cannot encode some index signature to OpenAPISchema`
           );
+        }
+        const identifier = Option.getOrUndefined(getIdentifierAnnotation(ast));
+        if (identifier && componentSchemaCallback) {
+          componentSchemaCallback(identifier, ast);
+          return reference(identifier);
         }
         const propertySignatures = ast.propertySignatures.map((ps) =>
           go(ps.type)
@@ -243,6 +252,17 @@ export const openAPISchemaFor = <A>(
       case 'Declaration':
         return go(ast.type);
       case 'Lazy':
+        const realAst = ast.f();
+        const identifier =
+          Option.getOrUndefined(getIdentifierAnnotation(ast)) ??
+          Option.getOrUndefined(getIdentifierAnnotation(realAst));
+        if (!identifier) {
+          console.warn(`Lazy schema must have identifier set.`);
+          return {};
+        }
+        return go(
+          AST.setAnnotation(realAst, AST.IdentifierAnnotationId, identifier)
+        );
       case 'UniqueSymbol':
       case 'UndefinedKeyword':
       case 'VoidKeyword':
@@ -258,5 +278,12 @@ export const openAPISchemaFor = <A>(
   const go = (ast: AST.AST): OpenAPISchemaType =>
     pipe(map(ast), addDescription(ast));
 
-  return go(schema.ast);
+  return go(ast);
+};
+
+export const openAPISchemaFor = <A>(
+  schema: Schema.Schema<A, any>,
+  componentSchemaCallback: ComponentSchemaCallback = undefined
+): OpenAPISchemaType => {
+  return openAPISchemaForAst(schema.ast, componentSchemaCallback);
 };
