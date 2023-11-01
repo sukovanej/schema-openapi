@@ -1,10 +1,6 @@
 import { Option, pipe } from 'effect';
 import { openAPISchemaFor, openAPISchemaForAst } from 'schema-openapi/compiler';
 import * as I from 'schema-openapi/internal';
-import {
-  ComponentSchemaCallback,
-  removeIdentifierAnnotation,
-} from 'schema-openapi/internal';
 import type {
   AnySchema,
   OpenAPISchemaType,
@@ -43,11 +39,11 @@ export const openAPI = (
   const componentSchemasFromReference: I.Setter<
     OpenAPISpec<OpenAPISchemaType>
   >[] = [];
-  const addedSchemaComponents = new Set<string>();
-  const addComponentSchemaCallback: ComponentSchemaCallback = (id, ast) => {
-    if (!addedSchemaComponents.has(id)) {
+  const addedComponentSchemas = new Set<string>();
+  const addComponentSchemaCallback: I.ComponentSchemaCallback = (id, ast) => {
+    if (!addedComponentSchemas.has(id)) {
       componentSchemasFromReference.push(componentSchema(id, ast));
-      addedSchemaComponents.add(id);
+      addedComponentSchemas.add(id);
     }
   };
   let spec = I.runSetters(
@@ -384,7 +380,7 @@ export const componentSchema =
       schemas: {
         ...spec.components?.schemas,
         [name]: openAPISchemaForAst(
-          removeIdentifierAnnotation(
+          I.removeIdentifierAnnotation(
             ast
           ) /* Remove identifier, so we don't create infinite loop */,
           componentSchemaCallback
@@ -447,7 +443,7 @@ export const responseHeaders =
 const modifyContentJsonSchema = (
   content: OpenApiSpecContent<OpenAPISchemaType> | undefined,
   schema: AnySchema | undefined,
-  componentSchemaCallback: ComponentSchemaCallback
+  componentSchemaCallback: I.ComponentSchemaCallback
 ): OpenApiSpecContent<OpenAPISchemaType> => ({
   'application/json': {
     ...(content && content['application/json']),
