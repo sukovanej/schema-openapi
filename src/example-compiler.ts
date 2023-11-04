@@ -305,25 +305,25 @@ const createNumberConstraint = (
     const min = jsonSchema.exclusiveMinimum;
     return TypeConstraint({ min, minExclusive: true });
   } else if (typeId === Schema.GreaterThanBigintTypeId) {
-    const min = jsonSchema.exclusiveMinimum;
+    const { min }: any = ast.annotations[typeId];
     return TypeConstraint({ min, minExclusive: true });
   } else if (typeId === Schema.GreaterThanOrEqualToTypeId) {
     const min = jsonSchema.minimum;
     return TypeConstraint({ min });
   } else if (typeId === Schema.GreaterThanOrEqualToBigintTypeId) {
-    const min = jsonSchema.minimum;
+    const { min }: any = ast.annotations[typeId];
     return TypeConstraint({ min });
   } else if (typeId === Schema.LessThanTypeId) {
     const max = jsonSchema.exclusiveMaximum;
     return TypeConstraint({ max, maxExclusive: true });
   } else if (typeId === Schema.LessThanBigintTypeId) {
-    const max = jsonSchema.exclusiveMaximum;
+    const { max }: any = ast.annotations[typeId];
     return TypeConstraint({ max, maxExclusive: true });
   } else if (typeId === Schema.LessThanOrEqualToTypeId) {
     const max = jsonSchema.maximum;
     return TypeConstraint({ max });
   } else if (typeId === Schema.LessThanOrEqualToBigintTypeId) {
-    const max = jsonSchema.maximum;
+    const { max }: any = ast.annotations[typeId];
     return TypeConstraint({ max });
   }
 };
