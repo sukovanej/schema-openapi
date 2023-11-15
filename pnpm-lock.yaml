@@ -12,11 +12,11 @@ devDependencies:
     specifier: ^2.26.2
     version: 2.26.2
   '@effect/schema':
-    specifier: ^0.47.6
-    version: 0.47.6(effect@2.0.0-next.54)(fast-check@3.13.2)
+    specifier: ^0.48.0
+    version: 0.48.0(effect@2.0.0-next.55)(fast-check@3.13.2)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.3.0
-    version: 4.3.0(prettier@3.0.3)
+    version: 4.3.0(prettier@3.1.0)
   '@types/express':
     specifier: ^4.17.21
     version: 4.17.21
@@ -24,14 +24,14 @@ devDependencies:
     specifier: ^4.1.6
     version: 4.1.6
   effect:
-    specifier: 2.0.0-next.54
-    version: 2.0.0-next.54
+    specifier: 2.0.0-next.55
+    version: 2.0.0-next.55
   express:
     specifier: ^4.18.2
     version: 4.18.2
   prettier:
-    specifier: ^3.0.3
-    version: 3.0.3
+    specifier: ^3.1.0
+    version: 3.1.0
   swagger-ui-express:
     specifier: ^5.0.0
     version: 5.0.0(express@4.18.2)
@@ -39,8 +39,8 @@ devDependencies:
     specifier: ^7.2.0
     version: 7.2.0(typescript@5.2.2)
   tsx:
-    specifier: ^4.1.1
-    version: 4.1.1
+    specifier: ^4.1.2
+    version: 4.1.2
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
@@ -398,13 +398,13 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@effect/schema@0.47.6(effect@2.0.0-next.54)(fast-check@3.13.2):
-    resolution: {integrity: sha512-+pH1/ByUnWa71tirb3kYMdCfWXjmYvU/2wZOfG3vmF8XQWcR3WnIlI1R5DvVYxtLp872a1kDiYX618h6ta6w9g==}
+  /@effect/schema@0.48.0(effect@2.0.0-next.55)(fast-check@3.13.2):
+    resolution: {integrity: sha512-IpAik8hX4kAuOdfNBfxfE8mYVfiikheSxFyWRkVQUutD1E86hDXG90EUYu2/zL2pHkgoS6c2cnY7uoKYwKSP2w==}
     peerDependencies:
-      effect: 2.0.0-next.54
+      effect: 2.0.0-next.55
       fast-check: ^3.13.2
     dependencies:
-      effect: 2.0.0-next.54
+      effect: 2.0.0-next.55
       fast-check: 3.13.2
     dev: true
 
@@ -692,7 +692,7 @@ packages:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
 
-  /@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.0.3):
+  /@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.1.0):
     resolution: {integrity: sha512-r3n0onD3BTOVUNPhR4lhVK4/pABGpbA7bW3eumZnYdKaHkf1qEC+Mag6DPbGNuuh0eG8AaYj+YqmVHSiGslaTQ==}
     peerDependencies:
       '@vue/compiler-sfc': 3.x
@@ -707,7 +707,7 @@ packages:
       '@babel/types': 7.17.0
       javascript-natural-sort: 0.7.1
       lodash: 4.17.21
-      prettier: 3.0.3
+      prettier: 3.1.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1376,8 +1376,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /effect@2.0.0-next.54:
-    resolution: {integrity: sha512-qROhKMxlm6fpa90YRfWSgKeelDfhaDq2igPK+pIKupGehiCnZH4vd2qrY71HVZ10qZgXxh0VXpGyDQxJC+EQqw==}
+  /effect@2.0.0-next.55:
+    resolution: {integrity: sha512-kNOB/HaDSdaFSDVXK2gyf4XcTKbKKlllyoS871uDyoJskcc+024sSOHnNioXZPgkqaz55a3mad4DFfLUIETwYQ==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -2351,7 +2351,7 @@ packages:
       acorn: 8.11.2
       pathe: 1.1.1
       pkg-types: 1.0.3
-      ufo: 1.3.1
+      ufo: 1.3.2
     dev: true
 
   /ms@2.0.0:
@@ -2641,8 +2641,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier@3.0.3:
-    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+  /prettier@3.1.0:
+    resolution: {integrity: sha512-TQLvXjq5IAibjh8EpBIkNKxO749UEWABoiIZehEPiY4GNpVdhaFKqSTu+QrlU6D2dPAfubRmtJTi4K4YkQ5eXw==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -3048,8 +3048,8 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /std-env@3.4.3:
-    resolution: {integrity: sha512-f9aPhy8fYBuMN+sNfakZV18U39PbalgjXG3lLB9WkaYTxijru61wb57V9wxxNthXM5Sd88ETBWi29qLAsHO52Q==}
+  /std-env@3.5.0:
+    resolution: {integrity: sha512-JGUEaALvL0Mf6JCfYnJOTcobY+Nc7sG/TemDRBqCA0wEr4DER7zDchaaixTlmOxAjG1uRJmX82EQcxwTQTkqVA==}
     dev: true
 
   /stream-transform@2.1.3:
@@ -3155,8 +3155,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /swagger-ui-dist@5.9.3:
-    resolution: {integrity: sha512-/OgHfO96RWXF+p/EOjEnvKNEh94qAG/VHukgmVKh5e6foX9kas1WbjvQnDDj0sSTAMr9MHRBqAWytDcQi0VOrg==}
+  /swagger-ui-dist@5.10.0:
+    resolution: {integrity: sha512-PBTn5qDOQVtU29hrx74km86SnK3/mFtF3grI98y575y1aRpxiuStRTIvsfXFudPFkLofHU7H9a+fKrP+Oayc3g==}
     dev: true
 
   /swagger-ui-express@5.0.0(express@4.18.2):
@@ -3166,7 +3166,7 @@ packages:
       express: '>=4.0.0 || >=5.0.0-beta'
     dependencies:
       express: 4.18.2
-      swagger-ui-dist: 5.9.3
+      swagger-ui-dist: 5.10.0
     dev: true
 
   /term-size@2.2.1:
@@ -3281,8 +3281,8 @@ packages:
       - ts-node
     dev: true
 
-  /tsx@4.1.1:
-    resolution: {integrity: sha512-zyPn5BFMB0TB5kMLbYPNx4x/oL/oSlaecdKCv6WeJ0TeSEfx8RTJWjuB5TZ2dSewktgfBsBO/HNA9mrMWqLXMA==}
+  /tsx@4.1.2:
+    resolution: {integrity: sha512-1spM1bFV6MP2s4tO4tDC7g52fsaFdtEWdO4GfGdqi20qUgPbnAJqixOyIAvCSx1DDj3YIUB4CD06owTWUsOAuQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
@@ -3379,8 +3379,8 @@ packages:
     hasBin: true
     dev: true
 
-  /ufo@1.3.1:
-    resolution: {integrity: sha512-uY/99gMLIOlJPwATcMVYfqDSxUR9//AUcgZMzwfSTJPDKzA1S8mX4VLqa+fiAtveraQUBCz4FFcwVZBGbwBXIw==}
+  /ufo@1.3.2:
+    resolution: {integrity: sha512-o+ORpgGwaYQXgqGDwd+hkS4PuZ3QnmqMMxRuajK/a38L6fTpcE5GPIfrf+L/KemFzfUpeUQc1rRS1iDBozvnFA==}
     dev: true
 
   /unbox-primitive@1.0.2:
@@ -3535,7 +3535,7 @@ packages:
       magic-string: 0.30.5
       pathe: 1.1.1
       picocolors: 1.0.0
-      std-env: 3.4.3
+      std-env: 3.5.0
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.7.0
