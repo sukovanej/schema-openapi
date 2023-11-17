@@ -153,11 +153,6 @@ export type OpenAPISchemaBooleanType = {
   nullable?: boolean;
 };
 
-export type OpenAPISchemaConstType = {
-  const: string | number | boolean;
-  nullable?: boolean;
-};
-
 export type OpenAPISchemaArrayType = {
   type: 'array';
   items?: OpenAPISchemaType | Array<OpenAPISchemaType>;
@@ -168,7 +163,7 @@ export type OpenAPISchemaArrayType = {
 };
 
 export type OpenAPISchemaEnumType = {
-  enum: Array<string | number>;
+  enum: Array<string | number | boolean>;
   nullable?: boolean;
 };
 
@@ -199,7 +194,6 @@ export type OpenAPISchemaType = {
   | OpenAPISchemaStringType
   | OpenAPISchemaNumberType
   | OpenAPISchemaBooleanType
-  | OpenAPISchemaConstType
   | OpenAPISchemaArrayType
   | OpenAPISchemaEnumType
   | OpenAPISchemaOneOfType

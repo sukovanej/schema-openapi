@@ -499,7 +499,7 @@ describe('description annotation', () => {
       type: 'object',
       properties: {
         id: { type: 'integer', description: 'id description' },
-        name: { const: 'value', description: 'value description' },
+        name: { enum: ['value'], description: 'value description' },
       },
       required: ['name', 'id'],
       description: 'my description',

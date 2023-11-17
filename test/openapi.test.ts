@@ -1,22 +1,21 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
+import * as OpenApi from 'schema-openapi';
 
-import * as S from '@effect/schema/Schema';
-
-import * as OA from '../src/openapi';
+import * as Schema from '@effect/schema/Schema';
 
 describe('simple', () => {
   it('simple post', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema),
-          OA.jsonResponse(200, schema, 'test')
+          OpenApi.jsonRequest(schema),
+          OpenApi.jsonResponse(200, schema, 'test')
         )
       )
     );
@@ -52,26 +51,26 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('set description', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.info(OA.description('My API')),
-      OA.path(
+      OpenApi.info(OpenApi.description('My API')),
+      OpenApi.path(
         '/pet',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema),
-          OA.jsonResponse(200, schema, 'description'),
-          OA.description('Store a pet')
+          OpenApi.jsonRequest(schema),
+          OpenApi.jsonResponse(200, schema, 'description'),
+          OpenApi.description('Store a pet')
         ),
-        OA.description('Pet endpoint')
+        OpenApi.description('Pet endpoint')
       )
     );
 
@@ -79,67 +78,70 @@ describe('simple', () => {
     expect(spec.paths['/pet'].post?.description).toEqual('Store a pet');
     expect(spec.paths['/pet'].description).toEqual('Pet endpoint');
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('set license', async () => {
-    const spec1 = OA.openAPI('test', '0.1', OA.license('MIT'));
+    const spec1 = OpenApi.openAPI('test', '0.1', OpenApi.license('MIT'));
 
     expect(spec1.info.license?.name).toEqual('MIT');
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec1);
 
-    const spec2 = OA.openAPI(
+    const spec2 = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.license('MIT', 'http://patrik.com')
+      OpenApi.license('MIT', 'http://patrik.com')
     );
 
     expect(spec2.info.license?.name).toEqual('MIT');
     expect(spec2.info.license?.url).toEqual('http://patrik.com');
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec2);
   });
 
   it('set description', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema),
-          OA.jsonResponse(200, schema, 'description'),
-          OA.summary('My summary')
+          OpenApi.jsonRequest(schema),
+          OpenApi.jsonResponse(200, schema, 'description'),
+          OpenApi.summary('My summary')
         ),
-        OA.summary('Pet stuff')
+        OpenApi.summary('Pet stuff')
       )
     );
 
     expect(spec.paths['/pet'].post?.summary).toEqual('My summary');
     expect(spec.paths['/pet'].summary).toEqual('Pet stuff');
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('schema description', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema, OA.description('request description')),
-          OA.jsonResponse(200, schema, 'response description')
+          OpenApi.jsonRequest(
+            schema,
+            OpenApi.description('request description')
+          ),
+          OpenApi.jsonResponse(200, schema, 'response description')
         )
       )
     );
@@ -152,51 +154,55 @@ describe('simple', () => {
       'request description'
     );
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('servers', async () => {
-    const spec1 = OA.openAPI('test', '0.1', OA.server('http://server.com'));
-
-    expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
-    // @ts-ignore
-    SwaggerParser.validate(spec1);
-
-    const spec2 = OA.openAPI(
+    const spec1 = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.server('http://server-prod.com'),
-      OA.server('http://server-sandbox.com')
+      OpenApi.server('http://server.com')
+    );
+
+    expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
+    // @ts-expect-error
+    SwaggerParser.validate(spec1);
+
+    const spec2 = OpenApi.openAPI(
+      'test',
+      '0.1',
+      OpenApi.server('http://server-prod.com'),
+      OpenApi.server('http://server-sandbox.com')
     );
 
     expect(spec2.servers).toStrictEqual([
       { url: 'http://server-prod.com' },
       { url: 'http://server-sandbox.com' },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec2);
 
-    const spec3 = OA.openAPI(
+    const spec3 = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.server('http://server.com', OA.description('production'))
+      OpenApi.server('http://server.com', OpenApi.description('production'))
     );
 
     expect(spec3.servers).toStrictEqual([
       { url: 'http://server.com', description: 'production' },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec3);
 
-    const spec4 = OA.openAPI(
+    const spec4 = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.server(
+      OpenApi.server(
         'http://server.com',
-        OA.description('production'),
-        OA.variable('username', 'demo', OA.description('username')),
-        OA.variable('port', '8443', OA.enum('8443', '443'))
+        OpenApi.description('production'),
+        OpenApi.variable('username', 'demo', OpenApi.description('username')),
+        OpenApi.variable('port', '8443', OpenApi.enum('8443', '443'))
       )
     );
 
@@ -210,32 +216,32 @@ describe('simple', () => {
         },
       },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec4);
   });
 
   it('path parameters', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet/{id}',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema),
-          OA.jsonResponse(200, schema, 'description')
+          OpenApi.jsonRequest(schema),
+          OpenApi.jsonResponse(200, schema, 'description')
         ),
-        OA.summary('Pet stuff'),
-        OA.parameter(
+        OpenApi.summary('Pet stuff'),
+        OpenApi.parameter(
           'id',
           'query',
-          S.string,
-          OA.required,
-          OA.deprecated,
-          OA.allowEmptyValue,
-          OA.description('id')
+          Schema.string,
+          OpenApi.required,
+          OpenApi.deprecated,
+          OpenApi.allowEmptyValue,
+          OpenApi.description('id')
         )
       )
     );
@@ -254,31 +260,31 @@ describe('simple', () => {
         allowEmptyValue: true,
       },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('operation parameters', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet/{id}',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema),
-          OA.jsonResponse(200, schema, 'description'),
-          OA.parameter(
+          OpenApi.jsonRequest(schema),
+          OpenApi.jsonResponse(200, schema, 'description'),
+          OpenApi.parameter(
             'id',
             'query',
-            S.string,
-            OA.required,
-            OA.description('id')
+            Schema.string,
+            OpenApi.required,
+            OpenApi.description('id')
           )
         ),
-        OA.summary('Pet stuff')
+        OpenApi.summary('Pet stuff')
       )
     );
 
@@ -294,22 +300,26 @@ describe('simple', () => {
         required: true,
       },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('request body', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet/{id}',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse(200, schema, 'description')
+          OpenApi.jsonRequest(
+            schema,
+            OpenApi.description('schema'),
+            OpenApi.required
+          ),
+          OpenApi.jsonResponse(200, schema, 'description')
         )
       )
     );
@@ -323,51 +333,65 @@ describe('simple', () => {
       required: true,
       description: 'schema',
     });
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('tags', async () => {
-    const schema = S.string;
+    const schema = Schema.string;
 
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet/{id}',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse(200, schema, 'description'),
-          OA.tags('tag1', 'tag2')
+          OpenApi.jsonRequest(
+            schema,
+            OpenApi.description('schema'),
+            OpenApi.required
+          ),
+          OpenApi.jsonResponse(200, schema, 'description'),
+          OpenApi.tags('tag1', 'tag2')
         )
       ),
-      OA.path(
+      OpenApi.path(
         '/another-endpoint',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonRequest(schema, OA.description('schema'), OA.required),
-          OA.jsonResponse(200, schema, 'description'),
-          OA.tags('tag1')
+          OpenApi.jsonRequest(
+            schema,
+            OpenApi.description('schema'),
+            OpenApi.required
+          ),
+          OpenApi.jsonResponse(200, schema, 'description'),
+          OpenApi.tags('tag1')
         )
       )
     );
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('tags', async () => {
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse(200, S.string, 'response'))
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonResponse(200, Schema.string, 'response')
+        )
       ),
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('get', OA.jsonResponse(200, S.string, 'response'))
+        OpenApi.operation(
+          'get',
+          OpenApi.jsonResponse(200, Schema.string, 'response')
+        )
       )
     );
 
@@ -398,24 +422,24 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('tags', async () => {
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation(
+        OpenApi.operation(
           'post',
-          OA.jsonResponse(
+          OpenApi.jsonResponse(
             200,
-            S.string,
+            Schema.string,
             'response',
-            OA.responseHeaders({
-              'My-Header': S.description('My description')(S.string),
+            OpenApi.responseHeaders({
+              'My-Header': Schema.description('My description')(Schema.string),
             })
           )
         )
@@ -443,17 +467,17 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
   it('empty response schema', async () => {
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse(200, undefined, 'test'))
+        OpenApi.operation('post', OpenApi.jsonResponse(200, undefined, 'test'))
       )
     );
 
@@ -465,7 +489,43 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
+    SwaggerParser.validate(spec);
+  });
+
+  it('literal', async () => {
+    const spec = OpenApi.openAPI(
+      'test',
+      '0.1',
+      OpenApi.path(
+        '/pet',
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonResponse(200, Schema.literal('value'), 'test')
+        )
+      )
+    );
+
+    expect(spec).toStrictEqual({
+      openapi: '3.0.3',
+      info: { title: 'test', version: '0.1' },
+      paths: {
+        '/pet': {
+          post: {
+            responses: {
+              200: {
+                content: {
+                  'application/json': { schema: { enum: ['value'] } },
+                },
+                description: 'test',
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 });

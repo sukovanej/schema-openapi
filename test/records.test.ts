@@ -1,4 +1,4 @@
-import * as S from '@effect/schema/Schema';
+import * as Schema from '@effect/schema/Schema';
 
 import { openAPISchemaFor } from '../src/compiler';
 
@@ -6,7 +6,7 @@ import { openAPISchemaFor } from '../src/compiler';
 
 describe('records', () => {
   it('string to string map', () => {
-    const schema = S.record(S.string, S.string);
+    const schema = Schema.record(Schema.string, Schema.string);
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
@@ -18,9 +18,12 @@ describe('records', () => {
   });
 
   it('string to object map', () => {
-    const schema = S.record(
-      S.string,
-      S.struct({ code: S.optional(S.number), text: S.optional(S.string) })
+    const schema = Schema.record(
+      Schema.string,
+      Schema.struct({
+        code: Schema.optional(Schema.number),
+        text: Schema.optional(Schema.string),
+      })
     );
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
