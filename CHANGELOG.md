@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.21.0
+
+### Minor Changes
+
+- 658a3ea: Fix: use `enum` instead of `const`.
+
 ## 0.20.1
 
 ### Patch Changes
