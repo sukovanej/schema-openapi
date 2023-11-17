@@ -82,7 +82,7 @@ export const openAPISchemaForAst = (
         } else if (ast.literal === null) {
           return { type: 'null' };
         }
-        return { const: ast.literal };
+        return { enum: [ast.literal] };
       }
       case 'UnknownKeyword':
       case 'AnyKeyword':
@@ -107,8 +107,8 @@ export const openAPISchemaForAst = (
           elements.length === 0
             ? undefined
             : elements.length === 1
-            ? elements[0]
-            : elements;
+              ? elements[0]
+              : elements;
         let additionalItems = undefined;
 
         // ---------------------------------------------
