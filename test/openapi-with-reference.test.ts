@@ -80,7 +80,7 @@ describe('component schema and reference', () => {
     };
     expect(spec).toStrictEqual(openapi);
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -135,7 +135,7 @@ describe('component schema and reference', () => {
     };
     expect(spec).toStrictEqual(openapi);
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -207,7 +207,7 @@ describe('component schema and reference', () => {
     };
     expect(spec).toStrictEqual(openapi);
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -232,7 +232,7 @@ describe('component schema and reference', () => {
     );
     expect(spec).toStrictEqual(recursiveOpenApiDefinition);
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -257,7 +257,7 @@ describe('component schema and reference', () => {
     );
     expect(spec).toStrictEqual(recursiveOpenApiDefinition);
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 });

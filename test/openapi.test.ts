@@ -51,7 +51,7 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -78,7 +78,7 @@ describe('simple', () => {
     expect(spec.paths['/pet'].post?.description).toEqual('Store a pet');
     expect(spec.paths['/pet'].description).toEqual('Pet endpoint');
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -86,7 +86,7 @@ describe('simple', () => {
     const spec1 = OpenApi.openAPI('test', '0.1', OpenApi.license('MIT'));
 
     expect(spec1.info.license?.name).toEqual('MIT');
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec1);
 
     const spec2 = OpenApi.openAPI(
@@ -98,7 +98,7 @@ describe('simple', () => {
     expect(spec2.info.license?.name).toEqual('MIT');
     expect(spec2.info.license?.url).toEqual('http://patrik.com');
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec2);
   });
 
@@ -123,7 +123,7 @@ describe('simple', () => {
     expect(spec.paths['/pet'].post?.summary).toEqual('My summary');
     expect(spec.paths['/pet'].summary).toEqual('Pet stuff');
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -154,7 +154,7 @@ describe('simple', () => {
       'request description'
     );
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -166,7 +166,7 @@ describe('simple', () => {
     );
 
     expect(spec1.servers).toStrictEqual([{ url: 'http://server.com' }]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec1);
 
     const spec2 = OpenApi.openAPI(
@@ -180,7 +180,7 @@ describe('simple', () => {
       { url: 'http://server-prod.com' },
       { url: 'http://server-sandbox.com' },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec2);
 
     const spec3 = OpenApi.openAPI(
@@ -192,7 +192,7 @@ describe('simple', () => {
     expect(spec3.servers).toStrictEqual([
       { url: 'http://server.com', description: 'production' },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec3);
 
     const spec4 = OpenApi.openAPI(
@@ -216,7 +216,7 @@ describe('simple', () => {
         },
       },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec4);
   });
 
@@ -260,7 +260,7 @@ describe('simple', () => {
         allowEmptyValue: true,
       },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -300,7 +300,7 @@ describe('simple', () => {
         required: true,
       },
     ]);
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -333,7 +333,7 @@ describe('simple', () => {
       required: true,
       description: 'schema',
     });
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -371,7 +371,7 @@ describe('simple', () => {
       )
     );
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -422,7 +422,7 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -467,7 +467,7 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -489,7 +489,7 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 
@@ -525,7 +525,7 @@ describe('simple', () => {
       },
     });
 
-    // @ts-ignore
+    // @ts-expect-error
     SwaggerParser.validate(spec);
   });
 });
