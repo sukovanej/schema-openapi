@@ -1,10 +1,8 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { pipe } from 'effect';
+import * as OpenApi from 'schema-openapi';
 
-import * as S from '@effect/schema/Schema';
-import { identifier } from '@effect/schema/Schema';
-
-import * as OA from '../src/openapi';
+import * as Schema from '@effect/schema/Schema';
 
 const recursiveOpenApiDefinition = {
   openapi: '3.0.3',
@@ -54,10 +52,13 @@ const recursiveOpenApiDefinition = {
 
 describe('component schema and reference', () => {
   it('component schema', async () => {
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.componentSchema('MyComponent', S.struct({ value: S.string }).ast)
+      OpenApi.componentSchema(
+        'MyComponent',
+        Schema.struct({ value: Schema.string }).ast
+      )
     );
     const openapi = {
       openapi: '3.0.3',
@@ -86,15 +87,18 @@ describe('component schema and reference', () => {
 
   it('reference', async () => {
     const ReferencedType = pipe(
-      S.struct({ something: S.string }),
-      identifier('ReferencedType')
+      Schema.struct({ something: Schema.string }),
+      Schema.identifier('ReferencedType')
     );
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse(200, ReferencedType, 'Test'))
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonResponse(200, ReferencedType, 'Test')
+        )
       )
     );
     const openapi = {
@@ -141,19 +145,22 @@ describe('component schema and reference', () => {
 
   it('reference with sub schema as reference', async () => {
     const ReferencedSubType = pipe(
-      S.struct({ more: S.string }),
-      identifier('ReferencedSubType')
+      Schema.struct({ more: Schema.string }),
+      Schema.identifier('ReferencedSubType')
     );
     const ReferencedType = pipe(
-      S.struct({ something: S.string, sub: ReferencedSubType }),
-      identifier('ReferencedType')
+      Schema.struct({ something: Schema.string, sub: ReferencedSubType }),
+      Schema.identifier('ReferencedType')
     );
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse(200, ReferencedType, 'Test'))
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonResponse(200, ReferencedType, 'Test')
+        )
       )
     );
     const openapi = {
@@ -216,18 +223,21 @@ describe('component schema and reference', () => {
       readonly name: string;
       readonly categories: ReadonlyArray<Category>;
     }
-    const categorySchema: S.Schema<Category> = S.lazy<Category>(() =>
-      S.struct({
-        name: S.string,
-        categories: S.array(categorySchema),
-      }).pipe(S.identifier('Category'))
+    const categorySchema: Schema.Schema<Category> = Schema.lazy<Category>(() =>
+      Schema.struct({
+        name: Schema.string,
+        categories: Schema.array(categorySchema),
+      }).pipe(Schema.identifier('Category'))
     );
-    const spec = OA.openAPI(
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse(200, categorySchema, 'Test'))
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonResponse(200, categorySchema, 'Test')
+        )
       )
     );
     expect(spec).toStrictEqual(recursiveOpenApiDefinition);
@@ -241,18 +251,21 @@ describe('component schema and reference', () => {
       readonly name: string;
       readonly categories: ReadonlyArray<Category>;
     }
-    const categorySchema: S.Schema<Category> = S.lazy<Category>(() =>
-      S.struct({
-        name: S.string,
-        categories: S.array(categorySchema),
+    const categorySchema: Schema.Schema<Category> = Schema.lazy<Category>(() =>
+      Schema.struct({
+        name: Schema.string,
+        categories: Schema.array(categorySchema),
       })
-    ).pipe(S.identifier('Category'));
-    const spec = OA.openAPI(
+    ).pipe(Schema.identifier('Category'));
+    const spec = OpenApi.openAPI(
       'test',
       '0.1',
-      OA.path(
+      OpenApi.path(
         '/pet',
-        OA.operation('post', OA.jsonResponse(200, categorySchema, 'Test'))
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonResponse(200, categorySchema, 'Test')
+        )
       )
     );
     expect(spec).toStrictEqual(recursiveOpenApiDefinition);
