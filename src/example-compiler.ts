@@ -1,4 +1,12 @@
-import { Context, Effect, Option, Ref, Unify, pipe } from 'effect';
+import {
+  Context,
+  Effect,
+  Option,
+  ReadonlyArray,
+  Ref,
+  Unify,
+  pipe,
+} from 'effect';
 
 import { AST, Parser, Schema } from '@effect/schema';
 
@@ -83,21 +91,36 @@ export const randomExample = <A>(
       case 'ObjectKeyword':
         return randomChoice([{ iam: 'object' }]);
       case 'Tuple': {
+        const generate = Effect.forEach((element: AST.AST) =>
+          go(element, undefined)
+        );
+
+        const elements = generate(ast.elements.map((element) => element.type));
+
+        const postRestElementsAst = pipe(
+          Option.flatMap(ast.rest, ReadonlyArray.tail),
+          Option.getOrElse(() => [] as AST.AST[])
+        );
+
+        const nElements = ast.elements.length + postRestElementsAst.length;
+
         const rest = pipe(
-          Option.map(
-            ast.rest,
-            Effect.forEach((ast) => go(ast, constraint))
+          Option.flatMap(ast.rest, ReadonlyArray.head),
+          Option.map((rest) =>
+            Array(
+              constraint?.min != null ? constraint.min - nElements : 1
+            ).fill(rest)
           ),
+          Option.map(generate),
           Option.getOrElse(() => Effect.succeed([] as any[]))
         );
 
-        const elements = pipe(
-          ast.elements.values(),
-          Effect.forEach((element) => go(element.type, constraint))
-        );
+        const postRestElements = generate(postRestElementsAst);
 
-        return Effect.flatMap(rest, (rest) =>
-          Effect.map(elements, (elements) => [...elements, ...rest])
+        return Effect.mergeAll(
+          [elements, rest, postRestElements],
+          [] as any[],
+          (a, b) => [...a, ...b]
         );
       }
       case 'TypeLiteral': {
@@ -234,7 +257,17 @@ const createConstraintFromRefinement = Unify.unify((ast: AST.Refinement) => {
     return Effect.fail(randomExampleError(message));
   }
 
-  const constraint = createNumberConstraint(typeId, ast);
+  let from = ast.from;
+  while (from._tag === 'Refinement') {
+    from = from.from;
+  }
+
+  let constraint: TypeConstraint | undefined;
+  if (from._tag === 'NumberKeyword' || from._tag === 'BigIntKeyword') {
+    constraint = createNumberConstraint(typeId, ast);
+  } else if (from._tag === 'Tuple') {
+    constraint = createTupleConstraint(typeId, ast);
+  }
 
   if (constraint === undefined) {
     const astStr = JSON.stringify(ast);
@@ -325,6 +358,25 @@ const createNumberConstraint = (
   } else if (typeId === Schema.LessThanOrEqualToBigintTypeId) {
     const { max }: any = ast.annotations[typeId];
     return TypeConstraint({ max });
+  }
+};
+
+const createTupleConstraint = (
+  typeId: AST.TypeAnnotation,
+  ast: AST.AST
+): TypeConstraint | undefined => {
+  const jsonSchema: any = ast.annotations[AST.JSONSchemaAnnotationId];
+
+  if (typeId === Schema.MinItemsTypeId) {
+    const min = jsonSchema.minItems;
+    return TypeConstraint({ min });
+  } else if (typeId === Schema.MaxItemsTypeId) {
+    const max = jsonSchema.maxItems;
+    return TypeConstraint({ max });
+  } else if (typeId === Schema.ItemsCountTypeId) {
+    const min = jsonSchema.minItems;
+    const max = jsonSchema.maxItems;
+    return TypeConstraint({ min, max });
   }
 };
 

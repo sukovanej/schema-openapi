@@ -209,4 +209,12 @@ describe('constraints', () => {
 
     expect(example).toEqual([5, 2, 12, 2, 5]);
   });
+
+  test('array min length', () => {
+    const schema = Schema.array(Schema.number).pipe(Schema.minItems(3));
+
+    const example = Effect.runSync(randomExample(schema));
+
+    expect(example.length).toBeGreaterThanOrEqual(3);
+  });
 });
