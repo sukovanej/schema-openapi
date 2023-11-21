@@ -529,3 +529,38 @@ describe('simple', () => {
     SwaggerParser.validate(spec);
   });
 });
+
+it('security', async () => {
+  const schema = Schema.string;
+
+  const spec = OpenApi.openAPI(
+    'test',
+    '0.1',
+    OpenApi.securityScheme('bearerAuth', {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    }),
+    OpenApi.path(
+      '/pet',
+      OpenApi.operation(
+        'post',
+        OpenApi.jsonRequest(schema),
+        OpenApi.jsonResponse(200, schema, 'test'),
+        OpenApi.securityRequirement('bearerAuth')
+      )
+    )
+  );
+
+  expect(spec.components?.securitySchemes).toEqual({
+    bearerAuth: {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    },
+  });
+  expect(spec.paths['/pet'].post?.security).toEqual([{ bearerAuth: [] }]);
+
+  // @ts-expect-error
+  SwaggerParser.validate(spec);
+});

@@ -4,6 +4,8 @@ import * as I from 'schema-openapi/internal';
 import type {
   AnySchema,
   OpenAPISchemaType,
+  OpenAPISecurityRequirement,
+  OpenAPISecurityScheme,
   OpenAPISpec,
   OpenAPISpecInfo,
   OpenAPISpecMethodName,
@@ -436,6 +438,48 @@ export const responseHeaders =
         },
       };
     }, {}),
+  });
+
+/**
+ * Add a security scheme to the specification.
+ *
+ * *Setter of*: `openAPI`
+ *
+ * @param {string} name - name of the security scheme
+ * @param {OpenAPISecurityScheme} securityScheme - security scheme
+ */
+export const securityScheme =
+  (
+    name: string,
+    securityScheme: OpenAPISecurityScheme
+  ): I.Setter<OpenAPISpec<OpenAPISchemaType>> =>
+  (spec) => ({
+    ...spec,
+    components: {
+      ...spec.components,
+      securitySchemes: {
+        ...spec.components?.securitySchemes,
+        [name]: securityScheme,
+      },
+    },
+  });
+
+/**
+ * Add a security requirement to the specification.
+ *
+ * *Setter of*: `openAPI`, `operation`
+ *
+ * @param {string} securityScheme - name of the security scheme
+ * @param {string[]} scopes - list of required OAuth2 scopes
+ */
+export const securityRequirement =
+  (
+    securityScheme: string,
+    scopes: string[] = []
+  ): I.Setter<{ security?: OpenAPISecurityRequirement[] }> =>
+  (spec) => ({
+    ...spec,
+    security: [...(spec.security ?? []), { [securityScheme]: scopes }],
   });
 
 // internals
