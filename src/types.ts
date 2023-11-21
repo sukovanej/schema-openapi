@@ -8,6 +8,7 @@ export type OpenAPISpec<S = AnySchema> = {
   servers?: OpenAPISpecServer[];
   paths: OpenAPISpecPaths<S>;
   components?: OpenAPIComponents<S>;
+  security?: OpenAPISecurityRequirement[];
 };
 
 export type OpenAPISpecInfo = {
@@ -112,8 +113,48 @@ export type OpenAPISpecReference = {
 };
 
 export type OpenAPIComponents<S = AnySchema> = {
-  schemas: Record<string, S>;
+  schemas?: Record<string, S>;
+  securitySchemes?: Record<string, OpenAPISecurityScheme>;
 };
+
+export type OpenAPIHTTPSecurityScheme = {
+  type: 'http';
+  scheme: string;
+  bearerFormat?: string;
+};
+
+export type OpenAPIApiKeySecurityScheme = {
+  type: 'apiKey';
+  name: string;
+  in: 'query' | 'header' | 'cookie';
+};
+
+export type OpenAPIMutualTLSSecurityScheme = {
+  type: 'mutualTLS';
+};
+
+export type OpenAPIOAuth2SecurityScheme = {
+  type: 'oauth2';
+  flows: Record<
+    'implicit' | 'password' | 'clientCredentials' | 'authorizationCode',
+    Record<string, unknown>
+  >;
+};
+
+export type OpenAPIOpenIdConnectSecurityScheme = {
+  type: 'openIdConnect';
+  openIdConnectUrl: string;
+};
+
+export type OpenAPISecurityScheme =
+  | OpenAPIHTTPSecurityScheme
+  | OpenAPIApiKeySecurityScheme
+  | OpenAPIMutualTLSSecurityScheme
+  | OpenAPIOAuth2SecurityScheme
+  | OpenAPIOpenIdConnectSecurityScheme
+  | OpenAPISpecReference;
+
+export type OpenAPISecurityRequirement = Record<string, string[]>;
 
 export type OpenAPISpecOperation<S = AnySchema> = {
   requestBody?: OpenAPISpecRequestBody<S>;
@@ -124,6 +165,7 @@ export type OpenAPISpecOperation<S = AnySchema> = {
   summary?: string;
   deprecated?: boolean;
   tags?: string[];
+  security?: OpenAPISecurityRequirement[];
 };
 
 // Open API schema
