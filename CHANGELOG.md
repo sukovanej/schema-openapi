@@ -1,5 +1,16 @@
 # schema-openapi
 
+## 0.22.0
+
+### Minor Changes
+
+- b886ab8: Update effect + @effect/schema.
+
+### Patch Changes
+
+- 2d1b38d: Add support for minItems constraint in example-compiler
+- e86f520: Add possibility to define security schemas and requirements
+
 ## 0.21.0
 
 ### Minor Changes
