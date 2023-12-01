@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.24.1
+
+### Patch Changes
+
+- 00ea2df: Update effect.
+
 ## 0.24.0
 
 ### Minor Changes
