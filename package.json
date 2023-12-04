@@ -43,7 +43,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@changesets/cli": "^2.27.1",
-    "@effect/schema": "^0.51.1",
+    "@effect/schema": "^0.51.3",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/express": "^4.17.21",
     "@types/swagger-ui-express": "^4.1.6",
@@ -52,7 +52,7 @@
     "prettier": "^3.1.0",
     "swagger-ui-express": "^5.0.0",
     "tsup": "^8.0.1",
-    "tsx": "^4.6.1",
+    "tsx": "^4.6.2",
     "typescript": "^5.3.2",
     "vitest": "^0.34.6"
   },
