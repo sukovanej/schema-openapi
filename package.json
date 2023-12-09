@@ -54,7 +54,7 @@
     "tsup": "^8.0.1",
     "tsx": "^4.6.2",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.1"
+    "vitest": "^1.0.2"
   },
   "peerDependencies": {
     "@effect/schema": "^0.52.0",
