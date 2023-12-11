@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.26.0
+
+### Minor Changes
+
+- c3d0243: Update effect.
+
 ## 0.25.0
 
 ### Minor Changes
