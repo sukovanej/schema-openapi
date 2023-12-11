@@ -251,7 +251,7 @@ export const openAPISchemaForAst = (
         return go(ast.from);
       case 'Declaration':
         return go(ast.type);
-      case 'Lazy':
+      case 'Suspend':
         const realAst = ast.f();
         const identifier =
           Option.getOrUndefined(getIdentifierAnnotation(ast)) ??

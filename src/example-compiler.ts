@@ -202,7 +202,7 @@ export const randomExample = <A>(
       }
       case 'SymbolKeyword':
         return Effect.fail(randomExampleError(`SymbolKeyword`));
-      case 'Lazy':
+      case 'Suspend':
         return go(ast.f(), constraint);
       case 'TemplateLiteral': {
         const result = pipe(
