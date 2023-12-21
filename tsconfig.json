@@ -16,7 +16,8 @@
       "schema-openapi/*": [
         "./src/*"
       ]
-    }
+    },
+    "exactOptionalPropertyTypes": true
   },
   "include": ["src", "test", "examples"]
 }

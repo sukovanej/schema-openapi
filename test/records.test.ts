@@ -21,7 +21,7 @@ describe('records', () => {
     const schema = Schema.record(
       Schema.string,
       Schema.struct({
-        code: Schema.optional(Schema.number),
+        code: Schema.optional(Schema.number, { exact: true }),
         text: Schema.optional(Schema.string),
       })
     );

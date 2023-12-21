@@ -190,7 +190,7 @@ describe('data types', () => {
   });
 
   it('parsed number', () => {
-    const schema = Schema.numberFromString(Schema.string);
+    const schema = Schema.NumberFromString;
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'string',
