@@ -12,8 +12,8 @@ devDependencies:
     specifier: ^2.27.1
     version: 2.27.1
   '@effect/schema':
-    specifier: ^0.55.0
-    version: 0.55.0(effect@2.0.0-next.61)(fast-check@3.15.0)
+    specifier: ^0.56.0
+    version: 0.56.0(effect@2.0.0-next.62)(fast-check@3.15.0)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.3.0
     version: 4.3.0(prettier@3.1.1)
@@ -24,8 +24,8 @@ devDependencies:
     specifier: ^4.1.6
     version: 4.1.6
   effect:
-    specifier: 2.0.0-next.61
-    version: 2.0.0-next.61
+    specifier: 2.0.0-next.62
+    version: 2.0.0-next.62
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -397,13 +397,13 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@effect/schema@0.55.0(effect@2.0.0-next.61)(fast-check@3.15.0):
-    resolution: {integrity: sha512-CWP/EMrdnwwS1t1dfAo1Z0uBFzSNiUbloRoHZBdtuTVFf03RDUk5yccm8EZilbEnAHzL4SQwyoQYD1yN6RA6dQ==}
+  /@effect/schema@0.56.0(effect@2.0.0-next.62)(fast-check@3.15.0):
+    resolution: {integrity: sha512-qVR6T9+Lbv2cAhtIAysYvHpRm8iJuMjhp++q0ZMl3ACyQM4v9mvzEg1hQxF0GpAAHS7MTagVDDXN6WCNPEK4oA==}
     peerDependencies:
-      effect: 2.0.0-next.61
+      effect: 2.0.0-next.62
       fast-check: ^3.13.2
     dependencies:
-      effect: 2.0.0-next.61
+      effect: 2.0.0-next.62
       fast-check: 3.15.0
     dev: true
 
@@ -1468,8 +1468,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /effect@2.0.0-next.61:
-    resolution: {integrity: sha512-BuRr9SEwYdMVLQunATRjm3MAkTgWI21Tyn5ooWVZnTeXj0lUqSV0fjaqNFksEymssmwJ1ucogbuYQ/3RLmwxgA==}
+  /effect@2.0.0-next.62:
+    resolution: {integrity: sha512-fJhLzf5oouL4WZP314ZJgZz5Bel7OHTY+YFxO06sW1mSvqJz0s28y7jDHr5zhtTNM1YRvzbeLYUYfNaJYKqx1A==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -1644,7 +1644,7 @@ packages:
       human-signals: 5.0.0
       is-stream: 3.0.0
       merge-stream: 2.0.0
-      npm-run-path: 5.1.0
+      npm-run-path: 5.2.0
       onetime: 6.0.0
       signal-exit: 4.1.0
       strip-final-newline: 3.0.0
@@ -2530,8 +2530,8 @@ packages:
       path-key: 3.1.1
     dev: true
 
-  /npm-run-path@5.1.0:
-    resolution: {integrity: sha512-sJOdmRGrY2sjNTRMbSvluQqg+8X7ZK61yvzBEIDhz4f8z1TZFYABsqjjCBd/0PUNE9M6QDgHJXQkGUEm7Q+l9Q==}
+  /npm-run-path@5.2.0:
+    resolution: {integrity: sha512-W4/tgAXFqFA0iL7fk0+uQ3g7wkL8xJmx3XdK0VGb4cHW//eZTtKGvFBBoRKVTpY7n6ze4NL9ly7rgXcHufqXKg==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       path-key: 4.0.0
