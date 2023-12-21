@@ -132,15 +132,15 @@ export const openAPISchemaForAst = (
           // const tail = RA.tailNonEmpty(rest.value) // TODO
         }
 
-        const minItemsObj = minItems && { minItems };
-        const maxItemsObj = maxItems && { maxItems };
+        const minItemsObj = minItems === undefined ? undefined : { minItems };
+        const maxItemsObj = maxItems === undefined ? undefined : { maxItems };
         const additionalItemsObj = additionalItems && { additionalItems };
 
         return {
           type: 'array',
           ...minItemsObj,
           ...maxItemsObj,
-          items,
+          ...(items && { items }),
           ...additionalItemsObj,
         };
       }
@@ -160,9 +160,24 @@ export const openAPISchemaForAst = (
           componentSchemaCallback(identifier, ast);
           return reference(identifier);
         }
-        const propertySignatures = ast.propertySignatures.map((ps) =>
-          go(ps.type)
-        );
+
+        const propertySignatures = ast.propertySignatures.map((ps) => {
+          const type = ps.type;
+
+          if (
+            type._tag === 'Union' &&
+            type.types.some(AST.isUndefinedKeyword)
+          ) {
+            const typyWithoutUndefined = AST.createUnion(
+              type.types.filter((ast) => !AST.isUndefinedKeyword(ast)),
+              type.annotations
+            );
+            return [go(typyWithoutUndefined), true] as const;
+          }
+
+          return [go(type), ps.isOptional] as const;
+        });
+
         const indexSignatures = ast.indexSignatures.map((is) => go(is.type));
         const output: OpenAPISchemaObjectType = { type: 'object' };
 
@@ -170,21 +185,23 @@ export const openAPISchemaForAst = (
         // handle property signatures
         // ---------------------------------------------
         for (let i = 0; i < propertySignatures.length; i++) {
+          const [signature, isOptional] = propertySignatures[i];
           const name = ast.propertySignatures[i].name;
-          if (typeof name === 'string') {
-            output.properties = output.properties ?? {};
-            output.properties[name] = propertySignatures[i];
-            // ---------------------------------------------
-            // handle optional property signatures
-            // ---------------------------------------------
-            if (!ast.propertySignatures[i].isOptional) {
-              output.required = output.required ?? [];
-              output.required.push(name);
-            }
-          } else {
+
+          if (typeof name !== 'string') {
             throw new Error(
               `Cannot encode ${String(name)} key to OpenAPISchema Schema`
             );
+          }
+
+          output.properties = output.properties ?? {};
+          output.properties[name] = signature;
+          // ---------------------------------------------
+          // handle optional property signatures
+          // ---------------------------------------------
+          if (!isOptional) {
+            output.required = output.required ?? [];
+            output.required.push(name);
           }
         }
         // ---------------------------------------------

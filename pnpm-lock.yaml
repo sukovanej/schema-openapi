@@ -12,8 +12,8 @@ devDependencies:
     specifier: ^2.27.1
     version: 2.27.1
   '@effect/schema':
-    specifier: ^0.54.1
-    version: 0.54.1(effect@2.0.0-next.61)(fast-check@3.15.0)
+    specifier: ^0.55.0
+    version: 0.55.0(effect@2.0.0-next.61)(fast-check@3.15.0)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.3.0
     version: 4.3.0(prettier@3.1.1)
@@ -397,8 +397,8 @@ packages:
       prettier: 2.8.8
     dev: true
 
-  /@effect/schema@0.54.1(effect@2.0.0-next.61)(fast-check@3.15.0):
-    resolution: {integrity: sha512-u3nlT/ekf8lvnzCqomPKi7uYer7Lw10PkgsXk9pnenePEHQrTX52pZTTis6BQepfCXHObUi9NkUqLsQ6mOF8Jg==}
+  /@effect/schema@0.55.0(effect@2.0.0-next.61)(fast-check@3.15.0):
+    resolution: {integrity: sha512-CWP/EMrdnwwS1t1dfAo1Z0uBFzSNiUbloRoHZBdtuTVFf03RDUk5yccm8EZilbEnAHzL4SQwyoQYD1yN6RA6dQ==}
     peerDependencies:
       effect: 2.0.0-next.61
       fast-check: ^3.13.2
