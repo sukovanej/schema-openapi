@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.27.1
+
+### Patch Changes
+
+- e027ca3: implement tag object
+
 ## 0.27.0
 
 ### Minor Changes
