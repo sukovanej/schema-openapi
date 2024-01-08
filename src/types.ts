@@ -9,6 +9,7 @@ export type OpenAPISpec<S = AnySchema> = {
   paths: OpenAPISpecPaths<S>;
   components?: OpenAPIComponents<S>;
   security?: OpenAPISecurityRequirement[];
+  tags?: OpenAPISpecTag[];
 };
 
 export type OpenAPISpecInfo = {
@@ -16,6 +17,15 @@ export type OpenAPISpecInfo = {
   version: string;
   description?: string;
   license?: OpenAPISpecLicense;
+};
+
+export type OpenAPISpecTag = {
+  name: string;
+  description?: string;
+  externalDocs?: {
+    url: string;
+    description?: string;
+  };
 };
 
 export type OpenAPISpecLicense = {

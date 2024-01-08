@@ -102,6 +102,64 @@ describe('simple', () => {
     SwaggerParser.validate(spec2);
   });
 
+  it('set globalTags', async () => {
+    const spec1 = OpenApi.openAPI('test', '0.1', OpenApi.globalTags({
+      name: 'test tag',
+      description: 'test tag description',
+      externalDocs: {
+        description: 'test externalDocs description',
+        url: 'https://patrik.com'
+      }
+    }));
+
+    expect(spec1.tags?.[0]).toEqual({
+      name: 'test tag',
+      description: 'test tag description',
+      externalDocs: {
+        description: 'test externalDocs description',
+        url: 'https://patrik.com'
+      }
+    });
+    // @ts-expect-error
+    SwaggerParser.validate(spec1);
+
+    const spec2 = OpenApi.openAPI(
+      'test',
+      '0.1',OpenApi.globalTags({
+        name: 'test tag',
+        description: 'test tag description',
+        externalDocs: {
+          url: 'https://patrik.com'
+        }
+      })
+    );
+
+    expect(spec2.tags?.[0]).toEqual({
+      name: 'test tag',
+      description: 'test tag description',
+      externalDocs: {
+        url: 'https://patrik.com'
+      }
+    });
+    // @ts-expect-error
+    SwaggerParser.validate(spec2);
+
+    const spec3 = OpenApi.openAPI(
+      'test',
+      '0.1',OpenApi.globalTags({
+        name: 'test tag',
+        description: 'test tag description',
+      })
+    );
+
+    expect(spec3.tags?.[0]).toEqual({
+      name: 'test tag',
+      description: 'test tag description',
+    });
+    // @ts-expect-error
+    SwaggerParser.validate(spec3);
+  });
+
   it('set description', async () => {
     const schema = Schema.string;
 

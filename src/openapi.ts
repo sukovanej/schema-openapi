@@ -1,7 +1,7 @@
 import { Option, pipe } from 'effect';
 import { openAPISchemaFor, openAPISchemaForAst } from 'schema-openapi/compiler';
 import * as I from 'schema-openapi/internal';
-import type {
+import {
   AnySchema,
   OpenAPISchemaType,
   OpenAPISecurityRequirement,
@@ -18,7 +18,7 @@ import type {
   OpenAPISpecServerVariable,
   OpenAPISpecStatusCode,
   OpenApiSpecContent,
-  OpenApiSpecResponse,
+  OpenApiSpecResponse, OpenAPISpecTag,
 } from 'schema-openapi/types';
 
 import { AST, type Schema } from '@effect/schema';
@@ -114,6 +114,21 @@ export const server =
       I.runSetters({ url }, setters, componentSchemaCallback),
     ],
   });
+
+/**
+ * Adds global tags.
+ *
+ * *Setter of*: `openAPI`
+ */
+export const globalTags =
+  (
+    tag: OpenAPISpecTag,
+    ...tags: OpenAPISpecTag[]
+  ): I.Setter<OpenAPISpec> =>
+    (spec) => ({
+      ...spec,
+      tags: [...(spec.tags ?? []), tag, ...tags],
+    });
 
 /**
  * Add variable to a server section.
