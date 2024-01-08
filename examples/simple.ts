@@ -15,6 +15,14 @@ const app = express();
 const spec = OpenApi.openAPI(
   'My awesome pets API',
   '1.0.0',
+  OpenApi.globalTags({
+    name: 'Pets',
+    description: 'Everything about your Pets',
+    externalDocs: {
+      description: 'Find out more',
+      url: 'http://swagger.io'
+    }
+  }),
   OpenApi.path(
     '/pet',
     OpenApi.operation(
