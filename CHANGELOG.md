@@ -1,5 +1,17 @@
 # schema-openapi
 
+## 0.28.0
+
+### Minor Changes
+
+- 35c7db2: Update @effect/schema.
+
+### Patch Changes
+
+- a39adfb: implement external documents object
+- a39adfb: implement tag object
+- b01c801: Update @effect/schema.
+
 ## 0.27.1
 
 ### Patch Changes
