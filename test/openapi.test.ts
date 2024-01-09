@@ -103,34 +103,39 @@ describe('simple', () => {
   });
 
   it('set globalTags', async () => {
-    const spec1 = OpenApi.openAPI('test', '0.1', OpenApi.globalTags({
-      name: 'test tag',
-      description: 'test tag description',
-      externalDocs: {
-        description: 'test externalDocs description',
-        url: 'https://patrik.com'
-      }
-    }));
+    const spec1 = OpenApi.openAPI(
+      'test',
+      '0.1',
+      OpenApi.globalTags({
+        name: 'test tag',
+        description: 'test tag description',
+        externalDocs: {
+          description: 'test externalDocs description',
+          url: 'https://patrik.com',
+        },
+      })
+    );
 
     expect(spec1.tags?.[0]).toEqual({
       name: 'test tag',
       description: 'test tag description',
       externalDocs: {
         description: 'test externalDocs description',
-        url: 'https://patrik.com'
-      }
+        url: 'https://patrik.com',
+      },
     });
     // @ts-expect-error
     SwaggerParser.validate(spec1);
 
     const spec2 = OpenApi.openAPI(
       'test',
-      '0.1',OpenApi.globalTags({
+      '0.1',
+      OpenApi.globalTags({
         name: 'test tag',
         description: 'test tag description',
         externalDocs: {
-          url: 'https://patrik.com'
-        }
+          url: 'https://patrik.com',
+        },
       })
     );
 
@@ -138,15 +143,16 @@ describe('simple', () => {
       name: 'test tag',
       description: 'test tag description',
       externalDocs: {
-        url: 'https://patrik.com'
-      }
+        url: 'https://patrik.com',
+      },
     });
     // @ts-expect-error
     SwaggerParser.validate(spec2);
 
     const spec3 = OpenApi.openAPI(
       'test',
-      '0.1',OpenApi.globalTags({
+      '0.1',
+      OpenApi.globalTags({
         name: 'test tag',
         description: 'test tag description',
       })
@@ -158,6 +164,56 @@ describe('simple', () => {
     });
     // @ts-expect-error
     SwaggerParser.validate(spec3);
+  });
+
+  it('set externalDocs', async () => {
+    const spec1 = OpenApi.openAPI(
+      'test',
+      '0.1',
+      OpenApi.externalDocs({
+        description: 'test externalDocs description',
+        url: 'https://patrik.com',
+      })
+    );
+
+    expect(spec1).toEqual({
+      openapi: '3.0.3',
+      info: { title: 'test', version: '0.1' },
+      paths: {},
+      externalDocs: {
+        description: 'test externalDocs description',
+        url: 'https://patrik.com',
+      },
+    });
+    // @ts-expect-error
+    SwaggerParser.validate(spec1);
+
+    const spec2 = OpenApi.openAPI(
+      'test',
+      '0.1',
+      OpenApi.path(
+        '/pet',
+        OpenApi.operation(
+          'post',
+          OpenApi.jsonRequest(Schema.string),
+          OpenApi.jsonResponse(200, Schema.string, 'description'),
+          OpenApi.description('Store a pet'),
+          OpenApi.externalDocs({
+            description: 'test externalDocs description',
+            url: 'https://patrik.com',
+          })
+        ),
+        OpenApi.description('Pet endpoint')
+      )
+    );
+
+    expect(spec2.paths['/pet'].post?.externalDocs).toEqual({
+      description: 'test externalDocs description',
+      url: 'https://patrik.com',
+    });
+
+    // @ts-expect-error
+    SwaggerParser.validate(spec2);
   });
 
   it('set description', async () => {

@@ -18,7 +18,7 @@ import {
   OpenAPISpecServerVariable,
   OpenAPISpecStatusCode,
   OpenApiSpecContent,
-  OpenApiSpecResponse, OpenAPISpecTag,
+  OpenApiSpecResponse, OpenAPISpecTag, OpenAPISpecExternalDocs,
 } from 'schema-openapi/types';
 
 import { AST, type Schema } from '@effect/schema';
@@ -128,6 +128,20 @@ export const globalTags =
     (spec) => ({
       ...spec,
       tags: [...(spec.tags ?? []), tag, ...tags],
+    });
+
+/**
+ * Adds external documentation object.
+ *
+ * *Setter of*: `openAPI`, `tag`, `operation`
+ */
+export const externalDocs =
+  (
+    externalDocs: OpenAPISpecExternalDocs,
+  ): I.Setter<{ externalDocs?: OpenAPISpecExternalDocs }> =>
+    (spec) => ({
+      ...spec,
+      externalDocs: externalDocs,
     });
 
 /**
