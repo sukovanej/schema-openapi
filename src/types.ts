@@ -10,6 +10,7 @@ export type OpenAPISpec<S = AnySchema> = {
   components?: OpenAPIComponents<S>;
   security?: OpenAPISecurityRequirement[];
   tags?: OpenAPISpecTag[];
+  externalDocs?: OpenAPISpecExternalDocs;
 };
 
 export type OpenAPISpecInfo = {
@@ -22,10 +23,12 @@ export type OpenAPISpecInfo = {
 export type OpenAPISpecTag = {
   name: string;
   description?: string;
-  externalDocs?: {
-    url: string;
-    description?: string;
-  };
+  externalDocs?: OpenAPISpecExternalDocs;
+};
+
+export type OpenAPISpecExternalDocs = {
+  url: string;
+  description?: string;
 };
 
 export type OpenAPISpecLicense = {
@@ -176,6 +179,7 @@ export type OpenAPISpecOperation<S = AnySchema> = {
   deprecated?: boolean;
   tags?: string[];
   security?: OpenAPISecurityRequirement[];
+  externalDocs?: OpenAPISpecExternalDocs;
 };
 
 // Open API schema
