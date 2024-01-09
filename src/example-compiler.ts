@@ -1,5 +1,6 @@
 import {
   Context,
+  Data,
   Effect,
   Option,
   ReadonlyArray,
@@ -16,9 +17,9 @@ const getExampleValue = (ast: AST.Annotated) =>
     Option.getOrUndefined
   );
 
-const getIdentifier = (ast: AST.Annotated) =>
+const getDescription = (ast: AST.Annotated) =>
   pipe(
-    AST.getAnnotation<AST.IdentifierAnnotation>(AST.IdentifierAnnotationId)(
+    AST.getAnnotation<AST.DescriptionAnnotation>(AST.DescriptionAnnotationId)(
       ast
     ),
     Option.getOrUndefined
@@ -41,20 +42,26 @@ const randomChoice = <A>(
     Effect.randomWith((r) => r.nextIntBetween(0, xs.length)),
     Effect.filterOrFail(
       (i) => i >= 0,
-      () => randomExampleError(`Can choose from ${xs}`)
+      () => RandomExampleErrorImpl.make(`Can choose from ${xs}`)
     ),
     Effect.map((i) => xs[i])
   );
 
-export type RandomExampleError = {
+export interface RandomExampleError {
   _tag: 'RandomExampleError';
-  error: unknown;
-};
+  error: string;
+}
 
-export const randomExampleError = (error: unknown): RandomExampleError => ({
-  _tag: 'RandomExampleError',
-  error,
-});
+class RandomExampleErrorImpl
+  extends Data.TaggedError('RandomExampleError')<{
+    error: string;
+  }>
+  implements RandomExampleError
+{
+  static make(error: string) {
+    return new RandomExampleErrorImpl({ error });
+  }
+}
 
 export const randomExample = <A>(
   schema: Schema.Schema<any, A>
@@ -131,7 +138,7 @@ export const randomExample = <A>(
           ).length
         ) {
           return Effect.fail(
-            randomExampleError(
+            RandomExampleErrorImpl.make(
               `Cannot create example for some index signatures`
             )
           );
@@ -170,7 +177,7 @@ export const randomExample = <A>(
             }
 
             return Effect.fail(
-              randomExampleError(
+              RandomExampleErrorImpl.make(
                 `Cannot create an example for refinement ${JSON.stringify(
                   error,
                   (_, value) =>
@@ -184,13 +191,13 @@ export const randomExample = <A>(
       case 'Transform':
         return go(ast.to, constraint);
       case 'UniqueSymbol':
-        return Effect.fail(randomExampleError(`UniqueSymbol`));
+        return Effect.fail(RandomExampleErrorImpl.make(`UniqueSymbol`));
       case 'UndefinedKeyword':
-        return Effect.fail(randomExampleError(`UndefinedKeyword`));
+        return Effect.fail(RandomExampleErrorImpl.make(`UndefinedKeyword`));
       case 'VoidKeyword':
-        return Effect.fail(randomExampleError(`VoidKeyword`));
+        return Effect.fail(RandomExampleErrorImpl.make(`VoidKeyword`));
       case 'NeverKeyword': {
-        return Effect.fail(randomExampleError(`NeverKeyword`));
+        return Effect.fail(RandomExampleErrorImpl.make(`NeverKeyword`));
       }
       case 'BigIntKeyword': {
         return Effect.map(nextInteger, (number) => {
@@ -201,7 +208,7 @@ export const randomExample = <A>(
         });
       }
       case 'SymbolKeyword':
-        return Effect.fail(randomExampleError(`SymbolKeyword`));
+        return Effect.fail(RandomExampleErrorImpl.make(`SymbolKeyword`));
       case 'Suspend':
         return go(ast.f(), constraint);
       case 'TemplateLiteral': {
@@ -215,9 +222,9 @@ export const randomExample = <A>(
         return result;
       }
       case 'Declaration': {
-        const identifier = getIdentifier(ast);
+        const identifier = getDescription(ast);
 
-        if (identifier === 'Option') {
+        if (identifier?.startsWith('Option<')) {
           return pipe(
             randomChoice([
               () => Effect.succeed(Option.none()),
@@ -231,7 +238,7 @@ export const randomExample = <A>(
         }
 
         return Effect.fail(
-          randomExampleError(
+          RandomExampleErrorImpl.make(
             `Can't give an example for declaration: ${JSON.stringify(ast)}`
           )
         );
@@ -254,7 +261,7 @@ const createConstraintFromRefinement = Unify.unify((ast: AST.Refinement) => {
   if (typeId === undefined) {
     const astStr = JSON.stringify(ast);
     const message = `Couldn't create an example for ${astStr}. Specify an example.`;
-    return Effect.fail(randomExampleError(message));
+    return Effect.fail(RandomExampleErrorImpl.make(message));
   }
 
   let from = ast.from;
@@ -272,7 +279,7 @@ const createConstraintFromRefinement = Unify.unify((ast: AST.Refinement) => {
   if (constraint === undefined) {
     const astStr = JSON.stringify(ast);
     const message = `Couldn't create a constraint for ${astStr} Specify an example.`;
-    return Effect.fail(randomExampleError(message));
+    return Effect.fail(RandomExampleErrorImpl.make(message));
   }
 
   return Effect.succeed(constraint);
