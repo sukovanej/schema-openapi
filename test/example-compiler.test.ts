@@ -1,6 +1,6 @@
 import { Effect, Option, pipe } from 'effect';
 
-import { ParseResult, Schema } from '@effect/schema';
+import { AST, ParseResult, Schema } from '@effect/schema';
 
 import { randomExample } from '../src/example-compiler';
 
@@ -187,10 +187,10 @@ describe('constraints', () => {
   });
   test('bigint constraints', () => {
     const schema = Schema.tuple(
-      Schema.bigint.pipe(Schema.greaterThanBigint(BigInt(-1))),
-      Schema.bigint.pipe(Schema.greaterThanOrEqualToBigint(BigInt(12))),
-      Schema.bigint.pipe(Schema.lessThanBigint(BigInt(-1))),
-      Schema.bigint.pipe(Schema.lessThanOrEqualToBigint(BigInt(12)))
+      Schema.bigintFromSelf.pipe(Schema.greaterThanBigint(BigInt(-1))),
+      Schema.bigintFromSelf.pipe(Schema.greaterThanOrEqualToBigint(BigInt(12))),
+      Schema.bigintFromSelf.pipe(Schema.lessThanBigint(BigInt(-1))),
+      Schema.bigintFromSelf.pipe(Schema.lessThanOrEqualToBigint(BigInt(12)))
     );
     const example = Effect.runSync(randomExample(schema));
 

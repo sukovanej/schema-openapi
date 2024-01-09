@@ -354,7 +354,8 @@ describe('objects', () => {
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: 'object',
-      description: 'an object',
+      description:
+        'an object in the TypeScript meaning, i.e. the `object` type',
     });
   });
 
