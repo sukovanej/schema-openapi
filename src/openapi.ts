@@ -7,6 +7,7 @@ import {
   OpenAPISecurityRequirement,
   OpenAPISecurityScheme,
   OpenAPISpec,
+  OpenAPISpecExternalDocs,
   OpenAPISpecInfo,
   OpenAPISpecMethodName,
   OpenAPISpecOperation,
@@ -17,8 +18,9 @@ import {
   OpenAPISpecServer,
   OpenAPISpecServerVariable,
   OpenAPISpecStatusCode,
+  OpenAPISpecTag,
   OpenApiSpecContent,
-  OpenApiSpecResponse, OpenAPISpecTag, OpenAPISpecExternalDocs,
+  OpenApiSpecResponse,
 } from 'schema-openapi/types';
 
 import { AST, type Schema } from '@effect/schema';
@@ -121,14 +123,11 @@ export const server =
  * *Setter of*: `openAPI`
  */
 export const globalTags =
-  (
-    tag: OpenAPISpecTag,
-    ...tags: OpenAPISpecTag[]
-  ): I.Setter<OpenAPISpec> =>
-    (spec) => ({
-      ...spec,
-      tags: [...(spec.tags ?? []), tag, ...tags],
-    });
+  (tag: OpenAPISpecTag, ...tags: OpenAPISpecTag[]): I.Setter<OpenAPISpec> =>
+  (spec) => ({
+    ...spec,
+    tags: [...(spec.tags ?? []), tag, ...tags],
+  });
 
 /**
  * Adds external documentation object.
@@ -137,12 +136,12 @@ export const globalTags =
  */
 export const externalDocs =
   (
-    externalDocs: OpenAPISpecExternalDocs,
+    externalDocs: OpenAPISpecExternalDocs
   ): I.Setter<{ externalDocs?: OpenAPISpecExternalDocs }> =>
-    (spec) => ({
-      ...spec,
-      externalDocs: externalDocs,
-    });
+  (spec) => ({
+    ...spec,
+    externalDocs: externalDocs,
+  });
 
 /**
  * Add variable to a server section.
