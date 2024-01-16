@@ -58,6 +58,6 @@
   },
   "peerDependencies": {
     "@effect/schema": "^0.60.0",
-    "effect": "^2.0.0"
+    "effect": "^2.1.0"
   }
 }
