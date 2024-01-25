@@ -267,7 +267,7 @@ export const openAPISchemaForAst = (
       case 'Transform':
         return go(ast.from);
       case 'Declaration':
-        return go(ast.type);
+        throw new Error(`Cannot encode Declaration to OpenAPISchema`);
       case 'Suspend':
         const realAst = ast.f();
         const identifier =

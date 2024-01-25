@@ -63,9 +63,9 @@ class RandomExampleErrorImpl
   }
 }
 
-export const randomExample = <A>(
-  schema: Schema.Schema<any, A>
-): Effect.Effect<never, RandomExampleError, A> => {
+export const randomExample = <R, From, To>(
+  schema: Schema.Schema<R, From, To>
+): Effect.Effect<never, RandomExampleError, To> => {
   const go = (
     ast: AST.AST,
     constraint: TypeConstraint<any> | undefined

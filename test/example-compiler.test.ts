@@ -1,6 +1,6 @@
 import { Effect, Option, pipe } from 'effect';
 
-import { AST, ParseResult, Schema } from '@effect/schema';
+import { ParseResult, Schema } from '@effect/schema';
 
 import { randomExample } from '../src/example-compiler';
 

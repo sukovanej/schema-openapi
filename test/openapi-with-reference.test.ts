@@ -223,12 +223,14 @@ describe('component schema and reference', () => {
       readonly name: string;
       readonly categories: ReadonlyArray<Category>;
     }
-    const categorySchema: Schema.Schema<Category> = Schema.suspend<Category>(
-      () =>
-        Schema.struct({
-          name: Schema.string,
-          categories: Schema.array(categorySchema),
-        }).pipe(Schema.identifier('Category'))
+    const categorySchema: Schema.Schema<never, Category> = Schema.suspend<
+      never,
+      Category
+    >(() =>
+      Schema.struct({
+        name: Schema.string,
+        categories: Schema.array(categorySchema),
+      }).pipe(Schema.identifier('Category'))
     );
     const spec = OpenApi.openAPI(
       'test',
@@ -252,12 +254,14 @@ describe('component schema and reference', () => {
       readonly name: string;
       readonly categories: ReadonlyArray<Category>;
     }
-    const categorySchema: Schema.Schema<Category> = Schema.suspend<Category>(
-      () =>
-        Schema.struct({
-          name: Schema.string,
-          categories: Schema.array(categorySchema),
-        })
+    const categorySchema: Schema.Schema<never, Category> = Schema.suspend<
+      never,
+      Category
+    >(() =>
+      Schema.struct({
+        name: Schema.string,
+        categories: Schema.array(categorySchema),
+      })
     ).pipe(Schema.identifier('Category'));
     const spec = OpenApi.openAPI(
       'test',
