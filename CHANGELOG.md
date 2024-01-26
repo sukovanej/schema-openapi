@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.29.2
+
+### Patch Changes
+
+- 83ae97f: Fix Schema typing.
+
 ## 0.29.1
 
 ### Patch Changes
