@@ -11,6 +11,16 @@ import {
 import { AST, Schema } from '@effect/schema';
 import { getIdentifierAnnotation } from '@effect/schema/AST';
 
+const OpenApiId = Symbol.for('schema-openapi/OpenApiId');
+
+export const annotate =
+  (spec: OpenAPISchemaType) =>
+  <R, I, A>(self: Schema.Schema<R, I, A>): Schema.Schema<R, I, A> =>
+    Schema.make(AST.setAnnotation(self.ast, OpenApiId, spec));
+
+export const getOpenApiAnnotation = (ast: AST.Annotated) =>
+  AST.getAnnotation<OpenAPISchemaType>(OpenApiId)(ast);
+
 const convertJsonSchemaAnnotation = (annotations: object) => {
   let newAnnotations = annotations;
 
@@ -267,7 +277,15 @@ export const openAPISchemaForAst = (
       case 'Transform':
         return go(ast.from);
       case 'Declaration':
-        throw new Error(`Cannot encode Declaration to OpenAPISchema`);
+        const spec = getOpenApiAnnotation(ast);
+
+        if (Option.isSome(spec)) {
+          return spec.value;
+        }
+
+        throw new Error(
+          `Cannot encode Declaration to OpenAPISchema, please specify OpenApi annotation for custom schemas`
+        );
       case 'Suspend':
         const realAst = ast.f();
         const identifier =
