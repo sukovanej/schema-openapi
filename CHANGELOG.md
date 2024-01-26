@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.29.1
+
+### Patch Changes
+
+- c1fdec2: Add open api schema annotation.
+
 ## 0.29.0
 
 ### Minor Changes
