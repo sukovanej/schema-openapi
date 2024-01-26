@@ -442,7 +442,7 @@ export const summary =
  */
 export const responseHeaders =
   (
-    headers: Record<string, Schema.Schema<string, any>>
+    headers: Record<string, Schema.Schema<any, string, any>>
   ): I.Setter<OpenApiSpecResponse<OpenAPISchemaType>> =>
   (spec, componentSchemaCallback) => ({
     ...spec,

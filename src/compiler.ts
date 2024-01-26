@@ -317,7 +317,7 @@ export const openAPISchemaForAst = (
 };
 
 export const openAPISchemaFor = <A>(
-  schema: Schema.Schema<A, any>,
+  schema: Schema.Schema<any, A, any>,
   componentSchemaCallback: ComponentSchemaCallback = undefined
 ): OpenAPISchemaType => {
   return openAPISchemaForAst(schema.ast, componentSchemaCallback);

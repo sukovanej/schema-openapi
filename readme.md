@@ -336,7 +336,7 @@ _Setter of_: [operation](#operation)
 ### `jsonResponse`
 
 Set the JSON response specification. The (2nd) schema parameter can be
-either `undefined` or `Schema<I, O>`. If it's set to `undefined`, the
+either `undefined` or `Schema<R, I, O>`. If it's set to `undefined`, the
 `content` field of the response is ommited.
 
 ```typescript
