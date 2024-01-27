@@ -132,22 +132,26 @@ export type OpenAPIComponents<S = AnySchema> = {
 
 export type OpenAPIHTTPSecurityScheme = {
   type: 'http';
+  description?: string;
   scheme: string;
   bearerFormat?: string;
 };
 
 export type OpenAPIApiKeySecurityScheme = {
   type: 'apiKey';
+  description?: string;
   name: string;
   in: 'query' | 'header' | 'cookie';
 };
 
 export type OpenAPIMutualTLSSecurityScheme = {
   type: 'mutualTLS';
+  description?: string;
 };
 
 export type OpenAPIOAuth2SecurityScheme = {
   type: 'oauth2';
+  description?: string;
   flows: Record<
     'implicit' | 'password' | 'clientCredentials' | 'authorizationCode',
     Record<string, unknown>
@@ -156,6 +160,7 @@ export type OpenAPIOAuth2SecurityScheme = {
 
 export type OpenAPIOpenIdConnectSecurityScheme = {
   type: 'openIdConnect';
+  description?: string;
   openIdConnectUrl: string;
 };
 
