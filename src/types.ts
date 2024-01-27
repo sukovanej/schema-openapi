@@ -133,7 +133,8 @@ export type OpenAPIComponents<S = AnySchema> = {
 export type OpenAPIHTTPSecurityScheme = {
   type: 'http';
   description?: string;
-  scheme: string;
+  scheme: 'bearer' | 'basic' | string;
+  /* only for scheme: 'bearer' */
   bearerFormat?: string;
 };
 
