@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.30.0
+
+### Minor Changes
+
+- cdef982: add description for security types
+
 ## 0.29.2
 
 ### Patch Changes
