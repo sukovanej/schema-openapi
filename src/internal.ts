@@ -1,6 +1,6 @@
 import { AST } from '@effect/schema';
 import { IdentifierAnnotationId } from '@effect/schema/AST';
-import { Annotated } from '@effect/schema/src/AST';
+import { Annotated } from '@effect/schema/AST';
 
 export type ComponentSchemaCallback =
   | ((id: string, ast: AST.AST) => void)
