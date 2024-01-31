@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.30.1
+
+### Patch Changes
+
+- bfbceca: Fix @effect/schema import.
+
 ## 0.30.0
 
 ### Minor Changes
