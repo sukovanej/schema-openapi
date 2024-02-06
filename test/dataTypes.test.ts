@@ -1,522 +1,522 @@
-import { pipe } from 'effect';
+import { pipe } from "effect"
 
-import { Schema } from '@effect/schema';
+import { Schema } from "@effect/schema"
 
-import { openAPISchemaFor } from '../src/compiler';
+import { openAPISchemaFor } from "schema-openapi/OpenApiCompiler"
+import { describe, expect, it, test } from "vitest"
 
 // https://swagger.io/docs/specification/data-models/data-types/
 
-describe('data types', () => {
-  it('boolean', () => {
-    const schema = Schema.boolean;
+describe("data types", () => {
+  it("boolean", () => {
+    const schema = Schema.boolean
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      description: 'a boolean',
-      type: 'boolean',
-    });
-  });
+      description: "a boolean",
+      type: "boolean"
+    })
+  })
 
-  it('string', () => {
-    const schema = Schema.string;
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      description: 'a string',
-      type: 'string',
-    });
-  });
-
-  it('branded string', () => {
-    const schema = pipe(Schema.string, Schema.brand('my-string'));
+  it("string", () => {
+    const schema = Schema.string
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      description: 'a string',
-      type: 'string',
-    });
-  });
+      description: "a string",
+      type: "string"
+    })
+  })
 
-  it('string with minLength', () => {
-    const schema = pipe(Schema.string, Schema.minLength(1));
+  it("branded string", () => {
+    const schema = pipe(Schema.string, Schema.brand("my-string"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
+      description: "a string",
+      type: "string"
+    })
+  })
+
+  it("string with minLength", () => {
+    const schema = pipe(Schema.string, Schema.minLength(1))
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "string",
       minLength: 1,
-      description: 'a string at least 1 character(s) long',
-    });
-  });
+      description: "a string at least 1 character(s) long"
+    })
+  })
 
-  it('string with maxLength', () => {
-    const schema = pipe(Schema.string, Schema.maxLength(10));
+  it("string with maxLength", () => {
+    const schema = pipe(Schema.string, Schema.maxLength(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
+      type: "string",
       maxLength: 10,
-      description: 'a string at most 10 character(s) long',
-    });
-  });
+      description: "a string at most 10 character(s) long"
+    })
+  })
 
-  it('string with minLength and maxLength', () => {
+  it("string with minLength and maxLength", () => {
     const schema = pipe(
       Schema.string,
       Schema.minLength(1),
       Schema.maxLength(10)
-    );
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
+      type: "string",
       minLength: 1,
       maxLength: 10,
-      description: 'a string at most 10 character(s) long',
-    });
-  });
+      description: "a string at most 10 character(s) long"
+    })
+  })
 
-  it('string with pattern', () => {
-    const schema = pipe(Schema.string, Schema.pattern(/^\d{3}-\d{2}-\d{4}$/));
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
-      pattern: '^\\d{3}-\\d{2}-\\d{4}$',
-      description: 'a string matching the pattern ^\\d{3}-\\d{2}-\\d{4}$',
-    });
-  });
-
-  it('number', () => {
-    const schema = Schema.number;
+  it("string with pattern", () => {
+    const schema = pipe(Schema.string, Schema.pattern(/^\d{3}-\d{2}-\d{4}$/))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      description: 'a number',
-      type: 'number',
-    });
-  });
+      type: "string",
+      pattern: "^\\d{3}-\\d{2}-\\d{4}$",
+      description: "a string matching the pattern ^\\d{3}-\\d{2}-\\d{4}$"
+    })
+  })
 
-  it('integer', () => {
-    const schema = pipe(Schema.number, Schema.int());
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'integer',
-      description: 'an integer',
-    });
-  });
-
-  it('integer with exclusive min', () => {
-    const schema = pipe(Schema.number, Schema.int(), Schema.greaterThan(10));
+  it("number", () => {
+    const schema = Schema.number
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'integer',
+      description: "a number",
+      type: "number"
+    })
+  })
+
+  it("integer", () => {
+    const schema = pipe(Schema.number, Schema.int())
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "integer",
+      description: "an integer"
+    })
+  })
+
+  it("integer with exclusive min", () => {
+    const schema = pipe(Schema.number, Schema.int(), Schema.greaterThan(10))
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "integer",
       exclusiveMinimum: true,
       minimum: 10,
-      description: 'a number greater than 10',
-    });
-  });
+      description: "a number greater than 10"
+    })
+  })
 
-  it('integer with exclusive max', () => {
-    const schema = pipe(Schema.number, Schema.int(), Schema.lessThan(10));
+  it("integer with exclusive max", () => {
+    const schema = pipe(Schema.number, Schema.int(), Schema.lessThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'integer',
+      type: "integer",
       exclusiveMaximum: true,
       maximum: 10,
-      description: 'a number less than 10',
-    });
-  });
+      description: "a number less than 10"
+    })
+  })
 
-  it('integer with non-exclusive min', () => {
+  it("integer with non-exclusive min", () => {
     const schema = pipe(
       Schema.number,
       Schema.int(),
       Schema.greaterThanOrEqualTo(10)
-    );
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'integer',
+      type: "integer",
       minimum: 10,
-      description: 'a number greater than or equal to 10',
-    });
-  });
+      description: "a number greater than or equal to 10"
+    })
+  })
 
-  it('integer with non-exclusive max', () => {
+  it("integer with non-exclusive max", () => {
     const schema = pipe(
       Schema.number,
       Schema.int(),
       Schema.lessThanOrEqualTo(10)
-    );
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'integer',
+      type: "integer",
       maximum: 10,
-      description: 'a number less than or equal to 10',
-    });
-  });
+      description: "a number less than or equal to 10"
+    })
+  })
 
-  it('number with exclusive min', () => {
-    const schema = pipe(Schema.number, Schema.greaterThan(10));
+  it("number with exclusive min", () => {
+    const schema = pipe(Schema.number, Schema.greaterThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'number',
+      type: "number",
       exclusiveMinimum: true,
       minimum: 10,
-      description: 'a number greater than 10',
-    });
-  });
+      description: "a number greater than 10"
+    })
+  })
 
-  it('number with exclusive max', () => {
-    const schema = pipe(Schema.number, Schema.lessThan(10));
+  it("number with exclusive max", () => {
+    const schema = pipe(Schema.number, Schema.lessThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'number',
+      type: "number",
       exclusiveMaximum: true,
       maximum: 10,
-      description: 'a number less than 10',
-    });
-  });
+      description: "a number less than 10"
+    })
+  })
 
-  it('number with non-exclusive min', () => {
-    const schema = pipe(Schema.number, Schema.greaterThanOrEqualTo(10));
+  it("number with non-exclusive min", () => {
+    const schema = pipe(Schema.number, Schema.greaterThanOrEqualTo(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'number',
+      type: "number",
       minimum: 10,
-      description: 'a number greater than or equal to 10',
-    });
-  });
+      description: "a number greater than or equal to 10"
+    })
+  })
 
-  it('number with non-exclusive max', () => {
-    const schema = pipe(Schema.number, Schema.lessThanOrEqualTo(10));
+  it("number with non-exclusive max", () => {
+    const schema = pipe(Schema.number, Schema.lessThanOrEqualTo(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'number',
+      type: "number",
       maximum: 10,
-      description: 'a number less than or equal to 10',
-    });
-  });
+      description: "a number less than or equal to 10"
+    })
+  })
 
-  it('parsed number', () => {
-    const schema = Schema.NumberFromString;
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
-      description: 'a string',
-    });
-  });
-});
-
-describe('nullable data types', () => {
-  it('nullable number', () => {
-    const schema = pipe(Schema.number, Schema.nullable);
+  it("parsed number", () => {
+    const schema = Schema.NumberFromString
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'number',
-      description: 'a number',
-      nullable: true,
-    });
-  });
+      type: "string",
+      description: "a string"
+    })
+  })
+})
 
-  it('nullable string', () => {
-    const schema = pipe(Schema.string, Schema.nullable);
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
-      description: 'a string',
-      nullable: true,
-    });
-  });
-
-  it('nullable string array', () => {
-    const schema = pipe(Schema.string, Schema.array, Schema.nullable);
+describe("nullable data types", () => {
+  it("nullable number", () => {
+    const schema = pipe(Schema.number, Schema.nullable)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
-      items: { type: 'string', description: 'a string' },
-      nullable: true,
-    });
-  });
-});
+      type: "number",
+      description: "a number",
+      nullable: true
+    })
+  })
 
-describe('arrays', () => {
-  it('number array', () => {
-    const schema = Schema.array(Schema.number);
+  it("nullable string", () => {
+    const schema = pipe(Schema.string, Schema.nullable)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
-      items: { type: 'number', description: 'a number' },
-    });
-  });
+      type: "string",
+      description: "a string",
+      nullable: true
+    })
+  })
 
-  it('string array', () => {
-    const schema = pipe(Schema.string, Schema.array);
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
-      items: { type: 'string', description: 'a string' },
-    });
-  });
-
-  it('2d number array', () => {
-    const schema = pipe(Schema.number, Schema.array, Schema.array);
+  it("nullable string array", () => {
+    const schema = pipe(Schema.string, Schema.array, Schema.nullable)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
+      type: "array",
+      items: { type: "string", description: "a string" },
+      nullable: true
+    })
+  })
+})
+
+describe("arrays", () => {
+  it("number array", () => {
+    const schema = Schema.array(Schema.number)
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "array",
+      items: { type: "number", description: "a number" }
+    })
+  })
+
+  it("string array", () => {
+    const schema = pipe(Schema.string, Schema.array)
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "array",
+      items: { type: "string", description: "a string" }
+    })
+  })
+
+  it("2d number array", () => {
+    const schema = pipe(Schema.number, Schema.array, Schema.array)
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "array",
       items: {
-        type: 'array',
-        items: { type: 'number', description: 'a number' },
-      },
-    });
-  });
+        type: "array",
+        items: { type: "number", description: "a number" }
+      }
+    })
+  })
 
-  it('object array', () => {
-    const schema = pipe(Schema.struct({ id: Schema.number }), Schema.array);
+  it("object array", () => {
+    const schema = pipe(Schema.struct({ id: Schema.number }), Schema.array)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
+      type: "array",
       items: {
-        type: 'object',
-        properties: { id: { type: 'number', description: 'a number' } },
-        required: ['id'],
-      },
-    });
-  });
+        type: "object",
+        properties: { id: { type: "number", description: "a number" } },
+        required: ["id"]
+      }
+    })
+  })
 
-  it('mixed type array', () => {
+  it("mixed type array", () => {
     const schema = pipe(
       Schema.union(Schema.number, Schema.string),
       Schema.array
-    );
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
+      type: "array",
       items: {
         oneOf: [
-          { type: 'number', description: 'a number' },
-          { type: 'string', description: 'a string' },
-        ],
-      },
-    });
-  });
+          { type: "number", description: "a number" },
+          { type: "string", description: "a string" }
+        ]
+      }
+    })
+  })
 
-  it('array of any items', () => {
-    const schema = Schema.array(Schema.any);
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
-      items: {},
-    });
-  });
-
-  it('single item array', () => {
-    const schema = Schema.tuple(Schema.string);
+  it("array of any items", () => {
+    const schema = Schema.array(Schema.any)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
+      type: "array",
+      items: {}
+    })
+  })
+
+  it("single item array", () => {
+    const schema = Schema.tuple(Schema.string)
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "array",
       items: {
-        type: 'string',
-        description: 'a string',
+        type: "string",
+        description: "a string"
       },
       minItems: 1,
-      maxItems: 1,
-    });
-  });
+      maxItems: 1
+    })
+  })
 
-  it('non-empty array', () => {
-    const schema = Schema.nonEmptyArray(Schema.string);
+  it("non-empty array", () => {
+    const schema = Schema.nonEmptyArray(Schema.string)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
+      type: "array",
       items: {
-        type: 'string',
-        description: 'a string',
+        type: "string",
+        description: "a string"
       },
-      minItems: 1,
-    });
-  });
+      minItems: 1
+    })
+  })
 
   // TODO: array length
   // TODO: unique items
-});
+})
 
-describe('objects', () => {
-  it('object', () => {
+describe("objects", () => {
+  it("object", () => {
     const schema = Schema.struct({
       id: Schema.int()(Schema.number),
-      name: Schema.string,
-    });
+      name: Schema.string
+    })
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'object',
+      type: "object",
       properties: {
-        id: { type: 'integer', description: 'an integer' },
-        name: { type: 'string', description: 'a string' },
+        id: { type: "integer", description: "an integer" },
+        name: { type: "string", description: "a string" }
       },
-      required: ['name', 'id'],
-    });
-  });
+      required: ["name", "id"]
+    })
+  })
 
-  it('object with non-required', () => {
-    const schema = Schema.object;
+  it("object with non-required", () => {
+    const schema = Schema.object
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'object',
-      description:
-        'an object in the TypeScript meaning, i.e. the `object` type',
-    });
-  });
+      type: "object",
+      description: "an object in the TypeScript meaning, i.e. the `object` type"
+    })
+  })
 
-  it('object with non-required', () => {
+  it("object with non-required", () => {
     const schema = Schema.struct({
       id: Schema.int()(Schema.number),
       username: Schema.string,
-      name: Schema.optional(Schema.string),
-    });
+      name: Schema.optional(Schema.string)
+    })
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'object',
+      type: "object",
       properties: {
-        id: { type: 'integer', description: 'an integer' },
-        name: { type: 'string', description: 'a string' },
-        username: { type: 'string', description: 'a string' },
+        id: { type: "integer", description: "an integer" },
+        name: { type: "string", description: "a string" },
+        username: { type: "string", description: "a string" }
       },
-      required: ['username', 'id'],
-    });
-  });
+      required: ["username", "id"]
+    })
+  })
 
-  it('brands', () => {
+  it("brands", () => {
     const schema = pipe(
       Schema.struct({
         id: Schema.int()(Schema.number),
         username: Schema.string,
-        name: Schema.optional(Schema.string),
+        name: Schema.optional(Schema.string)
       }),
-      Schema.brand('my-schema')
-    );
+      Schema.brand("my-schema")
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'object',
+      type: "object",
       properties: {
-        id: { type: 'integer', description: 'an integer' },
-        name: { description: 'a string', type: 'string' },
-        username: { description: 'a string', type: 'string' },
+        id: { type: "integer", description: "an integer" },
+        name: { description: "a string", type: "string" },
+        username: { description: "a string", type: "string" }
       },
-      required: ['username', 'id'],
-    });
-  });
-});
+      required: ["username", "id"]
+    })
+  })
+})
 
-it('optionFromNullable', () => {
+it("optionFromNullable", () => {
   const schema = Schema.struct({
-    value: Schema.optionFromNullable(Schema.string),
-  });
+    value: Schema.optionFromNullable(Schema.string)
+  })
 
   expect(openAPISchemaFor(schema)).toStrictEqual({
-    type: 'object',
+    type: "object",
     properties: {
-      value: { description: 'a string', type: 'string', nullable: true },
+      value: { description: "a string", type: "string", nullable: true }
     },
-    required: ['value'],
-  });
-});
+    required: ["value"]
+  })
+})
 
-describe('description annotation', () => {
-  test('null', () => {
+describe("description annotation", () => {
+  test("null", () => {
     const schema = pipe(
       Schema.null,
-      Schema.description('it is always missing')
-    );
+      Schema.description("it is always missing")
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'null',
-      description: 'it is always missing',
-    });
-  });
+      type: "null",
+      description: "it is always missing"
+    })
+  })
 
-  test('string', () => {
-    const schema = pipe(Schema.string, Schema.description('my description'));
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
-      description: 'my description',
-    });
-  });
-
-  test('number', () => {
-    const schema = pipe(Schema.number, Schema.description('my description'));
+  test("string", () => {
+    const schema = pipe(Schema.string, Schema.description("my description"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'number',
-      description: 'my description',
-    });
-  });
+      type: "string",
+      description: "my description"
+    })
+  })
 
-  test('boolean', () => {
-    const schema = pipe(Schema.boolean, Schema.description('my description'));
-
-    expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'boolean',
-      description: 'my description',
-    });
-  });
-
-  test('object', () => {
-    const schema = pipe(Schema.object, Schema.description('my description'));
+  test("number", () => {
+    const schema = pipe(Schema.number, Schema.description("my description"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'object',
-      description: 'my description',
-    });
-  });
+      type: "number",
+      description: "my description"
+    })
+  })
 
-  test('tuple', () => {
+  test("boolean", () => {
+    const schema = pipe(Schema.boolean, Schema.description("my description"))
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "boolean",
+      description: "my description"
+    })
+  })
+
+  test("object", () => {
+    const schema = pipe(Schema.object, Schema.description("my description"))
+
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      type: "object",
+      description: "my description"
+    })
+  })
+
+  test("tuple", () => {
     const schema = pipe(
-      Schema.tuple(pipe(Schema.string, Schema.description('my description'))),
-      Schema.description('my description')
-    );
+      Schema.tuple(pipe(Schema.string, Schema.description("my description"))),
+      Schema.description("my description")
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'array',
+      type: "array",
       items: {
-        type: 'string',
-        description: 'my description',
+        type: "string",
+        description: "my description"
       },
       minItems: 1,
       maxItems: 1,
-      description: 'my description',
-    });
-  });
+      description: "my description"
+    })
+  })
 
-  it('type literal', () => {
+  it("type literal", () => {
     const schema = pipe(
       Schema.struct({
         id: pipe(
           Schema.number,
           Schema.int(),
-          Schema.description('id description')
+          Schema.description("id description")
         ),
         name: pipe(
-          Schema.literal('value'),
-          Schema.description('value description')
-        ),
+          Schema.literal("value"),
+          Schema.description("value description")
+        )
       }),
-      Schema.description('my description')
-    );
+      Schema.description("my description")
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'object',
+      type: "object",
       properties: {
-        id: { type: 'integer', description: 'id description' },
-        name: { enum: ['value'], description: 'value description' },
+        id: { type: "integer", description: "id description" },
+        name: { enum: ["value"], description: "value description" }
       },
-      required: ['name', 'id'],
-      description: 'my description',
-    });
-  });
+      required: ["name", "id"],
+      description: "my description"
+    })
+  })
 
-  test('union', () => {
+  test("union", () => {
     const schema = pipe(
-      Schema.literal('value', 'another'),
-      Schema.description('my description')
-    );
+      Schema.literal("value", "another"),
+      Schema.description("my description")
+    )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
-      type: 'string',
-      enum: ['value', 'another'],
-      description: 'my description',
-    });
-  });
-});
+      type: "string",
+      enum: ["value", "another"],
+      description: "my description"
+    })
+  })
+})
