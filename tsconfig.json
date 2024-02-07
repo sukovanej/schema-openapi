@@ -1,23 +1,15 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "types": ["vitest/globals"],
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "paths": {
-      "schema-openapi": [
-        "./src/index.ts"
-      ],
-      "schema-openapi/*": [
-        "./src/*"
-      ]
+  "extends": "./tsconfig.base.json",
+  "include": [],
+  "references": [
+    {
+      "path": "tsconfig.src.json"
     },
-    "exactOptionalPropertyTypes": true
-  },
-  "include": ["src", "test", "examples"]
+    {
+      "path": "tsconfig.test.json"
+    },
+    {
+      "path": "tsconfig.examples.json"
+    }
+  ]
 }

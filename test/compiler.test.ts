@@ -1,15 +1,16 @@
-import * as Compiler from 'schema-openapi/compiler';
+import { OpenApiCompiler } from "schema-openapi"
 
-import { Schema } from '@effect/schema';
+import { Schema } from "@effect/schema"
+import { expect, test } from "vitest"
 
-test('Declaration', () => {
+test("Declaration", () => {
   const MySchema = Schema.instanceOf(FormData).pipe(
-    Compiler.annotate({ type: 'string' }),
-    Schema.description('form data')
-  );
+    OpenApiCompiler.annotate({ type: "string" }),
+    Schema.description("form data")
+  )
 
-  expect(Compiler.openAPISchemaForAst(MySchema.ast, () => undefined)).toEqual({
-    type: 'string',
-    description: 'form data',
-  });
-});
+  expect(OpenApiCompiler.openAPISchemaForAst(MySchema.ast, () => undefined)).toEqual({
+    type: "string",
+    description: "form data"
+  })
+})
