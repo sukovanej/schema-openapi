@@ -1,5 +1,12 @@
 # schema-openapi
 
+## 0.31.0
+
+### Minor Changes
+
+- 22defa5: Minor effect update (2.3).
+- 667a56e: Align setup with effect ecosystem.
+
 ## 0.30.1
 
 ### Patch Changes
