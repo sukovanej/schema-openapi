@@ -27,7 +27,7 @@ const getDescription = (ast: AST.Annotated) =>
 type IntegerCounter = Ref.Ref<number>
 
 /** @internal */
-const IntegerCounter = Context.Tag<IntegerCounter>(
+const IntegerCounter = Context.GenericTag<IntegerCounter>(
   "schema-openapi/example/integer-counter"
 )
 
@@ -40,7 +40,7 @@ const nextInteger = Effect.flatMap(
 /** @internal */
 const randomChoice = <A>(
   xs: ReadonlyArray<A>
-): Effect.Effect<never, RandomExampleError, A> =>
+): Effect.Effect<A, RandomExampleError> =>
   pipe(
     Effect.randomWith((r) => r.nextIntBetween(0, xs.length)),
     Effect.filterOrFail(
@@ -71,13 +71,13 @@ class RandomExampleErrorImpl extends Data.TaggedError("RandomExampleError")<{
 /**
  * @since 1.0.0
  */
-export const randomExample = <R, From, To>(
-  schema: Schema.Schema<R, From, To>
-): Effect.Effect<never, RandomExampleError, To> => {
+export const randomExample = <To, From, R>(
+  schema: Schema.Schema<To, From, R>
+): Effect.Effect<To, RandomExampleError> => {
   const go = (
     ast: AST.AST,
     constraint: TypeConstraint<any> | undefined
-  ): Effect.Effect<IntegerCounter, RandomExampleError, any> => {
+  ): Effect.Effect<any, RandomExampleError, IntegerCounter> => {
     const exampleFromAnnotation = getExampleValue(ast)
 
     if (exampleFromAnnotation) {

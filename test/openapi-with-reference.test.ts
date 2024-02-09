@@ -224,10 +224,7 @@ describe("component schema and reference", () => {
       readonly name: string
       readonly categories: ReadonlyArray<Category>
     }
-    const categorySchema: Schema.Schema<never, Category> = Schema.suspend<
-      never,
-      Category
-    >(() =>
+    const categorySchema: Schema.Schema<Category> = Schema.suspend<Category, Category, never>(() =>
       Schema.struct({
         name: Schema.string,
         categories: Schema.array(categorySchema)
@@ -255,10 +252,7 @@ describe("component schema and reference", () => {
       readonly name: string
       readonly categories: ReadonlyArray<Category>
     }
-    const categorySchema: Schema.Schema<never, Category> = Schema.suspend<
-      never,
-      Category
-    >(() =>
+    const categorySchema: Schema.Schema<Category, Category, never> = Schema.suspend<Category, Category, never>(() =>
       Schema.struct({
         name: Schema.string,
         categories: Schema.array(categorySchema)

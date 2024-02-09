@@ -16,7 +16,7 @@ const OpenApiId = Symbol.for("schema-openapi/OpenApiId")
 /**
  * @since 1.0.0
  */
-export const annotate = (spec: OpenAPISchemaType) => <R, I, A>(self: Schema.Schema<R, I, A>): Schema.Schema<R, I, A> =>
+export const annotate = (spec: OpenAPISchemaType) => <A, I, R>(self: Schema.Schema<A, I, R>): Schema.Schema<A, I, R> =>
   Schema.make(AST.setAnnotation(self.ast, OpenApiId, spec))
 
 /**
