@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.31.1
+
+### Patch Changes
+
+- ee3af46: Update effect dependencies.
+
 ## 0.31.0
 
 ### Minor Changes
