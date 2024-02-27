@@ -679,3 +679,36 @@ it("security", async () => {
   // @ts-expect-error
   SwaggerParser.validate(spec)
 })
+
+it("no-content", async () => {
+  const spec = OpenApi.openAPI(
+    "test",
+    "0.1",
+    OpenApi.path(
+      "/pet",
+      OpenApi.operation(
+        "post",
+        OpenApi.noContentResponse("my response")
+      )
+    )
+  )
+
+  expect(spec).toEqual({
+    openapi: "3.0.3",
+    info: { title: "test", version: "0.1" },
+    paths: {
+      "/pet": {
+        post: {
+          responses: {
+            204: {
+              description: "my response"
+            }
+          }
+        }
+      }
+    }
+  })
+
+  // @ts-expect-error
+  SwaggerParser.validate(spec)
+})

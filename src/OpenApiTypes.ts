@@ -140,7 +140,7 @@ export type OpenAPISpecParameter<S = AnySchema> = {
  * @category models
  * @since 1.0.0
  */
-export type OpenAPISpecStatusCode = 200 | 201
+export type OpenAPISpecStatusCode = 200 | 201 | 204
 
 /**
  * @category models
@@ -187,7 +187,7 @@ export type OpenApiSpecResponseHeaders<S = AnySchema> = Record<
  * @since 1.0.0
  */
 export type OpenApiSpecResponse<S = AnySchema> = {
-  content: OpenApiSpecContent<S>
+  content?: OpenApiSpecContent<S>
   headers?: OpenApiSpecResponseHeaders<S>
   description: string
 }

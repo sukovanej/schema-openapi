@@ -350,6 +350,32 @@ export const jsonRequest = (
 })
 
 /**
+ * Add 204 No-Content response.
+ *
+ * *Available setter*: `description`
+ * *Setter of*: `operation`
+ *
+ * @param {string} description - description of the response
+ *
+ * @since 1.0.0
+ */
+export const noContentResponse = (
+  description: string,
+  ...setters: Array<I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>>
+): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
+(spec, componentSchemaCallback) => ({
+  ...spec,
+  responses: {
+    ...spec.responses,
+    [204]: I.runSetters(
+      { description },
+      setters,
+      componentSchemaCallback
+    )
+  }
+})
+
+/**
  * Set JSON response for a HTTP status code.
  *
  * *Available setter*: `description`
