@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.32.0
+
+### Minor Changes
+
+- 918f0b4: Add `OpenApi.noContentResponse`. Update @effect/schema.
+
 ## 0.31.2
 
 ### Patch Changes
