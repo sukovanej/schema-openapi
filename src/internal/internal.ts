@@ -1,6 +1,4 @@
-import type { AST } from "@effect/schema"
-import type { Annotated } from "@effect/schema/AST"
-import { IdentifierAnnotationId } from "@effect/schema/AST"
+import * as AST from "@effect/schema/AST"
 
 export type ComponentSchemaCallback =
   | ((id: string, ast: AST.AST) => void)
@@ -22,7 +20,7 @@ export const runSetters = <A>(
   return a
 }
 
-export const removeAnnotation = (key: symbol) => (ast: AST.AST & Annotated): AST.AST => {
+export const removeAnnotation = (key: symbol) => (ast: AST.AST & AST.Annotated): AST.AST => {
   if (Object.prototype.hasOwnProperty.call(ast.annotations, key)) {
     const { [key]: _, ...rest } = ast.annotations
     return {
@@ -34,5 +32,5 @@ export const removeAnnotation = (key: symbol) => (ast: AST.AST & Annotated): AST
 }
 
 export const removeIdentifierAnnotation = removeAnnotation(
-  IdentifierAnnotationId
+  AST.IdentifierAnnotationId
 )

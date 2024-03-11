@@ -3,7 +3,7 @@
  *
  * @since 1.0.0
  */
-import type { Schema } from "@effect/schema"
+import type * as Schema from "@effect/schema/Schema"
 
 /**
  * @category models

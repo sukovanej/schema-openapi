@@ -3,12 +3,14 @@
  *
  * @since 1.0.0
  */
-import { Option, pipe, ReadonlyArray } from "effect"
+import { pipe } from "effect/Function"
+import * as Option from "effect/Option"
+import * as ReadonlyArray from "effect/ReadonlyArray"
 import type { ComponentSchemaCallback } from "./internal/internal.js"
 import type { OpenAPISchemaArrayType, OpenAPISchemaObjectType, OpenAPISchemaType } from "./OpenApiTypes.js"
 
-import { AST, Schema } from "@effect/schema"
-import { getIdentifierAnnotation } from "@effect/schema/AST"
+import * as AST from "@effect/schema/AST"
+import * as Schema from "@effect/schema/Schema"
 import * as circular from "./internal/circular.js"
 
 const OpenApiId = Symbol.for("schema-openapi/OpenApiId")
@@ -173,7 +175,7 @@ export const openAPISchemaForAst = (
             `Cannot encode some index signature to OpenAPISchema`
           )
         }
-        const identifier = Option.getOrUndefined(getIdentifierAnnotation(ast))
+        const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast))
         if (identifier && componentSchemaCallback) {
           componentSchemaCallback(identifier, ast)
           return circular.reference(identifier)
@@ -296,8 +298,8 @@ export const openAPISchemaForAst = (
       }
       case "Suspend": {
         const realAst = ast.f()
-        const identifier = Option.getOrUndefined(getIdentifierAnnotation(ast)) ??
-          Option.getOrUndefined(getIdentifierAnnotation(realAst))
+        const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast)) ??
+          Option.getOrUndefined(AST.getIdentifierAnnotation(realAst))
         if (!identifier) {
           console.warn(`Lazy schema must have identifier set.`)
           return {}

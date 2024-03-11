@@ -3,9 +3,18 @@
  *
  * @since 1.0.0
  */
-import { Context, Data, Effect, Option, pipe, ReadonlyArray, Ref, Unify } from "effect"
+import * as Context from "effect/Context"
+import * as Data from "effect/Data"
+import * as Effect from "effect/Effect"
+import { pipe } from "effect/Function"
+import * as Option from "effect/Option"
+import * as ReadonlyArray from "effect/ReadonlyArray"
+import * as Ref from "effect/Ref"
+import * as Unify from "effect/Unify"
 
-import { AST, Parser, Schema } from "@effect/schema"
+import * as AST from "@effect/schema/AST"
+import * as Parser from "@effect/schema/Parser"
+import * as Schema from "@effect/schema/Schema"
 
 /** @internal */
 const getExampleValue = (ast: AST.Annotated) =>

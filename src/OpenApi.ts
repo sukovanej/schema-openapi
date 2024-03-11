@@ -3,7 +3,8 @@
  *
  * @since 1.0.0
  */
-import { Option, pipe } from "effect"
+import { pipe } from "effect/Function"
+import * as Option from "effect/Option"
 import * as circular from "./internal/circular.js"
 import * as I from "./internal/internal.js"
 import { openAPISchemaFor, openAPISchemaForAst } from "./OpenApiCompiler.js"
@@ -29,7 +30,8 @@ import type {
   OpenAPISpecTag
 } from "./OpenApiTypes.js"
 
-import { AST, type Schema } from "@effect/schema"
+import * as AST from "@effect/schema/AST"
+import type * as Schema from "@effect/schema/Schema"
 
 /**
  * Initialize OpenAPI schema.
