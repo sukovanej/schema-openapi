@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.32.2
+
+### Patch Changes
+
+- c5eaa9b: Update effect packages.
+
 ## 0.32.1
 
 ### Patch Changes
