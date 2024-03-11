@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.32.3
+
+### Patch Changes
+
+- 0c64dd8: Use namespace imports internally.
+
 ## 0.32.2
 
 ### Patch Changes
