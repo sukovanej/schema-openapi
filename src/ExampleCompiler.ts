@@ -13,13 +13,12 @@ import * as Ref from "effect/Ref"
 import * as Unify from "effect/Unify"
 
 import * as AST from "@effect/schema/AST"
-import * as Parser from "@effect/schema/Parser"
 import * as Schema from "@effect/schema/Schema"
 
 /** @internal */
 const getExampleValue = (ast: AST.Annotated) =>
   pipe(
-    AST.getAnnotation<AST.ExamplesAnnotation>(AST.ExamplesAnnotationId)(ast),
+    AST.getAnnotation<AST.ExamplesAnnotation<any>>(AST.ExamplesAnnotationId)(ast),
     Option.getOrUndefined
   )
 
@@ -114,20 +113,20 @@ export const randomExample = <To, From, R>(
         return randomChoice([true, false])
       case "ObjectKeyword":
         return randomChoice([{ iam: "object" }])
-      case "Tuple": {
+      case "TupleType": {
         const generate = Effect.forEach((element: AST.AST) => go(element, undefined))
 
         const elements = generate(ast.elements.map((element) => element.type))
 
         const postRestElementsAst = pipe(
-          Option.flatMap(ast.rest, ReadonlyArray.tail),
+          ReadonlyArray.tail(ast.rest),
           Option.getOrElse(() => [] as Array<AST.AST>)
         )
 
         const nElements = ast.elements.length + postRestElementsAst.length
 
         const rest = pipe(
-          Option.flatMap(ast.rest, ReadonlyArray.head),
+          ReadonlyArray.head(ast.rest),
           Option.map((rest) =>
             Array(
               constraint?.min != null ? constraint.min - nElements : 1
@@ -182,7 +181,7 @@ export const randomExample = <To, From, R>(
         return createConstraintFromRefinement(ast).pipe(
           Effect.flatMap((constraint2) => go(ast.from, { ...constraint, ...constraint2 })),
           Effect.flatMap((a) => {
-            const error = ast.filter(a, Parser.defaultParseOption, ast)
+            const error = ast.filter(a, AST.defaultParseOption, ast)
 
             if (Option.isNone(error)) {
               return Effect.succeed(a)
@@ -201,7 +200,7 @@ export const randomExample = <To, From, R>(
           })
         )
       }
-      case "Transform":
+      case "Transformation":
         return go(ast.to, constraint)
       case "UniqueSymbol":
         return Effect.fail(RandomExampleErrorImpl.make(`UniqueSymbol`))
@@ -281,7 +280,7 @@ const createConstraintFromRefinement = Unify.unify((ast: AST.Refinement) => {
   let constraint: TypeConstraint | undefined
   if (from._tag === "NumberKeyword" || from._tag === "BigIntKeyword") {
     constraint = createNumberConstraint(typeId, ast)
-  } else if (from._tag === "Tuple") {
+  } else if (from._tag === "TupleType") {
     constraint = createTupleConstraint(typeId, ast)
   }
 

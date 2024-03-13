@@ -22,11 +22,11 @@ export const runSetters = <A>(
 
 export const removeAnnotation = (key: symbol) => (ast: AST.AST & AST.Annotated): AST.AST => {
   if (Object.prototype.hasOwnProperty.call(ast.annotations, key)) {
-    const { [key]: _, ...rest } = ast.annotations
-    return {
-      ...ast,
-      annotations: rest
-    }
+    // copied from the implementation of AST.annotations
+    const { [key]: _, ...annotations } = ast.annotations
+    const d = Object.getOwnPropertyDescriptors(ast)
+    d.annotations.value = annotations
+    return Object.create(Object.getPrototypeOf(ast), d)
   }
   return ast
 }

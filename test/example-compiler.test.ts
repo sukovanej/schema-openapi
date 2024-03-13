@@ -26,7 +26,8 @@ test("with test annotation", () => {
 
   const IntegerFromString = pipe(
     Schema.NumberFromString,
-    Schema.int({ examples: [42, 69] }),
+    Schema.int(),
+    Schema.examples([42, 69]),
     Schema.brand("Integer")
   )
 

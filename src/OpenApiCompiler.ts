@@ -19,7 +19,7 @@ const OpenApiId = Symbol.for("schema-openapi/OpenApiId")
  * @since 1.0.0
  */
 export const annotate = (spec: OpenAPISchemaType) => <A, I, R>(self: Schema.Schema<A, I, R>): Schema.Schema<A, I, R> =>
-  Schema.make(AST.setAnnotation(self.ast, OpenApiId, spec))
+  Schema.make(AST.annotations(self.ast, { [OpenApiId]: spec }))
 
 /**
  * @since 1.0.0
@@ -54,9 +54,8 @@ const convertJsonSchemaAnnotation = (annotations: object) => {
 /** @internal */
 const getJSONSchemaAnnotation = (ast: AST.Annotated) =>
   pipe(
-    AST.getAnnotation<AST.JSONSchemaAnnotation>(AST.JSONSchemaAnnotationId)(
-      ast
-    ),
+    ast,
+    AST.getAnnotation<AST.JSONSchemaAnnotation>(AST.JSONSchemaAnnotationId),
     Option.map(convertJsonSchemaAnnotation)
   )
 
@@ -118,9 +117,9 @@ export const openAPISchemaForAst = (
         return { type: "boolean" }
       case "ObjectKeyword":
         return { type: "object" }
-      case "Tuple": {
+      case "TupleType": {
         const elements = ast.elements.map((e) => go(e.type))
-        const rest = Option.map(ast.rest, ReadonlyArray.map(go))
+        const rest = ast.rest.map(go)
 
         const minItems = ast.elements.filter((e) => !e.isOptional).length || undefined
         let maxItems = minItems
@@ -134,8 +133,8 @@ export const openAPISchemaForAst = (
         // ---------------------------------------------
         // handle rest element
         // ---------------------------------------------
-        if (Option.isSome(rest)) {
-          const head = ReadonlyArray.headNonEmpty(rest.value)
+        if (ReadonlyArray.isNonEmptyArray(rest)) {
+          const head = ReadonlyArray.headNonEmpty(rest)
           if (items !== undefined) {
             maxItems = undefined
 
@@ -175,8 +174,9 @@ export const openAPISchemaForAst = (
             `Cannot encode some index signature to OpenAPISchema`
           )
         }
+
         const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast))
-        if (identifier && componentSchemaCallback) {
+        if (identifier !== undefined && componentSchemaCallback) {
           componentSchemaCallback(identifier, ast)
           return circular.reference(identifier)
         }
@@ -188,7 +188,7 @@ export const openAPISchemaForAst = (
             type._tag === "Union" &&
             type.types.some(AST.isUndefinedKeyword)
           ) {
-            const typyWithoutUndefined = AST.createUnion(
+            const typyWithoutUndefined = AST.Union.make(
               type.types.filter((ast) => !AST.isUndefinedKeyword(ast)),
               type.annotations
             )
@@ -283,7 +283,7 @@ export const openAPISchemaForAst = (
           })
         )
       }
-      case "Transform":
+      case "Transformation":
         return go(ast.from)
       case "Declaration": {
         const spec = getOpenApiAnnotation(ast)
@@ -305,7 +305,7 @@ export const openAPISchemaForAst = (
           return {}
         }
         return go(
-          AST.setAnnotation(realAst, AST.IdentifierAnnotationId, identifier)
+          AST.annotations(realAst, { [AST.IdentifierAnnotationId]: identifier })
         )
       }
       case "UniqueSymbol":

@@ -86,7 +86,7 @@ describe("component schema and reference", () => {
     SwaggerParser.validate(spec)
   })
 
-  it("reference", async () => {
+  it("reference only", async () => {
     const ReferencedType = pipe(
       Schema.struct({ something: Schema.string }),
       Schema.identifier("ReferencedType")
@@ -252,12 +252,14 @@ describe("component schema and reference", () => {
       readonly name: string
       readonly categories: ReadonlyArray<Category>
     }
+
     const categorySchema: Schema.Schema<Category, Category, never> = Schema.suspend<Category, Category, never>(() =>
       Schema.struct({
         name: Schema.string,
         categories: Schema.array(categorySchema)
       })
     ).pipe(Schema.identifier("Category"))
+
     const spec = OpenApi.openAPI(
       "test",
       "0.1",
