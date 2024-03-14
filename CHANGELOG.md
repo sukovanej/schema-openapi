@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.33.3
+
+### Patch Changes
+
+- 74b1b29: Fix: components not produced if the schema is a transformation.
+
 ## 0.33.2
 
 ### Patch Changes
