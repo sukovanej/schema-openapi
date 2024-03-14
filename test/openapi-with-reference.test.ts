@@ -276,4 +276,34 @@ describe("component schema and reference", () => {
     // @ts-expect-error
     SwaggerParser.validate(spec)
   })
+
+  // reported in https://github.com/sukovanej/effect-http/issues/471
+  it.each(
+    [
+      Schema.optional(Schema.Date, { nullable: true, exact: true, as: "Option" }),
+      Schema.optional(Schema.Date, { nullable: true, default: () => new Date() }),
+      Schema.optional(Schema.Date, { exact: true, default: () => new Date() }),
+      Schema.optional(Schema.Date, { exact: true, as: "Option" }),
+      Schema.optional(Schema.Date, { nullable: true, as: "Option" }),
+      Schema.optional(Schema.Date, { as: "Option" }),
+      Schema.optional(Schema.Date, { exact: true }),
+      Schema.optional(Schema.Date)
+    ]
+  )("optional variants", async (fieldSchema) => {
+    const MySchema = Schema.struct({ field: fieldSchema }).pipe(Schema.identifier("Foo"))
+
+    const spec = OpenApi.openAPI(
+      "test",
+      "0.1",
+      OpenApi.path(
+        "/pet",
+        OpenApi.operation(
+          "post",
+          OpenApi.jsonResponse(200, MySchema, "my response")
+        )
+      )
+    )
+
+    expect(Object.keys(spec.components!.schemas!)).toHaveLength(1)
+  })
 })
