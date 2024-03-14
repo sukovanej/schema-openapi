@@ -188,11 +188,11 @@ export const openAPISchemaForAst = (
             type._tag === "Union" &&
             type.types.some(AST.isUndefinedKeyword)
           ) {
-            const typyWithoutUndefined = AST.Union.make(
+            const typeWithoutUndefined = AST.Union.make(
               type.types.filter((ast) => !AST.isUndefinedKeyword(ast)),
               type.annotations
             )
-            return [go(typyWithoutUndefined), true] as const
+            return [go(typeWithoutUndefined), true] as const
           }
 
           return [go(type), ps.isOptional] as const
@@ -283,8 +283,18 @@ export const openAPISchemaForAst = (
           })
         )
       }
-      case "Transformation":
+      case "Transformation": {
+        if (ast.from._tag === "TypeLiteral") {
+          const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast))
+
+          if (identifier !== undefined && componentSchemaCallback) {
+            componentSchemaCallback(identifier, ast)
+            return circular.reference(identifier)
+          }
+        }
+
         return go(ast.from)
+      }
       case "Declaration": {
         const spec = getOpenApiAnnotation(ast)
 
