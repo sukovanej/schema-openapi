@@ -23,7 +23,7 @@ describe("enums", () => {
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
       nullable: true,
-      enum: ["asc", "desc", null]
+      enum: ["asc", "desc"]
     })
   })
 
