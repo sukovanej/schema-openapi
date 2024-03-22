@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.33.7
+
+### Patch Changes
+
+- d8e7278: Update effect
+
 ## 0.33.6
 
 ### Patch Changes
