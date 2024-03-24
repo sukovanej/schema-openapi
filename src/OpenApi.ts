@@ -352,7 +352,7 @@ export const jsonRequest = (
 })
 
 /**
- * Add 204 No-Content response.
+ * Add response with an empty body.
  *
  * *Available setter*: `description`
  * *Setter of*: `operation`
@@ -363,13 +363,14 @@ export const jsonRequest = (
  */
 export const noContentResponse = (
   description: string,
+  status: number,
   ...setters: Array<I.Setter<OpenApiSpecResponse<OpenAPISchemaType>>>
 ): I.Setter<OpenAPISpecOperation<OpenAPISchemaType>> =>
 (spec, componentSchemaCallback) => ({
   ...spec,
   responses: {
     ...spec.responses,
-    [204]: I.runSetters(
+    [status]: I.runSetters(
       { description },
       setters,
       componentSchemaCallback

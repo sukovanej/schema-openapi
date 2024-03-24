@@ -688,7 +688,7 @@ it("no-content", async () => {
       "/pet",
       OpenApi.operation(
         "post",
-        OpenApi.noContentResponse("my response")
+        OpenApi.noContentResponse("my response", 204)
       )
     )
   )
