@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.34.0
+
+### Minor Changes
+
+- b7f10e2: Add status argument to `noContentResponse`.
+
 ## 0.33.7
 
 ### Patch Changes
