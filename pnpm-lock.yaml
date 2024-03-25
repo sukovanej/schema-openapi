@@ -36,8 +36,8 @@ devDependencies:
     specifier: ^0.1.0
     version: 0.1.0
   '@effect/schema':
-    specifier: ^0.64.11
-    version: 0.64.11(effect@2.4.11)(fast-check@3.16.0)
+    specifier: ^0.64.13
+    version: 0.64.13(effect@2.4.13)(fast-check@3.17.0)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.3.0
     version: 4.3.0(prettier@3.2.5)
@@ -60,8 +60,8 @@ devDependencies:
     specifier: ^0.4.0
     version: 0.4.0(@babel/core@7.24.3)
   effect:
-    specifier: 2.4.11
-    version: 2.4.11
+    specifier: 2.4.13
+    version: 2.4.13
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
@@ -84,8 +84,8 @@ devDependencies:
     specifier: ^1.5.0
     version: 1.5.0(eslint@8.57.0)
   express:
-    specifier: ^4.19.1
-    version: 4.19.1
+    specifier: ^4.19.2
+    version: 4.19.2
   madge:
     specifier: ^6.1.0
     version: 6.1.0(typescript@5.4.3)
@@ -97,7 +97,7 @@ devDependencies:
     version: 5.0.5
   swagger-ui-express:
     specifier: ^5.0.0
-    version: 5.0.0(express@4.19.1)
+    version: 5.0.0(express@4.19.2)
   tsx:
     specifier: ^4.7.1
     version: 4.7.1
@@ -691,14 +691,14 @@ packages:
     resolution: {integrity: sha512-BnlM8LlaqCAYgdRfxlbR7gXGh/FD1scL1fPgNVJEPoOM08od1jtJz+iKhwfaud8TPnnhZR+TED2h5ynjanLeCQ==}
     dev: true
 
-  /@effect/schema@0.64.11(effect@2.4.11)(fast-check@3.16.0):
-    resolution: {integrity: sha512-n5FNgAc7mmWXR9cY3Ea44KciUv/I3tfWPIqK7cPyTIjGhJ7UP9vxfzmN66lct6QXOwL+AUC9Tx/HJ8mtE+zaGQ==}
+  /@effect/schema@0.64.13(effect@2.4.13)(fast-check@3.17.0):
+    resolution: {integrity: sha512-zn1XmoFalnfppza9YAcyOiIQE9caAxL+OuxrlEFTWceBJK8wYKpJyVokS7zeUGVQf8wIDBCOHfapSpSy55pPcQ==}
     peerDependencies:
-      effect: ^2.4.11
+      effect: ^2.4.13
       fast-check: ^3.13.2
     dependencies:
-      effect: 2.4.11
-      fast-check: 3.16.0
+      effect: 2.4.13
+      fast-check: 3.17.0
     dev: true
 
   /@esbuild/aix-ppc64@0.19.12:
@@ -2920,8 +2920,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /effect@2.4.11:
-    resolution: {integrity: sha512-BMfpWloJdV8+lVGNCesOpE6e5k27nL7F5BiWtheOEyWEQiWkM6uLK6pQ1MK9bDmFELiqe961CHFqiIY9HymLFw==}
+  /effect@2.4.13:
+    resolution: {integrity: sha512-QTQgeJOn4S4RdDWHieHc/aaB2sdRLN0zeF+tMEDvGn19tFcZOmqpnSKcYuiGvHaCTE0viexFbBH+iAgfg9Gurw==}
     dev: true
 
   /electron-to-chromium@1.4.715:
@@ -3478,8 +3478,8 @@ packages:
       jest-util: 29.7.0
     dev: true
 
-  /express@4.19.1:
-    resolution: {integrity: sha512-K4w1/Bp7y8iSiVObmCrtq8Cs79XjJc/RU2YYkZQ7wpUu5ZyZ7MtPHkqoMz4pf+mgXfNvo2qft8D9OnrH2ABk9w==}
+  /express@4.19.2:
+    resolution: {integrity: sha512-5T6nhjsT+EOMzuck8JjBHARTHfMht0POzlA60WV2pMD3gyXw2LZnZ+ueGdNxG+0calOJcWKbpFcuzLZ91YWq9Q==}
     engines: {node: '>= 0.10.0'}
     dependencies:
       accepts: 1.3.8
@@ -3537,8 +3537,8 @@ packages:
       tmp: 0.0.33
     dev: true
 
-  /fast-check@3.16.0:
-    resolution: {integrity: sha512-k8GtQHi4pJoRQ1gVDFQno+/FVkowo/ehiz/aCj9O/D7HRWb1sSFzNrw+iPVU8QlWtH+jNwbuN+dDVg3QkS56DQ==}
+  /fast-check@3.17.0:
+    resolution: {integrity: sha512-9A7UiBENXxMBb40qY+xOcIcGdxF5CYbXJOU4b+omh773RIFcIQRejHEjjrzIHQFLIQXWgWQu3dl6FrWR9VpYRQ==}
     engines: {node: '>=8.0.0'}
     dependencies:
       pure-rand: 6.1.0
@@ -6195,13 +6195,13 @@ packages:
     resolution: {integrity: sha512-Rt1xUpbHulJVGbiQjq9yy9/r/0Pg6TmpcG+fXTaMePDc8z5WUw4LfaWts5qcNv/8ewPvBIbY7DKq7qReIKNCCQ==}
     dev: true
 
-  /swagger-ui-express@5.0.0(express@4.19.1):
+  /swagger-ui-express@5.0.0(express@4.19.2):
     resolution: {integrity: sha512-tsU9tODVvhyfkNSvf03E6FAk+z+5cU3lXAzMy6Pv4av2Gt2xA0++fogwC4qo19XuFf6hdxevPuVCSKFuMHJhFA==}
     engines: {node: '>= v0.10.32'}
     peerDependencies:
       express: '>=4.0.0 || >=5.0.0-beta'
     dependencies:
-      express: 4.19.1
+      express: 4.19.2
       swagger-ui-dist: 5.12.0
     dev: true
 
@@ -6571,7 +6571,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.3
+      vite: 5.2.6
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -6583,8 +6583,8 @@ packages:
       - terser
     dev: true
 
-  /vite@5.2.3:
-    resolution: {integrity: sha512-+i1oagbvkVIhEy9TnEV+fgXsng13nZM90JQbrcPrf6DvW2mXARlz+DK7DLiDP+qeKoD1FCVx/1SpFL1CLq9Mhw==}
+  /vite@5.2.6:
+    resolution: {integrity: sha512-FPtnxFlSIKYjZ2eosBQamz4CbyrTizbZ3hnGJlh/wMtCrlp1Hah6AzBLjGI5I2urTfNnpovpHdrL6YRuBOPnCA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -6660,7 +6660,7 @@ packages:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.2
-      vite: 5.2.3
+      vite: 5.2.6
       vite-node: 1.4.0
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
