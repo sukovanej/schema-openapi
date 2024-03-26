@@ -46,15 +46,15 @@
     "@effect/docgen": "^0.4.0",
     "@effect/eslint-plugin": "^0.1.2",
     "@effect/language-service": "^0.1.0",
-    "@effect/schema": "^0.64.13",
+    "@effect/schema": "^0.64.14",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/express": "^4.17.21",
     "@types/swagger-ui-express": "^4.1.6",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "@vitest/coverage-v8": "^1.4.0",
     "babel-plugin-annotate-pure-calls": "^0.4.0",
-    "effect": "2.4.13",
+    "effect": "2.4.14",
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-codegen": "0.28.0",
@@ -72,7 +72,7 @@
     "vitest": "^1.4.0"
   },
   "peerDependencies": {
-    "@effect/schema": "^0.64.13",
-    "effect": "^2.4.13"
+    "@effect/schema": "^0.64.14",
+    "effect": "^2.4.14"
   }
 }
