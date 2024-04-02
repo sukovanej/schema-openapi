@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.34.4
+
+### Patch Changes
+
+- a913eeb: Update @effect/schema.
+
 ## 0.34.3
 
 ### Patch Changes
