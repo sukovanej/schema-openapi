@@ -1,7 +1,7 @@
 {
   "name": "schema-openapi",
   "type": "module",
-  "version": "0.34.5",
+  "version": "0.34.6",
   "license": "MIT",
   "author": "Milan Suk <Milansuk@email.cz>",
   "description": "Pipeable API for OpenAPI specification and @effect/schema compilers",
