@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest"
 
 describe("simple", () => {
   it("simple post", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -57,7 +57,7 @@ describe("simple", () => {
   })
 
   it("set description", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -196,8 +196,8 @@ describe("simple", () => {
         "/pet",
         OpenApi.operation(
           "post",
-          OpenApi.jsonRequest(Schema.string),
-          OpenApi.jsonResponse(200, Schema.string, "description"),
+          OpenApi.jsonRequest(Schema.String),
+          OpenApi.jsonResponse(200, Schema.String, "description"),
           OpenApi.description("Store a pet"),
           OpenApi.externalDocs({
             description: "test externalDocs description",
@@ -218,7 +218,7 @@ describe("simple", () => {
   })
 
   it("set description", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -243,7 +243,7 @@ describe("simple", () => {
   })
 
   it("schema description", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -336,7 +336,7 @@ describe("simple", () => {
   })
 
   it("path parameters", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -352,7 +352,7 @@ describe("simple", () => {
         OpenApi.parameter(
           "id",
           "query",
-          Schema.string,
+          Schema.String,
           OpenApi.required,
           OpenApi.deprecated,
           OpenApi.allowEmptyValue,
@@ -380,7 +380,7 @@ describe("simple", () => {
   })
 
   it("operation parameters", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -394,7 +394,7 @@ describe("simple", () => {
           OpenApi.parameter(
             "id",
             "query",
-            Schema.string,
+            Schema.String,
             OpenApi.required,
             OpenApi.description("id")
           )
@@ -420,7 +420,7 @@ describe("simple", () => {
   })
 
   it("request body", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -453,7 +453,7 @@ describe("simple", () => {
   })
 
   it("tags", async () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     const spec = OpenApi.openAPI(
       "test",
@@ -498,14 +498,14 @@ describe("simple", () => {
         "/pet",
         OpenApi.operation(
           "post",
-          OpenApi.jsonResponse(200, Schema.string, "response")
+          OpenApi.jsonResponse(200, Schema.String, "response")
         )
       ),
       OpenApi.path(
         "/pet",
         OpenApi.operation(
           "get",
-          OpenApi.jsonResponse(200, Schema.string, "response")
+          OpenApi.jsonResponse(200, Schema.String, "response")
         )
       )
     )
@@ -551,10 +551,10 @@ describe("simple", () => {
           "post",
           OpenApi.jsonResponse(
             200,
-            Schema.string,
+            Schema.String,
             "response",
             OpenApi.responseHeaders({
-              "My-Header": Schema.description("My description")(Schema.string)
+              "My-Header": Schema.description("My description")(Schema.String)
             })
           )
         )
@@ -616,7 +616,7 @@ describe("simple", () => {
         "/pet",
         OpenApi.operation(
           "post",
-          OpenApi.jsonResponse(200, Schema.literal("value"), "test")
+          OpenApi.jsonResponse(200, Schema.Literal("value"), "test")
         )
       )
     )
@@ -646,7 +646,7 @@ describe("simple", () => {
 })
 
 it("security", async () => {
-  const schema = Schema.string
+  const schema = Schema.String
 
   const spec = OpenApi.openAPI(
     "test",

@@ -4,12 +4,12 @@ import swaggerUi from "swagger-ui-express"
 
 import { Schema } from "@effect/schema"
 
-const Pet = Schema.struct({
-  name: Schema.string,
-  id: Schema.number
+const Pet = Schema.Struct({
+  name: Schema.String,
+  id: Schema.Number
 })
 
-const UsageId = Schema.description("Usage identifier")(Schema.string)
+const UsageId = Schema.description("Usage identifier")(Schema.String)
 
 const app = express()
 const spec = OpenApi.openAPI(
