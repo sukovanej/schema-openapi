@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest"
 
 describe("records", () => {
   it("string to string map", () => {
-    const schema = Schema.record(Schema.string, Schema.string)
+    const schema = Schema.Record(Schema.String, Schema.String)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "object",
@@ -19,11 +19,11 @@ describe("records", () => {
   })
 
   it("string to object map", () => {
-    const schema = Schema.record(
-      Schema.string,
-      Schema.struct({
-        code: Schema.optional(Schema.number, { exact: true }),
-        text: Schema.optional(Schema.string)
+    const schema = Schema.Record(
+      Schema.String,
+      Schema.Struct({
+        code: Schema.optional(Schema.Number, { exact: true }),
+        text: Schema.optional(Schema.String)
       })
     )
 

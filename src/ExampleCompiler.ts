@@ -363,25 +363,25 @@ const createNumberConstraint = (
   } else if (typeId === Schema.GreaterThanTypeId) {
     const min = jsonSchema.exclusiveMinimum
     return TypeConstraint({ min, minExclusive: true })
-  } else if (typeId === Schema.GreaterThanBigintTypeId) {
+  } else if (typeId === Schema.GreaterThanBigIntTypeId) {
     const { min }: any = ast.annotations[typeId]
     return TypeConstraint({ min, minExclusive: true })
   } else if (typeId === Schema.GreaterThanOrEqualToTypeId) {
     const min = jsonSchema.minimum
     return TypeConstraint({ min })
-  } else if (typeId === Schema.GreaterThanOrEqualToBigintTypeId) {
+  } else if (typeId === Schema.GreaterThanOrEqualToBigIntTypeId) {
     const { min }: any = ast.annotations[typeId]
     return TypeConstraint({ min })
   } else if (typeId === Schema.LessThanTypeId) {
     const max = jsonSchema.exclusiveMaximum
     return TypeConstraint({ max, maxExclusive: true })
-  } else if (typeId === Schema.LessThanBigintTypeId) {
+  } else if (typeId === Schema.LessThanBigIntTypeId) {
     const { max }: any = ast.annotations[typeId]
     return TypeConstraint({ max, maxExclusive: true })
   } else if (typeId === Schema.LessThanOrEqualToTypeId) {
     const max = jsonSchema.maximum
     return TypeConstraint({ max })
-  } else if (typeId === Schema.LessThanOrEqualToBigintTypeId) {
+  } else if (typeId === Schema.LessThanOrEqualToBigIntTypeId) {
     const { max }: any = ast.annotations[typeId]
     return TypeConstraint({ max })
   }

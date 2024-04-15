@@ -7,7 +7,7 @@ import { describe, expect, test } from "vitest"
 
 test("struct", () => {
   const es = Effect.runSync(
-    randomExample(Schema.struct({ name: Schema.number }))
+    randomExample(Schema.Struct({ name: Schema.Number }))
   )
 
   expect(typeof es).toBe("object")
@@ -18,7 +18,7 @@ test("struct", () => {
 test("with test annotation", () => {
   const example1 = Effect.runSync(
     randomExample(
-      Schema.struct({ name: pipe(Schema.number, Schema.examples([1])) })
+      Schema.Struct({ name: pipe(Schema.Number, Schema.examples([1])) })
     )
   )
 
@@ -42,12 +42,11 @@ test("with test annotation", () => {
   const example3 = Effect.runSync(randomExample(MyClassSchema))
   expect(example3).toBeInstanceOf(MyClass)
 
-  const TransformedSchema = Schema.transformOrFail(
-    Schema.string,
-    MyClassSchema,
-    () => ParseResult.succeed(new MyClass()),
-    () => ParseResult.succeed("hello")
-  )
+  const TransformedSchema = Schema.transformOrFail(Schema.String, MyClassSchema, {
+    decode: () => ParseResult.succeed(new MyClass()),
+    encode: () => ParseResult.succeed("hello")
+  })
+
   const example4 = Effect.runSync(randomExample(TransformedSchema))
   expect(example4).toBeInstanceOf(MyClass)
 })
@@ -55,17 +54,17 @@ test("with test annotation", () => {
 test("big struct", () => {
   const example = Effect.runSync(
     randomExample(
-      Schema.struct({
-        name: Schema.number,
-        value: Schema.string,
-        another: Schema.boolean,
-        hello: Schema.struct({
-          patrik: Schema.literal("borec"),
-          another: Schema.array(Schema.union(Schema.string, Schema.number))
+      Schema.Struct({
+        name: Schema.Number,
+        value: Schema.String,
+        another: Schema.Boolean,
+        hello: Schema.Struct({
+          patrik: Schema.Literal("borec"),
+          another: Schema.Array(Schema.Union(Schema.String, Schema.Number))
         }),
-        another3: Schema.boolean,
-        another4: Schema.boolean,
-        another5: Schema.boolean
+        another3: Schema.Boolean,
+        another4: Schema.Boolean,
+        another5: Schema.Boolean
       })
     )
   )
@@ -75,7 +74,7 @@ test("big struct", () => {
 })
 
 test("list", () => {
-  const example = Effect.runSync(randomExample(Schema.array(Schema.string)))
+  const example = Effect.runSync(randomExample(Schema.Array(Schema.String)))
 
   expect(Array.isArray(example)).toBe(true)
 
@@ -87,9 +86,9 @@ test("list", () => {
 test("tuple", () => {
   const example = Effect.runSync(
     randomExample(
-      Schema.tuple(
-        Schema.literal("a"),
-        Schema.union(Schema.literal("b"), Schema.literal("c"))
+      Schema.Tuple(
+        Schema.Literal("a"),
+        Schema.Union(Schema.Literal("b"), Schema.Literal("c"))
       )
     )
   )
@@ -108,7 +107,7 @@ describe("date", () => {
 
   test("in struct", () => {
     const dateStruct = Effect.runSync(
-      randomExample(Schema.struct({ date: Schema.Date }))
+      randomExample(Schema.Struct({ date: Schema.Date }))
     )
     expect(dateStruct.date).toBeInstanceOf(Date)
   })
@@ -117,7 +116,7 @@ describe("date", () => {
 describe("template literal", () => {
   test("simple", () => {
     const es = Effect.runSync(
-      randomExample(Schema.templateLiteral(Schema.literal("zdar")))
+      randomExample(Schema.TemplateLiteral(Schema.Literal("zdar")))
     )
 
     expect(es).toBe("zdar")
@@ -126,7 +125,7 @@ describe("template literal", () => {
   test("number literal", () => {
     const es = Effect.runSync(
       randomExample(
-        Schema.templateLiteral(Schema.literal(1), Schema.literal("2"))
+        Schema.TemplateLiteral(Schema.Literal(1), Schema.Literal("2"))
       )
     )
 
@@ -136,10 +135,10 @@ describe("template literal", () => {
   test("number schema", () => {
     const example = Effect.runSync(
       randomExample(
-        Schema.templateLiteral(
-          Schema.number,
-          Schema.literal("test"),
-          Schema.number
+        Schema.TemplateLiteral(
+          Schema.Number,
+          Schema.Literal("test"),
+          Schema.Number
         )
       )
     )
@@ -150,7 +149,7 @@ describe("template literal", () => {
 
   test("string schema", () => {
     const example = Effect.runSync(
-      randomExample(Schema.templateLiteral(Schema.number, Schema.string))
+      randomExample(Schema.TemplateLiteral(Schema.Number, Schema.String))
     )
 
     const reg = /(\d+)(\.\d+)?/
@@ -160,9 +159,9 @@ describe("template literal", () => {
   test("union", () => {
     const es = Effect.runSync(
       randomExample(
-        Schema.templateLiteral(
-          Schema.literal(1),
-          Schema.union(Schema.literal("2"), Schema.literal(3))
+        Schema.TemplateLiteral(
+          Schema.Literal(1),
+          Schema.Union(Schema.Literal("2"), Schema.Literal(3))
         )
       )
     )
@@ -172,17 +171,17 @@ describe("template literal", () => {
 })
 
 test("Declaration", () => {
-  const schema = Schema.optionFromNullable(Schema.string)
+  const schema = Schema.OptionFromNullOr(Schema.String)
   const example = Effect.runSync(randomExample(schema))
 
   expect(Option.isOption(example)).toBe(true)
 })
 
 test("Integers", () => {
-  const schema = Schema.tuple(
-    Schema.number,
-    Schema.bigint,
-    Schema.number.pipe(Schema.int(), Schema.brand("Integer"))
+  const schema = Schema.Tuple(
+    Schema.Number,
+    Schema.BigInt,
+    Schema.Number.pipe(Schema.int(), Schema.brand("Integer"))
   )
   const example = Effect.runSync(randomExample(schema))
 
@@ -191,24 +190,24 @@ test("Integers", () => {
 
 describe("constraints", () => {
   test("int", () => {
-    const schema = Schema.number.pipe(Schema.int())
+    const schema = Schema.Number.pipe(Schema.int())
     const example = Effect.runSync(randomExample(schema))
 
     expect(example).toEqual(1)
   })
 
   test("int between", () => {
-    const schema = Schema.number.pipe(Schema.int(), Schema.between(5, 10))
+    const schema = Schema.Number.pipe(Schema.int(), Schema.between(5, 10))
     const example = Effect.runSync(randomExample(schema))
 
     expect(example).toEqual(5)
   })
   test("bigint constraints", () => {
-    const schema = Schema.tuple(
-      Schema.bigintFromSelf.pipe(Schema.greaterThanBigint(BigInt(-1))),
-      Schema.bigintFromSelf.pipe(Schema.greaterThanOrEqualToBigint(BigInt(12))),
-      Schema.bigintFromSelf.pipe(Schema.lessThanBigint(BigInt(-1))),
-      Schema.bigintFromSelf.pipe(Schema.lessThanOrEqualToBigint(BigInt(12)))
+    const schema = Schema.Tuple(
+      Schema.BigIntFromSelf.pipe(Schema.greaterThanBigInt(BigInt(-1))),
+      Schema.BigIntFromSelf.pipe(Schema.greaterThanOrEqualToBigInt(BigInt(12))),
+      Schema.BigIntFromSelf.pipe(Schema.lessThanBigInt(BigInt(-1))),
+      Schema.BigIntFromSelf.pipe(Schema.lessThanOrEqualToBigInt(BigInt(12)))
     )
     const example = Effect.runSync(randomExample(schema))
 
@@ -216,12 +215,12 @@ describe("constraints", () => {
   })
 
   test("multiple constraints", () => {
-    const schema = Schema.tuple(
-      Schema.number.pipe(Schema.int(), Schema.between(5, 10)),
-      Schema.number.pipe(Schema.greaterThan(-1)),
-      Schema.number.pipe(Schema.greaterThanOrEqualTo(12)),
-      Schema.number.pipe(Schema.lessThan(3)),
-      Schema.number.pipe(Schema.lessThanOrEqualTo(7))
+    const schema = Schema.Tuple(
+      Schema.Number.pipe(Schema.int(), Schema.between(5, 10)),
+      Schema.Number.pipe(Schema.greaterThan(-1)),
+      Schema.Number.pipe(Schema.greaterThanOrEqualTo(12)),
+      Schema.Number.pipe(Schema.lessThan(3)),
+      Schema.Number.pipe(Schema.lessThanOrEqualTo(7))
     )
     const example = Effect.runSync(randomExample(schema))
 
@@ -229,7 +228,7 @@ describe("constraints", () => {
   })
 
   test("array min length", () => {
-    const schema = Schema.array(Schema.number).pipe(Schema.minItems(3))
+    const schema = Schema.Array(Schema.Number).pipe(Schema.minItems(3))
 
     const example = Effect.runSync(randomExample(schema))
 

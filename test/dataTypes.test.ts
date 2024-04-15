@@ -9,7 +9,7 @@ import { describe, expect, it, test } from "vitest"
 
 describe("data types", () => {
   it("boolean", () => {
-    const schema = Schema.boolean
+    const schema = Schema.Boolean
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       description: "a boolean",
@@ -18,7 +18,7 @@ describe("data types", () => {
   })
 
   it("string", () => {
-    const schema = Schema.string
+    const schema = Schema.String
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       description: "a string",
@@ -27,7 +27,7 @@ describe("data types", () => {
   })
 
   it("branded string", () => {
-    const schema = pipe(Schema.string, Schema.brand("my-string"))
+    const schema = pipe(Schema.String, Schema.brand("my-string"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       description: "a string",
@@ -36,7 +36,7 @@ describe("data types", () => {
   })
 
   it("string with minLength", () => {
-    const schema = pipe(Schema.string, Schema.minLength(1))
+    const schema = pipe(Schema.String, Schema.minLength(1))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -46,7 +46,7 @@ describe("data types", () => {
   })
 
   it("string with maxLength", () => {
-    const schema = pipe(Schema.string, Schema.maxLength(10))
+    const schema = pipe(Schema.String, Schema.maxLength(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -57,7 +57,7 @@ describe("data types", () => {
 
   it("string with minLength and maxLength", () => {
     const schema = pipe(
-      Schema.string,
+      Schema.String,
       Schema.minLength(1),
       Schema.maxLength(10)
     )
@@ -71,7 +71,7 @@ describe("data types", () => {
   })
 
   it("string with pattern", () => {
-    const schema = pipe(Schema.string, Schema.pattern(/^\d{3}-\d{2}-\d{4}$/))
+    const schema = pipe(Schema.String, Schema.pattern(/^\d{3}-\d{2}-\d{4}$/))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -81,7 +81,7 @@ describe("data types", () => {
   })
 
   it("number", () => {
-    const schema = Schema.number
+    const schema = Schema.Number
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       description: "a number",
@@ -90,7 +90,7 @@ describe("data types", () => {
   })
 
   it("integer", () => {
-    const schema = pipe(Schema.number, Schema.int())
+    const schema = pipe(Schema.Number, Schema.int())
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "integer",
@@ -99,7 +99,7 @@ describe("data types", () => {
   })
 
   it("integer with exclusive min", () => {
-    const schema = pipe(Schema.number, Schema.int(), Schema.greaterThan(10))
+    const schema = pipe(Schema.Number, Schema.int(), Schema.greaterThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "integer",
@@ -110,7 +110,7 @@ describe("data types", () => {
   })
 
   it("integer with exclusive max", () => {
-    const schema = pipe(Schema.number, Schema.int(), Schema.lessThan(10))
+    const schema = pipe(Schema.Number, Schema.int(), Schema.lessThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "integer",
@@ -122,7 +122,7 @@ describe("data types", () => {
 
   it("integer with non-exclusive min", () => {
     const schema = pipe(
-      Schema.number,
+      Schema.Number,
       Schema.int(),
       Schema.greaterThanOrEqualTo(10)
     )
@@ -136,7 +136,7 @@ describe("data types", () => {
 
   it("integer with non-exclusive max", () => {
     const schema = pipe(
-      Schema.number,
+      Schema.Number,
       Schema.int(),
       Schema.lessThanOrEqualTo(10)
     )
@@ -149,7 +149,7 @@ describe("data types", () => {
   })
 
   it("number with exclusive min", () => {
-    const schema = pipe(Schema.number, Schema.greaterThan(10))
+    const schema = pipe(Schema.Number, Schema.greaterThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -160,7 +160,7 @@ describe("data types", () => {
   })
 
   it("number with exclusive max", () => {
-    const schema = pipe(Schema.number, Schema.lessThan(10))
+    const schema = pipe(Schema.Number, Schema.lessThan(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -171,7 +171,7 @@ describe("data types", () => {
   })
 
   it("number with non-exclusive min", () => {
-    const schema = pipe(Schema.number, Schema.greaterThanOrEqualTo(10))
+    const schema = pipe(Schema.Number, Schema.greaterThanOrEqualTo(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -181,7 +181,7 @@ describe("data types", () => {
   })
 
   it("number with non-exclusive max", () => {
-    const schema = pipe(Schema.number, Schema.lessThanOrEqualTo(10))
+    const schema = pipe(Schema.Number, Schema.lessThanOrEqualTo(10))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -202,7 +202,7 @@ describe("data types", () => {
 
 describe("nullable data types", () => {
   it("nullable number", () => {
-    const schema = pipe(Schema.number, Schema.nullable)
+    const schema = pipe(Schema.Number, Schema.NullOr)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -212,7 +212,7 @@ describe("nullable data types", () => {
   })
 
   it("nullable string", () => {
-    const schema = pipe(Schema.string, Schema.nullable)
+    const schema = pipe(Schema.String, Schema.NullOr)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -222,7 +222,7 @@ describe("nullable data types", () => {
   })
 
   it("nullable string array", () => {
-    const schema = pipe(Schema.string, Schema.array, Schema.nullable)
+    const schema = pipe(Schema.String, Schema.Array, Schema.NullOr)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -234,7 +234,7 @@ describe("nullable data types", () => {
 
 describe("arrays", () => {
   it("number array", () => {
-    const schema = Schema.array(Schema.number)
+    const schema = Schema.Array(Schema.Number)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -243,7 +243,7 @@ describe("arrays", () => {
   })
 
   it("string array", () => {
-    const schema = pipe(Schema.string, Schema.array)
+    const schema = pipe(Schema.String, Schema.Array)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -252,7 +252,7 @@ describe("arrays", () => {
   })
 
   it("2d number array", () => {
-    const schema = pipe(Schema.number, Schema.array, Schema.array)
+    const schema = pipe(Schema.Number, Schema.Array, Schema.Array)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -264,7 +264,7 @@ describe("arrays", () => {
   })
 
   it("object array", () => {
-    const schema = pipe(Schema.struct({ id: Schema.number }), Schema.array)
+    const schema = pipe(Schema.Struct({ id: Schema.Number }), Schema.Array)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -278,8 +278,8 @@ describe("arrays", () => {
 
   it("mixed type array", () => {
     const schema = pipe(
-      Schema.union(Schema.number, Schema.string),
-      Schema.array
+      Schema.Union(Schema.Number, Schema.String),
+      Schema.Array
     )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -294,7 +294,7 @@ describe("arrays", () => {
   })
 
   it("array of any items", () => {
-    const schema = Schema.array(Schema.any)
+    const schema = Schema.Array(Schema.Any)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -303,7 +303,7 @@ describe("arrays", () => {
   })
 
   it("single item array", () => {
-    const schema = Schema.tuple(Schema.string)
+    const schema = Schema.Tuple(Schema.String)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -317,7 +317,7 @@ describe("arrays", () => {
   })
 
   it("non-empty array", () => {
-    const schema = Schema.nonEmptyArray(Schema.string)
+    const schema = Schema.NonEmptyArray(Schema.String)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "array",
@@ -335,9 +335,9 @@ describe("arrays", () => {
 
 describe("objects", () => {
   it("object", () => {
-    const schema = Schema.struct({
-      id: Schema.int()(Schema.number),
-      name: Schema.string
+    const schema = Schema.Struct({
+      id: Schema.int()(Schema.Number),
+      name: Schema.String
     })
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -351,7 +351,7 @@ describe("objects", () => {
   })
 
   it("object with non-required", () => {
-    const schema = Schema.object
+    const schema = Schema.Object
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "object",
@@ -360,10 +360,10 @@ describe("objects", () => {
   })
 
   it("object with non-required", () => {
-    const schema = Schema.struct({
-      id: Schema.int()(Schema.number),
-      username: Schema.string,
-      name: Schema.optional(Schema.string)
+    const schema = Schema.Struct({
+      id: Schema.int()(Schema.Number),
+      username: Schema.String,
+      name: Schema.optional(Schema.String)
     })
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -379,10 +379,10 @@ describe("objects", () => {
 
   it("brands", () => {
     const schema = pipe(
-      Schema.struct({
-        id: Schema.int()(Schema.number),
-        username: Schema.string,
-        name: Schema.optional(Schema.string)
+      Schema.Struct({
+        id: Schema.int()(Schema.Number),
+        username: Schema.String,
+        name: Schema.optional(Schema.String)
       }),
       Schema.brand("my-schema")
     )
@@ -400,8 +400,8 @@ describe("objects", () => {
 })
 
 it("optionFromNullable", () => {
-  const schema = Schema.struct({
-    value: Schema.optionFromNullable(Schema.string)
+  const schema = Schema.Struct({
+    value: Schema.OptionFromNullOr(Schema.String)
   })
 
   expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -416,7 +416,7 @@ it("optionFromNullable", () => {
 describe("description annotation", () => {
   test("null", () => {
     const schema = pipe(
-      Schema.null,
+      Schema.Null,
       Schema.description("it is always missing")
     )
 
@@ -427,7 +427,7 @@ describe("description annotation", () => {
   })
 
   test("string", () => {
-    const schema = pipe(Schema.string, Schema.description("my description"))
+    const schema = pipe(Schema.String, Schema.description("my description"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -436,7 +436,7 @@ describe("description annotation", () => {
   })
 
   test("number", () => {
-    const schema = pipe(Schema.number, Schema.description("my description"))
+    const schema = pipe(Schema.Number, Schema.description("my description"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -445,7 +445,7 @@ describe("description annotation", () => {
   })
 
   test("boolean", () => {
-    const schema = pipe(Schema.boolean, Schema.description("my description"))
+    const schema = pipe(Schema.Boolean, Schema.description("my description"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "boolean",
@@ -454,7 +454,7 @@ describe("description annotation", () => {
   })
 
   test("object", () => {
-    const schema = pipe(Schema.object, Schema.description("my description"))
+    const schema = pipe(Schema.Object, Schema.description("my description"))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "object",
@@ -464,7 +464,7 @@ describe("description annotation", () => {
 
   test("tuple", () => {
     const schema = pipe(
-      Schema.tuple(pipe(Schema.string, Schema.description("my description"))),
+      Schema.Tuple(pipe(Schema.String, Schema.description("my description"))),
       Schema.description("my description")
     )
 
@@ -482,14 +482,14 @@ describe("description annotation", () => {
 
   it("type literal", () => {
     const schema = pipe(
-      Schema.struct({
+      Schema.Struct({
         id: pipe(
-          Schema.number,
+          Schema.Number,
           Schema.int(),
           Schema.description("id description")
         ),
         name: pipe(
-          Schema.literal("value"),
+          Schema.Literal("value"),
           Schema.description("value description")
         )
       }),
@@ -509,7 +509,7 @@ describe("description annotation", () => {
 
   test("union", () => {
     const schema = pipe(
-      Schema.literal("value", "another"),
+      Schema.Literal("value", "another"),
       Schema.description("my description")
     )
 

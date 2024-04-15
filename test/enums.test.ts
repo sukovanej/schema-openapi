@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest"
 
 describe("enums", () => {
   it("literals", () => {
-    const schema = Schema.literal("asc", "desc")
+    const schema = Schema.Literal("asc", "desc")
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -18,7 +18,7 @@ describe("enums", () => {
   })
 
   it("nullable literals", () => {
-    const schema = pipe(Schema.literal("asc", "desc"), Schema.nullable)
+    const schema = pipe(Schema.Literal("asc", "desc"), Schema.NullOr)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -32,7 +32,7 @@ describe("enums", () => {
       Asc = "asc",
       Desc = "desc"
     }
-    const schema = Schema.enums(Enum)
+    const schema = Schema.Enums(Enum)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -45,7 +45,7 @@ describe("enums", () => {
       Asc = "asc",
       Desc = "desc"
     }
-    const schema = pipe(Schema.enums(Enum), Schema.nullable)
+    const schema = pipe(Schema.Enums(Enum), Schema.NullOr)
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",

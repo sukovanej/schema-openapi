@@ -58,7 +58,7 @@ describe("component schema and reference", () => {
       "0.1",
       OpenApi.componentSchema(
         "MyComponent",
-        Schema.struct({ value: Schema.string }).ast
+        Schema.Struct({ value: Schema.String }).ast
       )
     )
     const openapi = {
@@ -88,7 +88,7 @@ describe("component schema and reference", () => {
 
   it("reference only", async () => {
     const ReferencedType = pipe(
-      Schema.struct({ something: Schema.string }),
+      Schema.Struct({ something: Schema.String }),
       Schema.identifier("ReferencedType")
     )
     const spec = OpenApi.openAPI(
@@ -146,11 +146,11 @@ describe("component schema and reference", () => {
 
   it("reference with sub schema as reference", async () => {
     const ReferencedSubType = pipe(
-      Schema.struct({ more: Schema.string }),
+      Schema.Struct({ more: Schema.String }),
       Schema.identifier("ReferencedSubType")
     )
     const ReferencedType = pipe(
-      Schema.struct({ something: Schema.string, sub: ReferencedSubType }),
+      Schema.Struct({ something: Schema.String, sub: ReferencedSubType }),
       Schema.identifier("ReferencedType")
     )
     const spec = OpenApi.openAPI(
@@ -225,9 +225,9 @@ describe("component schema and reference", () => {
       readonly categories: ReadonlyArray<Category>
     }
     const categorySchema: Schema.Schema<Category> = Schema.suspend<Category, Category, never>(() =>
-      Schema.struct({
-        name: Schema.string,
-        categories: Schema.array(categorySchema)
+      Schema.Struct({
+        name: Schema.String,
+        categories: Schema.Array(categorySchema)
       }).pipe(Schema.identifier("Category"))
     )
     const spec = OpenApi.openAPI(
@@ -254,9 +254,9 @@ describe("component schema and reference", () => {
     }
 
     const categorySchema: Schema.Schema<Category, Category, never> = Schema.suspend<Category, Category, never>(() =>
-      Schema.struct({
-        name: Schema.string,
-        categories: Schema.array(categorySchema)
+      Schema.Struct({
+        name: Schema.String,
+        categories: Schema.Array(categorySchema)
       })
     ).pipe(Schema.identifier("Category"))
 
@@ -290,7 +290,7 @@ describe("component schema and reference", () => {
       Schema.optional(Schema.Date)
     ]
   )("optional variants", async (fieldSchema) => {
-    const MySchema = Schema.struct({ field: fieldSchema }).pipe(Schema.identifier("Foo"))
+    const MySchema = Schema.Struct({ field: fieldSchema }).pipe(Schema.identifier("Foo"))
 
     const spec = OpenApi.openAPI(
       "test",
