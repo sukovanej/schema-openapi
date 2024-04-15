@@ -1,5 +1,15 @@
 # schema-openapi
 
+## 0.35.0
+
+### Minor Changes
+
+- 8075d6e: Update @effect/schema.
+
+### Patch Changes
+
+- d6eac5c: added randomExample handling for Date Schemas to return new Date()
+
 ## 0.34.6
 
 ### Patch Changes
