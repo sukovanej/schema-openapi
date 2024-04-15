@@ -232,9 +232,15 @@ export const randomExample = <To, From, R>(
         return result
       }
       case "Declaration": {
-        const identifier = getDescription(ast)
+        const description = getDescription(ast)
+        const identifier = pipe(
+          AST.getAnnotation<AST.IdentifierAnnotation>(AST.IdentifierAnnotationId)(
+            ast
+          ),
+          Option.getOrUndefined
+        )
 
-        if (identifier?.startsWith("Option<")) {
+        if (description?.startsWith("Option<")) {
           return pipe(
             randomChoice([
               () => Effect.succeed(Option.none()),
@@ -242,6 +248,10 @@ export const randomExample = <To, From, R>(
             ]),
             Effect.flatMap((fn) => fn())
           )
+        }
+
+        if (identifier === "DateFromSelf") {
+          return Effect.succeed(new Date())
         }
 
         return Effect.fail(
@@ -282,6 +292,8 @@ const createConstraintFromRefinement = Unify.unify((ast: AST.Refinement) => {
     constraint = createNumberConstraint(typeId, ast)
   } else if (from._tag === "TupleType") {
     constraint = createTupleConstraint(typeId, ast)
+  } else if (from._tag === "Transformation" && from.transformation._tag === "FinalTransformation") {
+    return Effect.succeed(TypeConstraint({}))
   }
 
   if (constraint === undefined) {
