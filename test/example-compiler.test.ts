@@ -98,6 +98,22 @@ test("tuple", () => {
   expect(example[1]).oneOf(["b", "c"])
 })
 
+describe("date", () => {
+  test("simple", () => {
+    const date = Effect.runSync(
+      randomExample(Schema.Date)
+    )
+    expect(date).toBeInstanceOf(Date)
+  })
+
+  test("in struct", () => {
+    const dateStruct = Effect.runSync(
+      randomExample(Schema.struct({ date: Schema.Date }))
+    )
+    expect(dateStruct.date).toBeInstanceOf(Date)
+  })
+})
+
 describe("template literal", () => {
   test("simple", () => {
     const es = Effect.runSync(
