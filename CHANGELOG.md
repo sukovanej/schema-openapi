@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.36.0
+
+### Minor Changes
+
+- 7b1026f: Update to effect 3.0.0.
+
 ## 0.35.1
 
 ### Patch Changes
