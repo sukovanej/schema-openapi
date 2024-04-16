@@ -519,4 +519,28 @@ describe("description annotation", () => {
       description: "my description"
     })
   })
+
+  test.each([
+    Schema.Struct({ createdAt: Schema.Date }),
+    Schema.Struct({ createdAt: Schema.Date.pipe(Schema.brand("brand")) }),
+    Schema.Struct({
+      createdAt: Schema.Date.pipe(
+        Schema.filter((a) => a.getFullYear() === 2024, { message: () => "must be 2024" })
+      )
+    })
+  ])("date %#", (schema) => {
+    expect(openAPISchemaFor(schema)).toStrictEqual({
+      properties: {
+        createdAt: {
+          description: "a valid Date",
+          type: "string",
+          format: "date-time"
+        }
+      },
+      required: [
+        "createdAt"
+      ],
+      type: "object"
+    })
+  })
 })
