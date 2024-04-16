@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.35.1
+
+### Patch Changes
+
+- 01bafdc: Emit `format: 'date-time'` for `Schema.Date`.
+
 ## 0.35.0
 
 ### Minor Changes
