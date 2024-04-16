@@ -109,8 +109,9 @@ export const openAPISchemaForAst = (
       case "AnyKeyword":
         return {}
       case "TemplateLiteral":
-      case "StringKeyword":
+      case "StringKeyword": {
         return { type: "string" }
+      }
       case "NumberKeyword":
         return { type: "number" }
       case "BooleanKeyword":
@@ -275,12 +276,18 @@ export const openAPISchemaForAst = (
       }
       case "Refinement": {
         const from = go(ast.from)
+
+        const formatSchema = pipe(
+          AST.getIdentifierAnnotation(ast),
+          Option.filter((identifier) => identifier === "Date"),
+          Option.as({ format: "date-time" }),
+          Option.getOrElse(() => ({}))
+        )
+
         return pipe(
           getJSONSchemaAnnotation(ast),
-          Option.match({
-            onNone: () => from,
-            onSome: (schema) => ({ ...from, ...schema })
-          })
+          Option.getOrElse(() => ({})),
+          (schema) => ({ ...from, ...schema, ...formatSchema })
         )
       }
       case "Transformation": {
