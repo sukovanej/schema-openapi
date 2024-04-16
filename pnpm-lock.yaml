@@ -36,8 +36,8 @@ devDependencies:
     specifier: ^0.1.0
     version: 0.1.0
   '@effect/schema':
-    specifier: ^0.65.0
-    version: 0.65.0(effect@2.4.19)(fast-check@3.17.1)
+    specifier: ^0.66.0
+    version: 0.66.0(effect@3.0.0)(fast-check@3.17.1)
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.3.0
     version: 4.3.0(prettier@3.2.5)
@@ -60,8 +60,8 @@ devDependencies:
     specifier: ^0.4.0
     version: 0.4.0(@babel/core@7.24.4)
   effect:
-    specifier: 2.4.19
-    version: 2.4.19
+    specifier: 3.0.0
+    version: 3.0.0
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
@@ -691,13 +691,13 @@ packages:
     resolution: {integrity: sha512-BnlM8LlaqCAYgdRfxlbR7gXGh/FD1scL1fPgNVJEPoOM08od1jtJz+iKhwfaud8TPnnhZR+TED2h5ynjanLeCQ==}
     dev: true
 
-  /@effect/schema@0.65.0(effect@2.4.19)(fast-check@3.17.1):
-    resolution: {integrity: sha512-YWj13tEfXisJwMeOK+h6obPuVsMSnNi8FQ6zzOpJ1HdnGZJsOaKeOKqZ5uQxYcnfOR39Q5vePat4yLWkszmHrA==}
+  /@effect/schema@0.66.0(effect@3.0.0)(fast-check@3.17.1):
+    resolution: {integrity: sha512-wbmA4vQ0OswEwBt+vWn4oEgw2QdEDchPiNNisPCHvSy5e5qH0usfppJ3fNX9cwrCz6jEQTCE42Q/7Was2BhVHg==}
     peerDependencies:
-      effect: ^2.4.19
+      effect: ^3.0.0
       fast-check: ^3.13.2
     dependencies:
-      effect: 2.4.19
+      effect: 3.0.0
       fast-check: 3.17.1
     dev: true
 
@@ -2805,8 +2805,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
-  /effect@2.4.19:
-    resolution: {integrity: sha512-z/rn878Po3n522g/AYUDHD1SsZaZdvRxlTCLQ8xl8H6xA82nBwwooD1mdn/73Uywmp7d84oay3w3528r0Uyd0w==}
+  /effect@3.0.0:
+    resolution: {integrity: sha512-8yVxuahojpD8Y6ynrvIlSWD2xsea/PyGnjA4V5c7v0fOMJafgsKUNUHErBAr6YoPikmtOfR9zqNWRd9u5QaWEQ==}
     dev: true
 
   /electron-to-chromium@1.4.736:

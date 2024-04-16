@@ -3,12 +3,12 @@
  *
  * @since 1.0.0
  */
+import * as Array from "effect/Array"
 import * as Context from "effect/Context"
 import * as Data from "effect/Data"
 import * as Effect from "effect/Effect"
 import { pipe } from "effect/Function"
 import * as Option from "effect/Option"
-import * as ReadonlyArray from "effect/ReadonlyArray"
 import * as Ref from "effect/Ref"
 import * as Unify from "effect/Unify"
 
@@ -119,16 +119,16 @@ export const randomExample = <To, From, R>(
         const elements = generate(ast.elements.map((element) => element.type))
 
         const postRestElementsAst = pipe(
-          ReadonlyArray.tail(ast.rest),
+          Array.tail(ast.rest),
           Option.getOrElse(() => [] as Array<AST.AST>)
         )
 
         const nElements = ast.elements.length + postRestElementsAst.length
 
         const rest = pipe(
-          ReadonlyArray.head(ast.rest),
+          Array.head(ast.rest),
           Option.map((rest) =>
-            Array(
+            globalThis.Array(
               constraint?.min != null ? constraint.min - nElements : 1
             ).fill(rest)
           ),

@@ -3,9 +3,9 @@
  *
  * @since 1.0.0
  */
+import * as Array from "effect/Array"
 import { pipe } from "effect/Function"
 import * as Option from "effect/Option"
-import * as ReadonlyArray from "effect/ReadonlyArray"
 import type { ComponentSchemaCallback } from "./internal/internal.js"
 import type { OpenAPISchemaArrayType, OpenAPISchemaObjectType, OpenAPISchemaType } from "./OpenApiTypes.js"
 
@@ -134,8 +134,8 @@ export const openAPISchemaForAst = (
         // ---------------------------------------------
         // handle rest element
         // ---------------------------------------------
-        if (ReadonlyArray.isNonEmptyArray(rest)) {
-          const head = ReadonlyArray.headNonEmpty(rest)
+        if (Array.isNonEmptyArray(rest)) {
+          const head = Array.headNonEmpty(rest)
           if (items !== undefined) {
             maxItems = undefined
 
