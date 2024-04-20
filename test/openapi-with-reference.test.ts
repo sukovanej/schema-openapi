@@ -219,6 +219,129 @@ describe("component schema and reference", () => {
     SwaggerParser.validate(spec)
   })
 
+  it("enum as reference", async () => {
+    enum MyEnum {
+      test1 = "test1",
+      test2 = "test2"
+    }
+    const ReferencedEnum = pipe(
+      Schema.Enums(MyEnum),
+      Schema.identifier("ReferencedEnum")
+    )
+    const spec = OpenApi.openAPI(
+      "test",
+      "0.1",
+      OpenApi.path(
+        "/pet",
+        OpenApi.operation(
+          "post",
+          OpenApi.jsonResponse(200, ReferencedEnum, "Test")
+        )
+      )
+    )
+    const openapi = {
+      openapi: "3.0.3",
+      info: { title: "test", version: "0.1" },
+      paths: {
+        "/pet": {
+          post: {
+            responses: {
+              200: {
+                content: {
+                  "application/json": {
+                    schema: {
+                      $ref: "#/components/schemas/ReferencedEnum"
+                    }
+                  }
+                },
+                description: "Test"
+              }
+            }
+          }
+        }
+      },
+      components: {
+        schemas: {
+          ReferencedEnum: { type: "string", enum: ["test1", "test2"] }
+        }
+      }
+    }
+    expect(spec).toStrictEqual(openapi)
+    // @ts-expect-error
+    SwaggerParser.validate(spec)
+  })
+
+  it("union as reference", async () => {
+    const ReferencedType1 = pipe(
+      Schema.Struct({ something1: Schema.String }),
+      Schema.identifier("ReferencedType1")
+    )
+    const ReferencedType2 = pipe(
+      Schema.Struct({ something2: Schema.String }),
+      Schema.identifier("ReferencedType2")
+    )
+    const ReferencedUnion = Schema.Union(
+      ReferencedType1,
+      ReferencedType2
+    ).pipe(Schema.identifier("ReferencedUnion"))
+    const spec = OpenApi.openAPI(
+      "test",
+      "0.1",
+      OpenApi.path(
+        "/pet",
+        OpenApi.operation(
+          "post",
+          OpenApi.jsonResponse(200, ReferencedUnion, "Test")
+        )
+      )
+    )
+    const openapi = {
+      openapi: "3.0.3",
+      info: { title: "test", version: "0.1" },
+      paths: {
+        "/pet": {
+          post: {
+            responses: {
+              200: {
+                content: {
+                  "application/json": {
+                    schema: {
+                      $ref: "#/components/schemas/ReferencedUnion"
+                    }
+                  }
+                },
+                description: "Test"
+              }
+            }
+          }
+        }
+      },
+      components: {
+        schemas: {
+          ReferencedUnion: {
+            oneOf: [
+              { "$ref": "#/components/schemas/ReferencedType1" },
+              { "$ref": "#/components/schemas/ReferencedType2" }
+            ]
+          },
+          ReferencedType2: {
+            type: "object",
+            properties: { something2: { type: "string", description: "a string" } },
+            required: ["something2"]
+          },
+          ReferencedType1: {
+            type: "object",
+            properties: { something1: { type: "string", description: "a string" } },
+            required: ["something1"]
+          }
+        }
+      }
+    }
+    expect(spec).toStrictEqual(openapi)
+    // @ts-expect-error
+    SwaggerParser.validate(spec)
+  })
+
   it("reference with recursive reference and identifier inside lazy", async () => {
     interface Category {
       readonly name: string

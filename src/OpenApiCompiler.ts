@@ -95,6 +95,14 @@ export const openAPISchemaForAst = (
   ast: AST.AST,
   componentSchemaCallback: ComponentSchemaCallback
 ): OpenAPISchemaType => {
+  const handleReference = (ast: AST.AST): OpenAPISchemaType | null => {
+    const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast))
+    if (identifier !== undefined && componentSchemaCallback) {
+      componentSchemaCallback(identifier, ast)
+      return circular.reference(identifier)
+    }
+    return null
+  }
   const map = (ast: AST.AST): OpenAPISchemaType => {
     switch (ast._tag) {
       case "Literal": {
@@ -175,11 +183,9 @@ export const openAPISchemaForAst = (
             `Cannot encode some index signature to OpenAPISchema`
           )
         }
-
-        const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast))
-        if (identifier !== undefined && componentSchemaCallback) {
-          componentSchemaCallback(identifier, ast)
-          return circular.reference(identifier)
+        const reference = handleReference(ast)
+        if (reference) {
+          return reference
         }
 
         const propertySignatures = ast.propertySignatures.map((ps) => {
@@ -237,6 +243,10 @@ export const openAPISchemaForAst = (
         return output
       }
       case "Union": {
+        const reference = handleReference(ast)
+        if (reference) {
+          return reference
+        }
         const nullable = ast.types.find(
           (a) => a._tag === "Literal" && a.literal === null
         )
@@ -269,6 +279,10 @@ export const openAPISchemaForAst = (
         }
       }
       case "Enums": {
+        const reference = handleReference(ast)
+        if (reference) {
+          return reference
+        }
         return createEnum(
           ast.enums.map(([_, value]) => value),
           false
@@ -292,11 +306,9 @@ export const openAPISchemaForAst = (
       }
       case "Transformation": {
         if (ast.from._tag === "TypeLiteral") {
-          const identifier = Option.getOrUndefined(AST.getIdentifierAnnotation(ast))
-
-          if (identifier !== undefined && componentSchemaCallback) {
-            componentSchemaCallback(identifier, ast)
-            return circular.reference(identifier)
+          const reference = handleReference(ast)
+          if (reference) {
+            return reference
           }
         }
 
