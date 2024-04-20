@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.37.0
+
+### Minor Changes
+
+- 48fc624: Add component reference support for enums and union types
+
 ## 0.36.0
 
 ### Minor Changes
