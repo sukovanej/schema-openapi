@@ -630,7 +630,7 @@ describe("simple", () => {
             responses: {
               200: {
                 content: {
-                  "application/json": { schema: { enum: ["value"] } }
+                  "application/json": { schema: { enum: ["value"], type: "string" } }
                 },
                 description: "test"
               }
