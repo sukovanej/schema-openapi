@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.37.1
+
+### Patch Changes
+
+- [#220](https://github.com/sukovanej/schema-openapi/pull/220) [`350aa66`](https://github.com/sukovanej/schema-openapi/commit/350aa665334186871abad3b8b569d618962abd87) Thanks [@Almaju](https://github.com/Almaju)! - Add type for enum singleton in generated OpenAPI
+
 ## 0.37.0
 
 ### Minor Changes
