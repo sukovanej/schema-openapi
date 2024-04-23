@@ -7,7 +7,12 @@ import * as Array from "effect/Array"
 import { pipe } from "effect/Function"
 import * as Option from "effect/Option"
 import type { ComponentSchemaCallback } from "./internal/internal.js"
-import type { OpenAPISchemaArrayType, OpenAPISchemaObjectType, OpenAPISchemaType } from "./OpenApiTypes.js"
+import type {
+  OpenAPISchemaArrayType,
+  OpenAPISchemaEnumType,
+  OpenAPISchemaObjectType,
+  OpenAPISchemaType
+} from "./OpenApiTypes.js"
 
 import * as AST from "@effect/schema/AST"
 import * as Schema from "@effect/schema/Schema"
@@ -72,7 +77,7 @@ const addDescription = (ast: AST.Annotated) => (schema: OpenAPISchemaType) =>
 const createEnum = <T extends AST.LiteralValue>(
   types: ReadonlyArray<T>,
   nullable: boolean
-) => {
+): OpenAPISchemaEnumType => {
   const type = typeof types[0]
 
   if (type !== "string" && type !== "number") {
@@ -80,10 +85,11 @@ const createEnum = <T extends AST.LiteralValue>(
   }
 
   const nullableObj = nullable && { nullable: true }
+  const values = types as ReadonlyArray<string | number>
 
   return {
     type,
-    enum: nullable ? [...types, null] : types,
+    enum: nullable ? [...values, null] : [...values],
     ...nullableObj
   }
 }
@@ -106,12 +112,21 @@ export const openAPISchemaForAst = (
   const map = (ast: AST.AST): OpenAPISchemaType => {
     switch (ast._tag) {
       case "Literal": {
-        if (typeof ast.literal === "bigint") {
-          return { type: "integer" }
-        } else if (ast.literal === null) {
-          return { type: "null" }
+        switch (typeof ast.literal) {
+          case "bigint":
+            return { type: "integer" }
+          case "boolean":
+            return { type: "boolean", enum: [ast.literal] }
+          case "number":
+            return { type: "number", enum: [ast.literal] }
+          case "string":
+            return { type: "string", enum: [ast.literal] }
+          default:
+            if (ast.literal === null) {
+              return { type: "null" }
+            }
+            throw new Error(`Unknown literal type: ${typeof ast.literal}`)
         }
-        return { enum: [ast.literal] }
       }
       case "UnknownKeyword":
       case "AnyKeyword":

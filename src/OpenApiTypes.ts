@@ -380,7 +380,8 @@ export type OpenAPISchemaArrayType = {
  * @since 1.0.0
  */
 export type OpenAPISchemaEnumType = {
-  enum: Array<string | number | boolean>
+  type: "string" | "number" | "boolean"
+  enum: Array<string | number | boolean | null>
   nullable?: boolean
 }
 

@@ -500,7 +500,7 @@ describe("description annotation", () => {
       type: "object",
       properties: {
         id: { type: "integer", description: "id description" },
-        name: { enum: ["value"], description: "value description" }
+        name: { type: "string", enum: ["value"], description: "value description" }
       },
       required: ["name", "id"],
       description: "my description"
