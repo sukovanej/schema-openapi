@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.37.2
+
+### Patch Changes
+
+- [`cb9b609`](https://github.com/sukovanej/schema-openapi/commit/cb9b6098dca968d955160da2a1f5a3549f249dc4) Thanks [@sukovanej](https://github.com/sukovanej)! - Update effect.
+
 ## 0.37.1
 
 ### Patch Changes
