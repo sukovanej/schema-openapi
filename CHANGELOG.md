@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.38.0
+
+### Minor Changes
+
+- [`6f2006a`](https://github.com/sukovanej/schema-openapi/commit/6f2006a2f379568d51eb476dfe7bfce8a61fcbc9) Thanks [@sukovanej](https://github.com/sukovanej)! - Update /schema.
+
 ## 0.37.2
 
 ### Patch Changes
