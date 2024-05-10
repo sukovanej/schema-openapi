@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.38.1
+
+### Patch Changes
+
+- [`9f5301e`](https://github.com/sukovanej/schema-openapi/commit/9f5301e574fae25d92f56c726294186e5c9f8441) Thanks [@sukovanej](https://github.com/sukovanej)! - Update /schema peer dependency.
+
 ## 0.38.0
 
 ### Minor Changes
