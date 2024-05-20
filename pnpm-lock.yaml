@@ -34,7 +34,7 @@ importers:
         version: 0.7.6
       '@effect/docgen':
         specifier: ^0.4.3
-        version: 0.4.3(tsx@4.10.4)(typescript@5.4.5)
+        version: 0.4.3(tsx@4.10.5)(typescript@5.4.5)
       '@effect/eslint-plugin':
         specifier: ^0.1.2
         version: 0.1.2
@@ -42,8 +42,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@effect/schema':
-        specifier: ^0.67.5
-        version: 0.67.5(effect@3.1.5)
+        specifier: ^0.67.9
+        version: 0.67.9(effect@3.2.1)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.2.5)
@@ -66,8 +66,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(@babel/core@7.24.5)
       effect:
-        specifier: 3.1.5
-        version: 3.1.5
+        specifier: 3.2.1
+        version: 3.2.1
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -105,8 +105,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(express@4.19.2)
       tsx:
-        specifier: ^4.10.4
-        version: 4.10.4
+        specifier: ^4.10.5
+        version: 4.10.5
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -369,10 +369,10 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
 
-  '@effect/schema@0.67.5':
-    resolution: {integrity: sha512-RxlnCahk1rEmbosz0ZOb6mu3PTrf27+X+LQKeytFkDgUiNqQUyrLUUTMwh0BckPeRudeWpb7WKhpJvzJyG8uBw==}
+  '@effect/schema@0.67.9':
+    resolution: {integrity: sha512-bly2PIIZGA9lhahCu+RuLHIS04H9sTYaD7Rkb+Jz2lhEHVWtzDO0hNyfigGJ7M1MDlaC3LKA9BY1uLKQmBnyRg==}
     peerDependencies:
-      effect: ^3.1.5
+      effect: ^3.2.1
 
   '@esbuild/aix-ppc64@0.20.2':
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -1430,8 +1430,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  effect@3.1.5:
-    resolution: {integrity: sha512-nTkW/ViRF8cXVMKjusYMVp7L1eqLwMZV7K6GHoqq3MD7NjPT/tJRVhY8d6z5Vam9kxgvRAzqwJKkaRpRVz1jTw==}
+  effect@3.2.1:
+    resolution: {integrity: sha512-WnM7QyHekA+oWkJyD1g99BDqD3atAXKjarcDnUX9alIKLd8EFXdY333wpgcNJkSqtvXDsx8qYWOMbuivdwoN2w==}
 
   electron-to-chromium@1.4.774:
     resolution: {integrity: sha512-132O1XCd7zcTkzS3FgkAzKmnBuNJjK8WjcTtNuoylj7MYbqw5eXehjQ5OK91g0zm7OTKIPeaAG4CPoRfD9M1Mg==}
@@ -1727,8 +1727,8 @@ packages:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
 
-  fp-ts@2.16.5:
-    resolution: {integrity: sha512-N8T8PwMSeTKKtkm9lkj/zSTAnPC/aJIIrQhnHxxkL0KLsRCNUPANksJOlMXxcKKCo7H1ORP3No9EMD+fP0tsdA==}
+  fp-ts@2.16.6:
+    resolution: {integrity: sha512-v7w209VPj4L6pPn/ftFRJu31Oa8QagwcVw7BZmLCUWU4AQoc954rX9ogSIahDf67Pg+GjPbkW/Kn9XWnlWJG0g==}
 
   fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
@@ -3205,8 +3205,8 @@ packages:
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
 
-  tsx@4.10.4:
-    resolution: {integrity: sha512-Gtg9qnZWNqC/OtcgiXfoAUdAKx3/cgKOYvEocAsv+m21MV/eKpV/WUjRXe6/sDCaGBl2/v8S6v29BpUnGMCX5A==}
+  tsx@4.10.5:
+    resolution: {integrity: sha512-twDSbf7Gtea4I2copqovUiNTEDrT8XNFXsuHpfGbdpW/z9ZW4fTghzzhAG0WfrCuJmJiOEY1nLIjq4u3oujRWQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -3869,13 +3869,13 @@ snapshots:
 
   '@effect/build-utils@0.7.6': {}
 
-  '@effect/docgen@0.4.3(tsx@4.10.4)(typescript@5.4.5)':
+  '@effect/docgen@0.4.3(tsx@4.10.5)(typescript@5.4.5)':
     dependencies:
       '@effect/markdown-toc': 0.1.0
       doctrine: 3.0.0
       glob: 10.3.15
       prettier: 3.2.5
-      tsx: 4.10.4
+      tsx: 4.10.5
       typescript: 5.4.5
 
   '@effect/eslint-plugin@0.1.2':
@@ -3901,9 +3901,9 @@ snapshots:
       repeat-string: 1.6.1
       strip-color: 0.1.0
 
-  '@effect/schema@0.67.5(effect@3.1.5)':
+  '@effect/schema@0.67.9(effect@3.2.1)':
     dependencies:
-      effect: 3.1.5
+      effect: 3.2.1
       fast-check: 3.18.0
 
   '@esbuild/aix-ppc64@0.20.2':
@@ -4970,7 +4970,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  effect@3.1.5: {}
+  effect@3.2.1: {}
 
   electron-to-chromium@1.4.774: {}
 
@@ -5165,9 +5165,9 @@ snapshots:
       dedent: 1.5.3
       eslint-plugin-markdown: 4.0.1(eslint@8.57.0)
       expect: 29.7.0
-      fp-ts: 2.16.5
+      fp-ts: 2.16.6
       glob: 10.3.15
-      io-ts: 2.2.21(fp-ts@2.16.5)
+      io-ts: 2.2.21(fp-ts@2.16.6)
       io-ts-extra: 0.11.6
       js-yaml: 3.14.1
       lodash: 4.17.21
@@ -5479,7 +5479,7 @@ snapshots:
 
   forwarded@0.2.0: {}
 
-  fp-ts@2.16.5: {}
+  fp-ts@2.16.6: {}
 
   fresh@0.5.2: {}
 
@@ -5692,12 +5692,12 @@ snapshots:
 
   io-ts-extra@0.11.6:
     dependencies:
-      fp-ts: 2.16.5
-      io-ts: 2.2.21(fp-ts@2.16.5)
+      fp-ts: 2.16.6
+      io-ts: 2.2.21(fp-ts@2.16.6)
 
-  io-ts@2.2.21(fp-ts@2.16.5):
+  io-ts@2.2.21(fp-ts@2.16.6):
     dependencies:
-      fp-ts: 2.16.5
+      fp-ts: 2.16.6
 
   ipaddr.js@1.9.1: {}
 
@@ -6961,7 +6961,7 @@ snapshots:
       tslib: 1.14.1
       typescript: 5.4.5
 
-  tsx@4.10.4:
+  tsx@4.10.5:
     dependencies:
       esbuild: 0.20.2
       get-tsconfig: 4.7.5
