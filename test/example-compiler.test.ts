@@ -116,7 +116,7 @@ describe("date", () => {
 describe("template literal", () => {
   test("simple", () => {
     const es = Effect.runSync(
-      randomExample(Schema.TemplateLiteral(Schema.Literal("zdar")))
+      randomExample(Schema.TemplateLiteral("zdar"))
     )
 
     expect(es).toBe("zdar")
@@ -125,7 +125,7 @@ describe("template literal", () => {
   test("number literal", () => {
     const es = Effect.runSync(
       randomExample(
-        Schema.TemplateLiteral(Schema.Literal(1), Schema.Literal("2"))
+        Schema.TemplateLiteral(Schema.Literal("1"), "2")
       )
     )
 
@@ -160,8 +160,8 @@ describe("template literal", () => {
     const es = Effect.runSync(
       randomExample(
         Schema.TemplateLiteral(
-          Schema.Literal(1),
-          Schema.Union(Schema.Literal("2"), Schema.Literal(3))
+          "1",
+          Schema.Union(Schema.Literal("2"), Schema.Literal("3"))
         )
       )
     )
