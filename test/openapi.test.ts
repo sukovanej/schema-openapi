@@ -554,7 +554,7 @@ describe("simple", () => {
             Schema.String,
             "response",
             OpenApi.responseHeaders({
-              "My-Header": Schema.description("My description")(Schema.String)
+              "My-Header": Schema.annotations(Schema.String, { description: "My description" })
             })
           )
         )

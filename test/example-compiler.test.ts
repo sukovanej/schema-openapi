@@ -18,7 +18,7 @@ test("struct", () => {
 test("with test annotation", () => {
   const example1 = Effect.runSync(
     randomExample(
-      Schema.Struct({ name: pipe(Schema.Number, Schema.examples([1])) })
+      Schema.Struct({ name: pipe(Schema.Number, Schema.annotations({ examples: [1] })) })
     )
   )
 
@@ -27,7 +27,7 @@ test("with test annotation", () => {
   const IntegerFromString = pipe(
     Schema.NumberFromString,
     Schema.int(),
-    Schema.examples([42, 69]),
+    Schema.annotations({ examples: [42, 69] }),
     Schema.brand("Integer")
   )
 

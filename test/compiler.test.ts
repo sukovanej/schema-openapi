@@ -6,7 +6,7 @@ import { expect, test } from "vitest"
 test("Declaration", () => {
   const MySchema = Schema.instanceOf(FormData).pipe(
     OpenApiCompiler.annotate({ type: "string" }),
-    Schema.description("form data")
+    Schema.annotations({ description: "form data" })
   )
 
   expect(OpenApiCompiler.openAPISchemaForAst(MySchema.ast, () => undefined)).toEqual({
