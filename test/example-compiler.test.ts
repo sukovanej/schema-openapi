@@ -234,4 +234,11 @@ describe("constraints", () => {
 
     expect(example.length).toBeGreaterThanOrEqual(3)
   })
+
+  // todo
+  // test("max length string", () => {
+  //  const example = Effect.runSync(randomExample(Schema.String.pipe(Schema.maxLength(3))))
+
+  //  expect(example.length).toBeLessThanOrEqual(3)
+  // })
 })
