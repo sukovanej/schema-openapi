@@ -42,8 +42,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@effect/schema':
-        specifier: ^0.68.0
-        version: 0.68.0(effect@3.3.4)
+        specifier: ^0.68.1
+        version: 0.68.1(effect@3.3.5)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.3.2)
@@ -66,8 +66,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(@babel/core@7.24.7)
       effect:
-        specifier: 3.3.4
-        version: 3.3.4
+        specifier: 3.3.5
+        version: 3.3.5
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -372,10 +372,10 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
 
-  '@effect/schema@0.68.0':
-    resolution: {integrity: sha512-Z4G2g4Nq5WYrPSl2mJl2SqoQBRlnoyvWrN2fQwB0u5fhrNVlnCnt6kLAuFvMDOgL6NYLgN9aPomg1opgbfxcDA==}
+  '@effect/schema@0.68.1':
+    resolution: {integrity: sha512-wUxqHyNmwsjjUgborcBcOHAv5k1BFq9S43NGMcvDeAQOBB2ad5+bLbWxl0zAFj7Hq3V2laTj45UD9L5YQGmg/w==}
     peerDependencies:
-      effect: ^3.3.4
+      effect: ^3.3.5
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -1424,11 +1424,11 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  effect@3.3.4:
-    resolution: {integrity: sha512-BNQBZqe28ZlIwqKiHmEnXHx0Mql700KUk8QmXVHPwat2RhtWt28HyR86DRvc/93R6jM8AFwRRSYS/zfHI0KYIQ==}
+  effect@3.3.5:
+    resolution: {integrity: sha512-ehDpb+3zRTYsCqDWY32rT4oxtG0BJ797+HSog+FPjiWKjNxnPgpslUIQha8CoxqFZln2ZeBRv00tzGIhUAQKsw==}
 
-  electron-to-chromium@1.4.805:
-    resolution: {integrity: sha512-8W4UJwX/w9T0QSzINJckTKG6CYpAUTqsaWcWIsdud3I1FYJcMgW9QqT1/4CBff/pP/TihWh13OmiyY8neto6vw==}
+  electron-to-chromium@1.4.806:
+    resolution: {integrity: sha512-nkoEX2QIB8kwCOtvtgwhXWy2IHVcOLQZu9Qo36uaGB835mdX/h8uLRlosL6QIhLVUnAiicXRW00PwaPZC74Nrg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -1798,8 +1798,8 @@ packages:
     resolution: {integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==}
     engines: {node: '>=10.13.0'}
 
-  glob@10.4.1:
-    resolution: {integrity: sha512-2jelhlq3E4ho74ZyVLN03oKdAZVUa6UDZzFLVH1H7dnoax+y9qyaq8zBkfDIggjniU19z0wU18y16jMB2eyVIw==}
+  glob@10.4.2:
+    resolution: {integrity: sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==}
     engines: {node: '>=16 || 14 >=14.18'}
     hasBin: true
 
@@ -2578,6 +2578,9 @@ packages:
   p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
+
+  package-json-from-dist@1.0.0:
+    resolution: {integrity: sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -3881,7 +3884,7 @@ snapshots:
     dependencies:
       '@effect/markdown-toc': 0.1.0
       doctrine: 3.0.0
-      glob: 10.4.1
+      glob: 10.4.2
       prettier: 3.3.2
       tsx: 4.15.6
       typescript: 5.4.5
@@ -3909,9 +3912,9 @@ snapshots:
       repeat-string: 1.6.1
       strip-color: 0.1.0
 
-  '@effect/schema@0.68.0(effect@3.3.4)':
+  '@effect/schema@0.68.1(effect@3.3.5)':
     dependencies:
-      effect: 3.3.4
+      effect: 3.3.5
       fast-check: 3.19.0
 
   '@esbuild/aix-ppc64@0.21.5':
@@ -4617,7 +4620,7 @@ snapshots:
   browserslist@4.23.1:
     dependencies:
       caniuse-lite: 1.0.30001636
-      electron-to-chromium: 1.4.805
+      electron-to-chromium: 1.4.806
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.1)
 
@@ -4947,9 +4950,9 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  effect@3.3.4: {}
+  effect@3.3.5: {}
 
-  electron-to-chromium@1.4.805: {}
+  electron-to-chromium@1.4.806: {}
 
   emoji-regex@8.0.0: {}
 
@@ -5143,7 +5146,7 @@ snapshots:
       eslint-plugin-markdown: 4.0.1(eslint@8.57.0)
       expect: 29.7.0
       fp-ts: 2.16.6
-      glob: 10.4.1
+      glob: 10.4.2
       io-ts: 2.2.21(fp-ts@2.16.6)
       io-ts-extra: 0.11.6
       js-yaml: 3.14.1
@@ -5531,12 +5534,13 @@ snapshots:
     dependencies:
       is-glob: 4.0.3
 
-  glob@10.4.1:
+  glob@10.4.2:
     dependencies:
       foreground-child: 3.2.1
       jackspeak: 3.4.0
       minimatch: 9.0.4
       minipass: 7.1.2
+      package-json-from-dist: 1.0.0
       path-scurry: 1.11.1
 
   glob@7.2.3:
@@ -6307,6 +6311,8 @@ snapshots:
 
   p-try@2.2.0: {}
 
+  package-json-from-dist@1.0.0: {}
+
   parent-module@1.0.1:
     dependencies:
       callsites: 3.1.0
@@ -6578,7 +6584,7 @@ snapshots:
 
   rimraf@5.0.7:
     dependencies:
-      glob: 10.4.1
+      glob: 10.4.2
 
   rollup@4.18.0:
     dependencies:
