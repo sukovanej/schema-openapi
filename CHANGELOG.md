@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.39.0
+
+### Minor Changes
+
+- [#231](https://github.com/sukovanej/schema-openapi/pull/231) [`1c1a24e`](https://github.com/sukovanej/schema-openapi/commit/1c1a24ef28bd3eadd8ffe00e7a3bacc307ec1945) Thanks [@sukovanej](https://github.com/sukovanej)! - Update @effect/schema.
+
 ## 0.38.3
 
 ### Patch Changes
