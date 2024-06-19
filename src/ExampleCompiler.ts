@@ -120,6 +120,7 @@ export const randomExample = <To, From, R>(
 
         const postRestElementsAst = pipe(
           Array.tail(ast.rest),
+          Option.map((rest) => rest.map((e) => e.type)),
           Option.getOrElse(() => [] as Array<AST.AST>)
         )
 
@@ -130,7 +131,7 @@ export const randomExample = <To, From, R>(
           Option.map((rest) =>
             globalThis.Array(
               constraint?.min != null ? constraint.min - nElements : 1
-            ).fill(rest)
+            ).fill(rest.type)
           ),
           Option.map(generate),
           Option.getOrElse(() => Effect.succeed([] as Array<any>))

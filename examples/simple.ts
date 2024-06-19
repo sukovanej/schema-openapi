@@ -9,7 +9,7 @@ const Pet = Schema.Struct({
   id: Schema.Number
 })
 
-const UsageId = Schema.description("Usage identifier")(Schema.String)
+const UsageId = Schema.annotations(Schema.String, { description: "Usage identifier" })
 
 const app = express()
 const spec = OpenApi.openAPI(

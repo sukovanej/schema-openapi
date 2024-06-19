@@ -89,7 +89,7 @@ describe("component schema and reference", () => {
   it("reference only", async () => {
     const ReferencedType = pipe(
       Schema.Struct({ something: Schema.String }),
-      Schema.identifier("ReferencedType")
+      Schema.annotations({ identifier: "ReferencedType" })
     )
     const spec = OpenApi.openAPI(
       "test",
@@ -147,11 +147,11 @@ describe("component schema and reference", () => {
   it("reference with sub schema as reference", async () => {
     const ReferencedSubType = pipe(
       Schema.Struct({ more: Schema.String }),
-      Schema.identifier("ReferencedSubType")
+      Schema.annotations({ identifier: "ReferencedSubType" })
     )
     const ReferencedType = pipe(
       Schema.Struct({ something: Schema.String, sub: ReferencedSubType }),
-      Schema.identifier("ReferencedType")
+      Schema.annotations({ identifier: "ReferencedType" })
     )
     const spec = OpenApi.openAPI(
       "test",
@@ -226,7 +226,7 @@ describe("component schema and reference", () => {
     }
     const ReferencedEnum = pipe(
       Schema.Enums(MyEnum),
-      Schema.identifier("ReferencedEnum")
+      Schema.annotations({ identifier: "ReferencedEnum" })
     )
     const spec = OpenApi.openAPI(
       "test",
@@ -274,16 +274,16 @@ describe("component schema and reference", () => {
   it("union as reference", async () => {
     const ReferencedType1 = pipe(
       Schema.Struct({ something1: Schema.String }),
-      Schema.identifier("ReferencedType1")
+      Schema.annotations({ identifier: "ReferencedType1" })
     )
     const ReferencedType2 = pipe(
       Schema.Struct({ something2: Schema.String }),
-      Schema.identifier("ReferencedType2")
+      Schema.annotations({ identifier: "ReferencedType2" })
     )
     const ReferencedUnion = Schema.Union(
       ReferencedType1,
       ReferencedType2
-    ).pipe(Schema.identifier("ReferencedUnion"))
+    ).pipe(Schema.annotations({ identifier: "ReferencedUnion" }))
     const spec = OpenApi.openAPI(
       "test",
       "0.1",
@@ -351,7 +351,7 @@ describe("component schema and reference", () => {
       Schema.Struct({
         name: Schema.String,
         categories: Schema.Array(categorySchema)
-      }).pipe(Schema.identifier("Category"))
+      }).pipe(Schema.annotations({ identifier: "Category" }))
     )
     const spec = OpenApi.openAPI(
       "test",
@@ -381,7 +381,7 @@ describe("component schema and reference", () => {
         name: Schema.String,
         categories: Schema.Array(categorySchema)
       })
-    ).pipe(Schema.identifier("Category"))
+    ).pipe(Schema.annotations({ identifier: "Category" }))
 
     const spec = OpenApi.openAPI(
       "test",
@@ -413,7 +413,7 @@ describe("component schema and reference", () => {
       Schema.optional(Schema.Date)
     ]
   )("optional variants", async (fieldSchema) => {
-    const MySchema = Schema.Struct({ field: fieldSchema }).pipe(Schema.identifier("Foo"))
+    const MySchema = Schema.Struct({ field: fieldSchema }).pipe(Schema.annotations({ identifier: "Foo" }))
 
     const spec = OpenApi.openAPI(
       "test",

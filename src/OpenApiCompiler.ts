@@ -143,7 +143,7 @@ export const openAPISchemaForAst = (
         return { type: "object" }
       case "TupleType": {
         const elements = ast.elements.map((e) => go(e.type))
-        const rest = ast.rest.map(go)
+        const rest = ast.rest.map((t) => go(t.type))
 
         const minItems = ast.elements.filter((e) => !e.isOptional).length || undefined
         let maxItems = minItems

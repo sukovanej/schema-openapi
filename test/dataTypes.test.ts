@@ -417,7 +417,7 @@ describe("description annotation", () => {
   test("null", () => {
     const schema = pipe(
       Schema.Null,
-      Schema.description("it is always missing")
+      Schema.annotations({ description: "it is always missing" })
     )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -427,7 +427,7 @@ describe("description annotation", () => {
   })
 
   test("string", () => {
-    const schema = pipe(Schema.String, Schema.description("my description"))
+    const schema = pipe(Schema.String, Schema.annotations({ description: "my description" }))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "string",
@@ -436,7 +436,7 @@ describe("description annotation", () => {
   })
 
   test("number", () => {
-    const schema = pipe(Schema.Number, Schema.description("my description"))
+    const schema = pipe(Schema.Number, Schema.annotations({ description: "my description" }))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "number",
@@ -445,7 +445,7 @@ describe("description annotation", () => {
   })
 
   test("boolean", () => {
-    const schema = pipe(Schema.Boolean, Schema.description("my description"))
+    const schema = pipe(Schema.Boolean, Schema.annotations({ description: "my description" }))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "boolean",
@@ -454,7 +454,7 @@ describe("description annotation", () => {
   })
 
   test("object", () => {
-    const schema = pipe(Schema.Object, Schema.description("my description"))
+    const schema = pipe(Schema.Object, Schema.annotations({ description: "my description" }))
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
       type: "object",
@@ -464,8 +464,8 @@ describe("description annotation", () => {
 
   test("tuple", () => {
     const schema = pipe(
-      Schema.Tuple(pipe(Schema.String, Schema.description("my description"))),
-      Schema.description("my description")
+      Schema.Tuple(Schema.annotations(Schema.String, { description: "my description" })),
+      Schema.annotations({ description: "my description" })
     )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -486,14 +486,14 @@ describe("description annotation", () => {
         id: pipe(
           Schema.Number,
           Schema.int(),
-          Schema.description("id description")
+          Schema.annotations({ description: "id description" })
         ),
         name: pipe(
           Schema.Literal("value"),
-          Schema.description("value description")
+          Schema.annotations({ description: "value description" })
         )
       }),
-      Schema.description("my description")
+      Schema.annotations({ description: "my description" })
     )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
@@ -510,7 +510,7 @@ describe("description annotation", () => {
   test("union", () => {
     const schema = pipe(
       Schema.Literal("value", "another"),
-      Schema.description("my description")
+      Schema.annotations({ description: "my description" })
     )
 
     expect(openAPISchemaFor(schema)).toStrictEqual({
