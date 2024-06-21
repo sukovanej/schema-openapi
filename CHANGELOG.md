@@ -1,5 +1,11 @@
 # schema-openapi
 
+## 0.39.1
+
+### Patch Changes
+
+- [`18dbaab`](https://github.com/sukovanej/schema-openapi/commit/18dbaabf589b2b62eb03966875c44fe6b480ecc3) Thanks [@sukovanej](https://github.com/sukovanej)! - Update effect to 3.4.0.
+
 ## 0.39.0
 
 ### Minor Changes
